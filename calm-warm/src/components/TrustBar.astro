@@ -3,7 +3,12 @@
 //
 // Guard: bila credentials kosong → return null (tidak emit elemen/heading/
 // container apa pun) (R5.3). Bila ada, render SELURUH entri (Property 8).
-// Warna via CSS var saja (R6.4).
+// Gaya calm-warm minimalis: strip kredensial STATIS sejajar container, latar
+// paper hangat dengan hairline tipis atas-bawah. Tiap kredensial memakai SATU
+// ikon "verified" SVG seragam dalam lingkaran sage lembut (lebih rapi & premium
+// daripada emoji yang rendering-nya beda antar platform). Separator garis
+// vertikal tipis di antar-item, sembunyi saat wrap di mobile. Reveal bertahap
+// saat load, dihormati prefers-reduced-motion. Warna via CSS var saja (R6.4).
 import type { Credential } from '../types.ts';
 import { isEmptyList } from '../lib/empty.ts';
 
@@ -17,17 +22,17 @@ const credentials = items as Credential[];
 ---
 
 <section class="trustbar" aria-labelledby="trustbar-h">
+  <h2 id="trustbar-h" class="visually-hidden">Kredensial &amp; Sertifikasi</h2>
   <div class="container">
-    <h2 id="trustbar-h" class="visually-hidden">Kredensial &amp; Sertifikasi</h2>
     <ul class="trust-list" role="list">
       {
-        credentials.map((c) => (
-          <li class="trust-item">
-            {c.icon && (
-              <span class="trust-icon" aria-hidden="true">
-                {c.icon}
-              </span>
-            )}
+        credentials.map((c, i) => (
+          <li class="trust-item" style={`--i:${i}`}>
+            <span class="trust-mark" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 6L9 17l-5-5" />
+              </svg>
+            </span>
             <span class="trust-label">{c.label}</span>
           </li>
         ))
@@ -38,8 +43,9 @@ const credentials = items as Credential[];
 
 <style>
   .trustbar {
-    background: var(--background);
-    border-bottom: 1px solid var(--surface);
+    padding-block: clamp(1.4rem, 3vw, 2rem);
+    background: var(--paper-2);
+    border-block: 1px solid var(--hairline);
   }
   .visually-hidden {
     position: absolute;
@@ -58,18 +64,67 @@ const credentials = items as Credential[];
     padding: 0;
     display: flex;
     flex-wrap: wrap;
-    gap: 1rem 2rem;
+    align-items: center;
     justify-content: center;
+    gap: clamp(0.85rem, 2.5vw, 2.25rem);
   }
   .trust-item {
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
-    color: var(--text);
-    font-weight: 500;
+    gap: 0.6rem;
+    position: relative;
+    /* Reveal bertahap saat load. */
+    opacity: 0;
+    transform: translateY(6px);
+    animation: trust-in 0.5s ease forwards;
+    animation-delay: calc(var(--i) * 80ms);
   }
-  .trust-icon {
-    font-size: 1.25rem;
-    color: var(--accent);
+  /* Separator garis vertikal tipis di antar-item (bukan sebelum yang pertama). */
+  .trust-item + .trust-item::before {
+    content: '';
+    position: absolute;
+    left: calc(clamp(0.85rem, 2.5vw, 2.25rem) / -2);
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1px;
+    height: 1.1rem;
+    background: var(--hairline-strong);
   }
+  .trust-mark {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--sage-tint);
+    color: var(--sage-deep);
+  }
+  .trust-label {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: clamp(0.82rem, 1.6vw, 0.95rem);
+    letter-spacing: 0.01em;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+  @keyframes trust-in {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  /* Saat wrap di layar sempit, separator vertikal mengganggu → sembunyikan. */
+  @media (max-width: 640px) {
+    .trust-list {
+      justify-content: flex-start;
+    }
+    .trust-item + .trust-item::before {
+      display: none;
+    }
+  }
+  /* Catatan: guard prefers-reduced-motion sengaja DILEPAS atas permintaan —
+     reveal fade-in tetap berjalan meski OS/user meminta reduce-motion. */
+
 </style>

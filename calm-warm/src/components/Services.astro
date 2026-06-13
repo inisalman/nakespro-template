@@ -2,7 +2,10 @@
 // components/Services.astro — section 3, Auto-Hide (R3.6, R3.12, R5.3).
 //
 // Guard: services kosong → return null (R5.3). Bila ada, render SELURUH entri
-// (Property 8). Warna via CSS var saja (R6.4).
+// (Property 8). Gaya Bloom & Bone: kepala split (judul serif kiri, lead kanan)
+// + kartu bernomor 01/02/03. Variasi warna kartu (krem / sage / arang) digerakkan
+// via :nth-child — BUKAN kelas modifier — agar token kontrak class="service-card"
+// tetap utuh & terhitung benar (Property 8). Warna via CSS var saja (R6.4).
 import type { Service } from '../types.ts';
 import { isEmptyList } from '../lib/empty.ts';
 
@@ -13,22 +16,41 @@ interface Props {
 const { items } = Astro.props;
 if (isEmptyList(items)) return null;
 const services = items as Service[];
+
+/** Nomor urut dua digit (01, 02, …) untuk label editorial. */
+const pad = (n: number) => String(n + 1).padStart(2, '0');
 ---
 
 <section class="services" aria-labelledby="services-h">
   <div class="container">
-    <h2 id="services-h">Layanan Kami</h2>
+    <div class="services-head">
+      <div class="services-head-left">
+        <span class="kicker">Layanan</span>
+        <h2 id="services-h" class="section-title services-title">
+          Hadir dekat. Penuh kasih.
+        </h2>
+      </div>
+      <p class="section-lead services-lead">
+        Dari pendampingan harian hingga perawatan khusus di rumah — kami bantu
+        temukan dukungan yang pas untuk ritme dan kebutuhan keluarga Anda.
+      </p>
+    </div>
     <ul class="services-grid" role="list">
       {
-        services.map((s) => (
+        services.map((s, i) => (
           <li class="service-card">
-            {s.icon && (
-              <span class="service-icon" aria-hidden="true">
-                {s.icon}
-              </span>
-            )}
-            <h3 class="service-title">{s.title}</h3>
-            <p class="service-desc">{s.description}</p>
+            <span class="service-num" aria-hidden="true">
+              {pad(i)}
+            </span>
+            <div class="service-body">
+              {s.icon && (
+                <span class="service-icon" aria-hidden="true">
+                  {s.icon}
+                </span>
+              )}
+              <h3 class="service-title">{s.title}</h3>
+              <p class="service-desc">{s.description}</p>
+            </div>
           </li>
         ))
       }
@@ -37,36 +59,107 @@ const services = items as Service[];
 </section>
 
 <style>
-  .services {
-    background: var(--background);
+  .services-head {
+    display: grid;
+    gap: 1rem 2.5rem;
+    align-items: end;
+    margin-bottom: clamp(1.75rem, 3vw, 2.5rem);
   }
-  .services h2 {
-    font-size: clamp(1.5rem, 4vw, 2.1rem);
-    margin: 0 0 1.5rem;
+  @media (min-width: 820px) {
+    .services-head {
+      grid-template-columns: 1.1fr 0.9fr;
+    }
+  }
+  .services-title {
+    margin-top: 0.25rem;
+    max-width: 14ch;
+  }
+  .services-lead {
+    padding-bottom: 0.3rem;
   }
   .services-grid {
     list-style: none;
     margin: 0;
     padding: 0;
     display: grid;
-    gap: 1.25rem;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.1rem;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   }
   .service-card {
-    background: var(--surface);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 250px;
     border-radius: var(--radius);
-    padding: 1.5rem;
+    border: 1px solid var(--hairline);
+    padding: 1.6rem;
+    overflow: hidden;
+    transition:
+      transform 0.28s ease,
+      box-shadow 0.28s ease;
+  }
+  .service-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow);
+  }
+  /* Rotasi tri-warna ala Bloom & Bone — via posisi, bukan kelas modifier. */
+  .service-card:nth-child(3n + 1) {
+    background: var(--card);
+    color: var(--ink);
+  }
+  .service-card:nth-child(3n + 2) {
+    background: var(--sage-tint);
+    border-color: color-mix(in srgb, var(--sage) 30%, transparent);
+    color: var(--ink);
+  }
+  .service-card:nth-child(3n + 3) {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--on-ink);
+  }
+  .service-num {
+    align-self: flex-start;
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    padding: 0.3rem 0.6rem;
+    border-radius: var(--radius-pill);
+    border: 1px solid currentColor;
+    opacity: 0.55;
+    margin-bottom: auto;
+  }
+  .service-body {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
   }
   .service-icon {
-    font-size: 1.75rem;
+    font-size: 1.6rem;
+    line-height: 1;
+    margin-bottom: 0.35rem;
+  }
+  .service-card:nth-child(3n + 1) .service-icon,
+  .service-card:nth-child(3n + 2) .service-icon {
     color: var(--accent);
   }
   .service-title {
-    font-size: 1.15rem;
-    margin: 0.5rem 0 0.4rem;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 1.35rem;
+    margin: 0;
   }
   .service-desc {
-    color: var(--muted);
     margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: currentColor;
+    opacity: 0.78;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .service-card {
+      transition: none;
+    }
   }
 </style>

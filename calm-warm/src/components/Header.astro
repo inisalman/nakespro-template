@@ -1,0 +1,160 @@
+---
+// components/Header.astro — TopNav tipis (sticky), bukan bagian Auto-Hide.
+//
+// Menampilkan brand (websiteName), tautan navigasi internal ke section, dan
+// WhatsApp_CTA. Tidak memuat <h1> (h1 tunggal ada di Hero, Property 13) —
+// brand dirender sebagai teks non-heading. Tautan nav menunjuk ke id heading
+// section; bila section ter-Auto-Hide, anchor tetap aman (tidak error). CTA
+// hanya tampil bila nomor valid (R4.4). Warna via var(--token)/color-mix saja
+// (R6.4). Gaya Bloom & Bone: dot brand + nama serif, nav tengah, CTA pil gelap.
+import type { SiteContent } from '../types.ts';
+import { buildWaUrl, isValidWaNumber } from '../lib/whatsapp.ts';
+
+interface Props {
+  content: SiteContent;
+}
+
+const { content } = Astro.props;
+const waValid = isValidWaNumber(content.waNumber);
+const waHref = buildWaUrl(content.waNumber, content.waMessage);
+
+const navLinks = [
+  { href: '#services-h', label: 'Layanan' },
+  { href: '#about-h', label: 'Tentang' },
+  { href: '#gallery-h', label: 'Galeri' },
+  { href: '#contact-h', label: 'Kontak' },
+];
+---
+
+<header class="site-nav">
+  <div class="container nav-inner">
+    <a class="brand" href="#hero-h" aria-label={content.websiteName}>
+      <span class="brand-dot" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 20c0-4.5.7-7.6 2.9-9.8C16.9 8.2 19 7.6 19 7.6s.2 2.7-1.4 5C15.8 14.8 13.4 15.3 12 15.3Z" />
+          <path d="M12 20c0-3.8-.6-6.3-2.4-8.3C7.7 9.9 5.6 9.3 5.6 9.3s-.2 2.4 1.2 4.5C8.4 15.6 10.6 16 12 16Z" />
+          <path d="M12 20v-4.5" />
+        </svg>
+      </span>
+      <span class="brand-name">{content.websiteName}</span>
+    </a>
+
+    <nav class="nav-links" aria-label="Navigasi utama">
+      {navLinks.map((l) => <a href={l.href}>{l.label}</a>)}
+    </nav>
+
+    {
+      waValid && (
+        <a
+          class="nav-cta"
+          href={waHref}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Hubungi kami via WhatsApp"
+        >
+          Buat Janji
+        </a>
+      )
+    }
+  </div>
+</header>
+
+<style>
+  .site-nav {
+    position: sticky;
+    top: 0;
+    z-index: 60;
+    background: color-mix(in srgb, var(--paper) 88%, transparent);
+    backdrop-filter: blur(12px) saturate(1.1);
+    -webkit-backdrop-filter: blur(12px) saturate(1.1);
+    border-bottom: 1px solid var(--hairline);
+  }
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: 66px;
+    padding-block: 0.5rem;
+  }
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .brand-dot {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--ink);
+    color: var(--on-ink);
+  }
+  .brand-name {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 1.12rem;
+    letter-spacing: -0.01em;
+    max-width: 18ch;
+    line-height: 1.1;
+  }
+  .nav-links {
+    display: none;
+    align-items: center;
+    gap: 0.4rem;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  .nav-links a {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 0.82rem;
+    color: var(--ink-soft);
+    text-decoration: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: var(--radius-pill);
+    transition:
+      color 0.2s ease,
+      background 0.2s ease;
+  }
+  .nav-links a:hover {
+    color: var(--ink);
+    background: var(--card);
+  }
+  .nav-cta {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    padding: 0.55rem 1.3rem;
+    border-radius: var(--radius-pill);
+    background: var(--ink);
+    color: var(--on-ink);
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 0.82rem;
+    text-decoration: none;
+    transition:
+      transform 0.2s ease,
+      background 0.2s ease;
+  }
+  .nav-cta:hover {
+    transform: translateY(-1px);
+    background: color-mix(in srgb, var(--ink) 86%, var(--accent));
+  }
+  @media (min-width: 880px) {
+    .nav-links {
+      display: flex;
+    }
+  }
+  @media (max-width: 460px) {
+    .nav-cta {
+      display: none;
+    }
+  }
+</style>

@@ -9,7 +9,13 @@
 //   - Menyediakan <slot /> untuk section. Tepat satu <h1> berada di Hero,
 //     bukan di sini (Property 13).
 //
-// Warna global (body background/text) diset dari CSS var hasil palette.
+// Identitas visual calm-warm (R7.3): editorial "warm studio" — paper krem
+// hangat, judul serif Fraunces, tubuh sans humanis (Mulish). Aksen terakota
+// (palette) dipadu dua warna pendamping TETAP: sage hijau lembut & arang
+// hangat (ink). Tenang tapi punya karakter: kartu bertumpuk, pita marquee,
+// pull-quote sage, blok ajakan gelap. File ini adalah SATU-SATUNYA lapisan
+// token: nilai warna literal hanya boleh muncul di sini (didukung discipline
+// test); seluruh komponen memakai var(--token)/color-mix di atasnya (R6.4).
 import type { SiteContent } from '../types.ts';
 import palettes, { DEFAULT_PALETTE_ID } from '../palettes.ts';
 import { resolvePalette, paletteToCssVars } from '../lib/palette.ts';
@@ -31,41 +37,98 @@ const cssVars = paletteToCssVars(palette);
     <meta name="description" content={content.description} />
     <title>{content.websiteName}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Mulish:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
     <slot />
     <style is:global>
       :root {
-        --max-width: 1120px;
+        --max-width: 1140px;
         --space: 1rem;
-        /* calm-warm: bentuk lembut/soft — sudut membulat (R7.3). */
-        --radius: 16px;
-        --shadow: 0 8px 24px rgba(58, 36, 21, 0.14);
+
+        /* Sudut membulat editorial (R7.3). */
+        --radius: 20px;
+        --radius-sm: 12px;
+        --radius-lg: 30px;
+        --radius-pill: 999px;
+
+        /* ── Warna pendamping TETAP (di luar palette) ──────────────────
+           Paper krem hangat, sage hijau menenangkan, arang hangat (ink).
+           Hanya boleh didefinisikan di sini (R6.4). */
+        --paper: #f4ece2;
+        --paper-2: #efe5d8;
+        --card: #faf4ec;
+        --ink: #2b2722;
+        --ink-soft: #6f675c;
+        --sage: #7e8c6a;
+        --sage-deep: #5f6b4d;
+        --sage-tint: #e4e7d6;
+        --cream-line: #e0d5c5;
+
+        /* Teks di atas permukaan gelap/sage. */
+        --on-ink: #f4ece2;
+        --on-sage: #f7f3e8;
+        --on-accent: #fbf5ec;
+
+        /* Aksen terakota berasal dari palette (R6.x): --accent. Turunannya: */
+        --accent-soft: color-mix(in srgb, var(--accent) 14%, var(--paper));
+        --accent-softer: color-mix(in srgb, var(--accent) 7%, var(--paper));
+        --hairline: var(--cream-line);
+        --hairline-strong: color-mix(in srgb, var(--ink) 14%, transparent);
+
+        /* Bayangan rendah & hangat — kesan kartu kertas bertumpuk. */
+        --shadow-sm: 0 4px 14px -8px color-mix(in srgb, var(--ink) 50%, transparent);
+        --shadow: 0 16px 36px -22px color-mix(in srgb, var(--ink) 55%, transparent);
+        --shadow-lg: 0 30px 60px -28px color-mix(in srgb, var(--ink) 60%, transparent);
+
+        --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
         --font-sans:
-          system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial,
-          sans-serif;
+          'Mulish', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica,
+          Arial, sans-serif;
       }
       * {
         box-sizing: border-box;
       }
       html {
         font-family: var(--font-sans);
-        color: var(--text);
-        background: var(--background);
+        color: var(--ink);
+        background: var(--paper);
         scroll-behavior: smooth;
       }
       body {
         margin: 0;
-        background: var(--background);
-        color: var(--text);
-        line-height: 1.6;
+        background-color: var(--paper);
+        /* Tekstur grain halus + dua noda krem lembut untuk kedalaman. */
+        background-image:
+          radial-gradient(
+            900px 480px at 88% -6%,
+            var(--accent-softer),
+            transparent 60%
+          ),
+          radial-gradient(
+            760px 420px at -8% 12%,
+            color-mix(in srgb, var(--sage) 12%, transparent),
+            transparent 62%
+          ),
+          url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+        background-attachment: fixed, fixed, fixed;
+        color: var(--ink);
+        line-height: 1.7;
         overflow-x: hidden;
       }
       h1,
       h2,
-      h3 {
-        line-height: 1.2;
-        color: var(--text);
+      h3,
+      h4 {
+        font-family: var(--font-display);
+        font-weight: 400;
+        line-height: 1.06;
+        color: var(--ink);
+        letter-spacing: -0.015em;
       }
       a {
         color: var(--accent);
@@ -79,15 +142,102 @@ const cssVars = paletteToCssVars(palette);
         width: 100%;
         max-width: var(--max-width);
         margin-inline: auto;
-        padding-inline: clamp(1rem, 4vw, 2rem);
+        padding-inline: clamp(1.1rem, 5vw, 3.25rem);
+        position: relative;
+        z-index: 1;
       }
       section {
-        padding-block: clamp(2.5rem, 6vw, 4.5rem);
+        padding-block: clamp(2.75rem, 6vw, 5rem);
+        position: relative;
+      }
+      /* Kicker pill bersama: kapsul mungil huruf-kapital berspasi. */
+      .kicker {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-family: var(--font-sans);
+        font-weight: 700;
+        font-size: 0.66rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--ink-soft);
+        background: var(--card);
+        border: 1px solid var(--hairline);
+        padding: 0.4rem 0.85rem;
+        border-radius: var(--radius-pill);
+        margin: 0 0 1.25rem;
+      }
+      .kicker::before {
+        content: '';
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--accent);
+      }
+      .section-title {
+        font-size: clamp(1.9rem, 4.5vw, 2.9rem);
+        font-weight: 400;
+        margin: 0;
+      }
+      .section-lead {
+        color: var(--ink-soft);
+        margin: 0;
+        font-size: clamp(1rem, 2vw, 1.1rem);
+        max-width: 44ch;
       }
       :where(a, button, [tabindex]):focus-visible {
-        outline: 3px solid var(--accent);
-        outline-offset: 2px;
+        outline: 2px solid var(--accent);
+        outline-offset: 3px;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+      }
+
+      /* ── Fade-in per section saat masuk viewport ──────────────────────
+         Hanya disembunyikan bila JS aktif (html.reveal-ready ditambah oleh
+         skrip). Tanpa JS → section tetap tampil (tak ada risiko blank).
+         Atas permintaan, animasi tetap jalan meski reduce-motion. */
+      .reveal-ready section {
+        opacity: 0;
+        transform: translateY(26px);
+        transition:
+          opacity 0.7s ease,
+          transform 0.7s ease;
+        will-change: opacity, transform;
+      }
+      .reveal-ready section.is-visible {
+        opacity: 1;
+        transform: none;
       }
     </style>
+    <script is:inline>
+      document.documentElement.classList.add('reveal-ready');
+      const revealEls = document.querySelectorAll('section');
+      const reveal = (el) => el.classList.add('is-visible');
+      if ('IntersectionObserver' in window) {
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (entry.isIntersecting) {
+                reveal(entry.target);
+                io.unobserve(entry.target);
+              }
+            }
+          },
+          { threshold: 0.12, rootMargin: '0px 0px -8% 0px' },
+        );
+        // Tunda observe satu frame agar state opacity:0 ke-paint dulu; tanpa ini
+        // section above-the-fold (Hero, TrustBar) di-set is-visible di frame yang
+        // sama → muncul instan tanpa transisi. Dengan rAF, section atas ikut
+        // fade-in saat load, sisanya tetap fade saat di-scroll masuk viewport.
+        requestAnimationFrame(() => {
+          revealEls.forEach((el) => io.observe(el));
+        });
+      } else {
+        revealEls.forEach(reveal);
+      }
+    </script>
   </body>
 </html>

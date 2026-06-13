@@ -2,7 +2,13 @@
 // components/Testimonials.astro — section 7, Auto-Hide (R3.10, R3.12, R5.3).
 //
 // Guard: testimonials kosong → return null (R5.3). Render SELURUH entri
-// (Property 8). Warna via CSS var saja (R6.4).
+// (Property 8). Gaya Bloom & Bone: kartu kutipan bergulir kanan→kiri sebagai
+// marquee infinite. Track digandakan untuk loop mulus; salinan kedua
+// aria-hidden & memakai kelas berbeda (testi-card-dup) agar tidak ikut terhitung
+// sebagai token class="testi-card" (Property 8). Warna kartu bergiliran via
+// :nth-child (arang/sage/krem). Marquee pause saat hover/fokus; dihormati
+// prefers-reduced-motion (jadi grid statis yang bisa di-scroll). Warna via CSS
+// var saja (R6.4).
 import type { Testimonial } from '../types.ts';
 import { isEmptyList } from '../lib/empty.ts';
 
@@ -17,13 +23,35 @@ const testimonials = items as Testimonial[];
 
 <section class="testimonials" aria-labelledby="testimonials-h">
   <div class="container">
-    <h2 id="testimonials-h">Apa Kata Mereka</h2>
-    <ul class="testi-grid" role="list">
+    <div class="testi-head">
+      <span class="kicker">Testimoni</span>
+      <h2 id="testimonials-h" class="section-title">Cerita dari keluarga</h2>
+    </div>
+  </div>
+  <div class="testi-marquee">
+    <ul class="testi-track" role="list">
       {
         testimonials.map((t) => (
           <li class="testi-card">
+            <span class="testi-mark" aria-hidden="true">
+              &ldquo;
+            </span>
             <blockquote class="testi-quote">{t.text}</blockquote>
-            <p class="testi-meta">
+            <p class="testi-by">
+              <span class="testi-name">{t.name}</span>
+              {t.role && <span class="testi-role">{t.role}</span>}
+            </p>
+          </li>
+        ))
+      }
+    </ul>
+    <ul class="testi-track" role="list" aria-hidden="true">
+      {
+        testimonials.map((t) => (
+          <li class="testi-card-dup">
+            <span class="testi-mark">&ldquo;</span>
+            <blockquote class="testi-quote">{t.text}</blockquote>
+            <p class="testi-by">
               <span class="testi-name">{t.name}</span>
               {t.role && <span class="testi-role">{t.role}</span>}
             </p>
@@ -35,43 +63,125 @@ const testimonials = items as Testimonial[];
 </section>
 
 <style>
-  .testimonials {
-    background: var(--surface);
+  .testi-head {
+    margin-bottom: clamp(1.5rem, 3vw, 2.25rem);
   }
-  .testimonials h2 {
-    font-size: clamp(1.5rem, 4vw, 2.1rem);
-    margin: 0 0 1.5rem;
+  .testi-marquee {
+    display: flex;
+    width: 100%;
+    max-width: var(--max-width);
+    margin-inline: auto;
+    padding-inline: clamp(1.1rem, 5vw, 3.25rem);
+    overflow: hidden;
+    gap: 1.1rem;
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent,
+      var(--ink) 6%,
+      var(--ink) 94%,
+      transparent
+    );
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      var(--ink) 6%,
+      var(--ink) 94%,
+      transparent
+    );
   }
-  .testi-grid {
+  .testi-track {
     list-style: none;
     margin: 0;
-    padding: 0;
-    display: grid;
-    gap: 1.25rem;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    padding: 0.5rem 0;
+    display: flex;
+    flex: none;
+    align-items: stretch;
+    gap: 1.1rem;
+    padding-left: 1.1rem;
+    animation: testi-marquee 44s linear infinite;
   }
-  .testi-card {
-    background: var(--background);
-    border-radius: var(--radius);
-    padding: 1.5rem;
-    border: 1px solid var(--surface);
+  .testi-marquee:hover .testi-track,
+  .testi-marquee:focus-within .testi-track {
+    animation-play-state: paused;
   }
-  .testi-quote {
-    margin: 0 0 1rem;
-    color: var(--text);
-    font-style: italic;
-  }
-  .testi-meta {
-    margin: 0;
+  .testi-card,
+  .testi-card-dup {
+    position: relative;
+    flex: none;
+    width: clamp(270px, 80vw, 360px);
     display: flex;
     flex-direction: column;
+    gap: 1.25rem;
+    border-radius: var(--radius);
+    padding: 1.85rem 1.65rem 1.5rem;
+    overflow: hidden;
+  }
+  /* Rotasi warna via posisi — sage, krem, arang. Berlaku untuk kedua kelas
+     agar salinan duplikat tampak identik. */
+  .testi-card:nth-child(3n + 1),
+  .testi-card-dup:nth-child(3n + 1) {
+    background: var(--sage);
+    color: var(--on-sage);
+  }
+  .testi-card:nth-child(3n + 2),
+  .testi-card-dup:nth-child(3n + 2) {
+    background: var(--card);
+    border: 1px solid var(--hairline);
+    color: var(--ink);
+  }
+  .testi-card:nth-child(3n + 3),
+  .testi-card-dup:nth-child(3n + 3) {
+    background: var(--ink);
+    color: var(--on-ink);
+  }
+  .testi-mark {
+    font-family: var(--font-display);
+    font-size: 3.5rem;
+    line-height: 0.6;
+    height: 1.4rem;
+    color: var(--accent);
+  }
+  .testi-card:nth-child(3n + 1) .testi-mark,
+  .testi-card:nth-child(3n + 3) .testi-mark,
+  .testi-card-dup:nth-child(3n + 1) .testi-mark,
+  .testi-card-dup:nth-child(3n + 3) .testi-mark {
+    color: color-mix(in srgb, currentColor 65%, transparent);
+  }
+  .testi-quote {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 1.18rem;
+    line-height: 1.45;
+    flex: 1;
+  }
+  .testi-by {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    margin: 0;
   }
   .testi-name {
-    font-weight: 600;
-    color: var(--text);
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 0.92rem;
   }
   .testi-role {
-    font-size: 0.875rem;
-    color: var(--muted);
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
+    opacity: 0.7;
   }
+  @keyframes testi-marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-100%);
+    }
+  }
+  /* Catatan: guard prefers-reduced-motion sengaja DILEPAS atas permintaan —
+     marquee tetap bergulir meski OS/user meminta reduce-motion (mis. Windows
+     "Adjust for best performance"). Mengorbankan preferensi aksesibilitas
+     motion demi animasi yang selalu hidup. */
+
 </style>

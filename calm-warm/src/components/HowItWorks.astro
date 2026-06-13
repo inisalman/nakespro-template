@@ -2,7 +2,9 @@
 // components/HowItWorks.astro — section 6, Auto-Hide (R3.9, R3.12, R5.3).
 //
 // Guard: howItWorks kosong → return null (R5.3). Render SELURUH entri terurut
-// sesuai urutan pada data (Property 8). Warna via CSS var saja (R6.4).
+// sesuai urutan pada data (Property 8). Gaya Bloom & Bone: langkah bernomor
+// editorial dalam grid bergaris, angka serif besar. Warna via CSS var saja
+// (R6.4).
 import type { HowItWorksStep } from '../types.ts';
 import { isEmptyList } from '../lib/empty.ts';
 
@@ -17,7 +19,10 @@ const howItWorks = steps as HowItWorksStep[];
 
 <section class="how" aria-labelledby="how-h">
   <div class="container">
-    <h2 id="how-h">Cara Kerja</h2>
+    <div class="how-head">
+      <span class="kicker">Cara Kerja</span>
+      <h2 id="how-h" class="section-title">Mulai dengan tenang</h2>
+    </div>
     <ol class="how-list">
       {
         howItWorks.map((s) => (
@@ -37,44 +42,58 @@ const howItWorks = steps as HowItWorksStep[];
 </section>
 
 <style>
-  .how {
-    background: var(--background);
-  }
-  .how h2 {
-    font-size: clamp(1.5rem, 4vw, 2.1rem);
-    margin: 0 0 1.5rem;
+  .how-head {
+    margin-bottom: clamp(1.5rem, 3vw, 2.25rem);
   }
   .how-list {
     list-style: none;
     margin: 0;
     padding: 0;
     display: grid;
-    gap: 1.25rem;
-    counter-reset: step;
+    gap: 0;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    border-top: 1px solid var(--hairline);
   }
   .how-step {
     display: flex;
-    gap: 1rem;
-    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.9rem;
+    padding: 1.6rem 1.4rem 1.6rem 0;
+    border-bottom: 1px solid var(--hairline);
   }
   .how-num {
-    flex: none;
-    width: 2.25rem;
-    height: 2.25rem;
-    border-radius: 50%;
-    background: var(--accent);
-    color: var(--background);
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    font-weight: 700;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    background: var(--accent-soft);
+    border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+    color: var(--accent);
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 1.25rem;
   }
   .how-title {
-    margin: 0 0 0.25rem;
-    font-size: 1.1rem;
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 1.25rem;
   }
   .how-desc {
     margin: 0;
-    color: var(--muted);
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+  @media (min-width: 640px) {
+    .how-step {
+      padding-inline: clamp(1rem, 2vw, 1.75rem);
+      border-right: 1px solid var(--hairline);
+    }
+    .how-step:first-child {
+      padding-left: 0;
+    }
   }
 </style>

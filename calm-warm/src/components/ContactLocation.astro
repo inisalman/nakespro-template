@@ -9,16 +9,23 @@
 //   - Bila googleMaps kosong tapi sub-field lain ada: section tetap tampil
 //     dengan indikasi peta tidak tersedia (R3.14).
 //   - Iframe Maps punya title tidak kosong (accessible name) (R11.6).
-// Warna via CSS var saja (R6.4).
+// Gaya Bloom & Bone: blok kontak ber-ikon + peta berbingkai, ditutup band
+// ajakan gelap (arang) dengan tombol pil terakota. CTA WhatsApp hanya tampil
+// bila nomor valid (R4.4); band tetap menyatu dalam section kontak (tak ada
+// slot section baru). Warna via CSS var saja (R6.4).
 import { isEmptyText } from '../lib/empty.ts';
+import { buildWaUrl, isValidWaNumber } from '../lib/whatsapp.ts';
 
 interface Props {
   practiceHours?: string;
   location?: string;
   googleMaps?: string;
+  waNumber?: string;
+  waMessage?: string;
 }
 
-const { practiceHours, location, googleMaps } = Astro.props;
+const { practiceHours, location, googleMaps, waNumber, waMessage } =
+  Astro.props;
 
 const hasHours = !isEmptyText(practiceHours);
 const hasLocation = !isEmptyText(location);
@@ -29,82 +36,152 @@ if (!hasHours && !hasLocation && !hasMaps) return null;
 // Sub-field non-maps menentukan apakah indikasi "peta tidak tersedia"
 // ditampilkan (hanya bila ada konteks kontak lain namun maps kosong, R3.14).
 const showMapUnavailable = !hasMaps && (hasHours || hasLocation);
+
+const waValid = isValidWaNumber(waNumber ?? '');
+const waHref = waValid ? buildWaUrl(waNumber as string, waMessage) : '';
 ---
 
 <section class="contact" aria-labelledby="contact-h">
-  <div class="container contact-grid">
-    <div class="contact-info">
-      <h2 id="contact-h">Kontak &amp; Lokasi</h2>
+  <div class="container">
+    <div class="contact-card">
+      <div class="contact-grid">
+        <div class="contact-info">
+          <span class="kicker">Kontak</span>
+          <h2 id="contact-h" class="contact-title">Kontak &amp; Lokasi</h2>
+          {
+            hasHours && (
+              <div class="contact-block">
+                <span class="contact-ic" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="9" />
+                    <path d="M12 7v5l3 2" />
+                  </svg>
+                </span>
+                <div>
+                  <h3 class="contact-label">Jam Praktik</h3>
+                  <p class="contact-value">{practiceHours}</p>
+                </div>
+              </div>
+            )
+          }
+          {
+            hasLocation && (
+              <div class="contact-block">
+                <span class="contact-ic" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 21s-7-5.6-7-11a7 7 0 0 1 14 0c0 5.4-7 11-7 11Z" />
+                    <circle cx="12" cy="10" r="2.5" />
+                  </svg>
+                </span>
+                <div>
+                  <h3 class="contact-label">Area Layanan</h3>
+                  <p class="contact-value">{location}</p>
+                </div>
+              </div>
+            )
+          }
+          {
+            showMapUnavailable && (
+              <p class="map-unavailable">Peta lokasi tidak tersedia saat ini.</p>
+            )
+          }
+        </div>
+        {
+          hasMaps && (
+            <div class="contact-map">
+              <iframe
+                src={googleMaps}
+                title="Peta lokasi praktik"
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+                allowfullscreen
+              />
+            </div>
+          )
+        }
+      </div>
+    </div>
+
+    <div class="cta-band">
+      <h2 class="cta-title">Siap memulai pendampingan yang tenang?</h2>
+      <p class="cta-sub">
+        Hubungi kami untuk konsultasi awal — kami bantu menyusun rencana
+        perawatan yang sesuai untuk keluarga Anda.
+      </p>
       {
-        hasHours && (
-          <div class="contact-block">
-            <h3 class="contact-label">Jam Praktik</h3>
-            <p class="contact-value">{practiceHours}</p>
-          </div>
-        )
-      }
-      {
-        hasLocation && (
-          <div class="contact-block">
-            <h3 class="contact-label">Area Layanan</h3>
-            <p class="contact-value">{location}</p>
-          </div>
-        )
-      }
-      {
-        showMapUnavailable && (
-          <p class="map-unavailable">Peta lokasi tidak tersedia saat ini.</p>
+        waValid && (
+          <a
+            class="cta-btn"
+            href={waHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Hubungi kami via WhatsApp"
+          >
+            Hubungi via WhatsApp
+          </a>
         )
       }
     </div>
-    {
-      hasMaps && (
-        <div class="contact-map">
-          <iframe
-            src={googleMaps}
-            title="Peta lokasi praktik"
-            loading="lazy"
-            referrerpolicy="no-referrer-when-downgrade"
-            allowfullscreen
-          />
-        </div>
-      )
-    }
   </div>
 </section>
 
 <style>
-  .contact {
-    background: var(--surface);
+  .contact-card {
+    background: var(--card);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-lg);
+    padding: clamp(1.75rem, 4vw, 3rem);
+    box-shadow: var(--shadow-sm);
   }
   .contact-grid {
     display: grid;
-    gap: 2rem;
-    align-items: start;
+    gap: 2.5rem;
+    align-items: center;
   }
   @media (min-width: 768px) {
     .contact-grid {
       grid-template-columns: 1fr 1fr;
     }
   }
-  .contact h2 {
-    font-size: clamp(1.5rem, 4vw, 2.1rem);
-    margin: 0 0 1.25rem;
+  .contact-title {
+    font-size: clamp(1.7rem, 4vw, 2.5rem);
+    font-weight: 400;
+    margin: 0 0 1.75rem;
   }
   .contact-block {
-    margin-bottom: 1.25rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .contact-block:last-of-type {
+    margin-bottom: 0;
+  }
+  .contact-ic {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: var(--accent-soft);
+    color: var(--accent);
+    border: 1px solid color-mix(in srgb, var(--accent) 28%, transparent);
   }
   .contact-label {
-    font-size: 1rem;
-    color: var(--muted);
-    margin: 0 0 0.25rem;
+    font-size: 1.05rem;
+    font-family: var(--font-display);
+    font-weight: 500;
+    color: var(--ink);
+    margin: 0 0 0.2rem;
   }
   .contact-value {
     margin: 0;
-    color: var(--text);
+    color: var(--ink-soft);
   }
   .map-unavailable {
-    color: var(--muted);
+    color: var(--ink-soft);
     font-style: italic;
   }
   .contact-map {
@@ -113,6 +190,8 @@ const showMapUnavailable = !hasMaps && (hasHours || hasLocation);
     aspect-ratio: 4 / 3;
     border-radius: var(--radius);
     overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--hairline);
   }
   .contact-map iframe {
     position: absolute;
@@ -120,5 +199,54 @@ const showMapUnavailable = !hasMaps && (hasHours || hasLocation);
     width: 100%;
     height: 100%;
     border: 0;
+  }
+
+  /* Band ajakan gelap — penutup dramatis ala Bloom & Bone. */
+  .cta-band {
+    margin-top: 1.1rem;
+    background: var(--ink);
+    color: var(--on-ink);
+    border-radius: var(--radius-lg);
+    padding: clamp(2.25rem, 5vw, 3.5rem);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.85rem;
+  }
+  .cta-title {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(1.7rem, 4.5vw, 2.8rem);
+    line-height: 1.08;
+    margin: 0;
+    max-width: 18ch;
+  }
+  .cta-sub {
+    margin: 0;
+    color: color-mix(in srgb, var(--on-ink) 72%, transparent);
+    max-width: 46ch;
+    font-size: 1rem;
+  }
+  .cta-btn {
+    margin-top: 0.85rem;
+    display: inline-flex;
+    align-items: center;
+    min-height: 52px;
+    padding: 0.9rem 2rem;
+    border-radius: var(--radius-pill);
+    background: var(--accent);
+    color: var(--on-accent);
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition:
+      transform 0.2s ease,
+      box-shadow 0.2s ease;
+  }
+  .cta-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
   }
 </style>

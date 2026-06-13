@@ -5,11 +5,12 @@
 // Aturan render:
 //   - Section dirender bila ada ≥1 foto di kategori mana pun; bila semua
 //     kategori kosong → return null (R5.3).
-//   - Hanya grup kategori tidak kosong yang dirender; grup kosong disembunyikan
-//     (R3.13). Urutan kategori tetap: nakes, ruangan, alat, hasil.
+//   - SELURUH foto digabung ke SATU grid tunggal (tanpa sub-heading kategori).
+//     Urutan tetap: nakes, ruangan, alat, hasil (R3.13).
 //   - Tiap gambar: width/height eksplisit, loading="lazy" (below-the-fold,
 //     R10.8 Property 14), format modern (.webp di public/images), alt via
 //     resolveAltText (R11.1).
+// Gaya Bloom & Bone: bingkai foto krem, caption muncul halus saat hover/fokus.
 // Warna via CSS var saja (R6.4).
 import type { PhotoSet } from '../types.ts';
 import { isEmptyList } from '../lib/empty.ts';
@@ -19,72 +20,52 @@ interface Props {
   photos?: PhotoSet;
 }
 
-const LABELS: Record<keyof PhotoSet, string> = {
-  nakes: 'Tenaga Kesehatan',
-  ruangan: 'Ruangan',
-  alat: 'Peralatan',
-  hasil: 'Hasil',
-};
 const ORDER: (keyof PhotoSet)[] = ['nakes', 'ruangan', 'alat', 'hasil'];
 
 const { photos } = Astro.props;
 
-const groups = photos
-  ? ORDER.filter((cat) => !isEmptyList(photos[cat])).map((cat) => ({
-      cat,
-      label: LABELS[cat],
-      items: photos[cat],
-    }))
+const items = photos
+  ? ORDER.filter((cat) => !isEmptyList(photos[cat])).flatMap(
+      (cat) => photos[cat] ?? [],
+    )
   : [];
 
-if (groups.length === 0) return null;
+if (items.length === 0) return null;
 ---
 
 <section class="gallery" aria-labelledby="gallery-h">
   <div class="container">
-    <h2 id="gallery-h">Galeri</h2>
-    {
-      groups.map((group) => (
-        <div class="gallery-group">
-          <h3 class="gallery-cat">{group.label}</h3>
-          <ul class="gallery-grid" role="list">
-            {group.items.map((photo) => (
-              <li class="gallery-item">
-                <img
-                  src={`/images/${photo.url}`}
-                  alt={resolveAltText(photo)}
-                  width="400"
-                  height="300"
-                  loading="lazy"
-                  decoding="async"
-                />
-                {photo.caption && (
-                  <figcaption class="gallery-cap">{photo.caption}</figcaption>
-                )}
-              </li>
-            ))}
-          </ul>
-        </div>
-      ))
-    }
+    <div class="gallery-head">
+      <span class="kicker">Dokumentasi</span>
+      <h2 id="gallery-h" class="section-title">Galeri</h2>
+    </div>
+    <ul class="gallery-grid" role="list">
+      {
+        items.map((photo) => (
+          <li class="gallery-item">
+            <figure class="gallery-fig">
+              <img
+                src={`/images/${photo.url}`}
+                alt={resolveAltText(photo)}
+                width="400"
+                height="300"
+                loading="lazy"
+                decoding="async"
+              />
+              {photo.caption && (
+                <figcaption class="gallery-cap">{photo.caption}</figcaption>
+              )}
+            </figure>
+          </li>
+        ))
+      }
+    </ul>
   </div>
 </section>
 
 <style>
-  .gallery {
-    background: var(--background);
-  }
-  .gallery h2 {
-    font-size: clamp(1.5rem, 4vw, 2.1rem);
-    margin: 0 0 1.5rem;
-  }
-  .gallery-group {
-    margin-bottom: 2rem;
-  }
-  .gallery-cat {
-    font-size: 1.1rem;
-    color: var(--muted);
-    margin: 0 0 0.75rem;
+  .gallery-head {
+    margin-bottom: clamp(1.5rem, 3vw, 2.25rem);
   }
   .gallery-grid {
     list-style: none;
@@ -92,20 +73,56 @@ if (groups.length === 0) return null;
     padding: 0;
     display: grid;
     gap: 1rem;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   }
   .gallery-item {
     margin: 0;
   }
-  .gallery-item img {
-    width: 100%;
-    height: auto;
+  .gallery-fig {
+    position: relative;
+    margin: 0;
     border-radius: var(--radius);
+    overflow: hidden;
+    border: 1px solid var(--hairline);
+    box-shadow: var(--shadow-sm);
+    aspect-ratio: 4 / 3;
+    background: var(--card);
+  }
+  .gallery-fig img {
+    width: 100%;
+    height: 100%;
     object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+  .gallery-fig:hover img {
+    transform: scale(1.05);
   }
   .gallery-cap {
-    font-size: 0.8125rem;
-    color: var(--muted);
-    margin-top: 0.4rem;
+    position: absolute;
+    inset: auto 0 0 0;
+    padding: 1.75rem 1rem 0.85rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--on-ink);
+    background: linear-gradient(
+      to top,
+      color-mix(in srgb, var(--ink) 82%, transparent),
+      transparent
+    );
+    opacity: 0;
+    transform: translateY(8px);
+    transition:
+      opacity 0.3s ease,
+      transform 0.3s ease;
+  }
+  .gallery-fig:hover .gallery-cap,
+  .gallery-fig:focus-within .gallery-cap {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .gallery-fig img {
+      transition: none;
+    }
   }
 </style>
