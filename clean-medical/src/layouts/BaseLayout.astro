@@ -1,15 +1,18 @@
 ---
-// layouts/BaseLayout.astro — shell semantik + injeksi palette.
+// layouts/BaseLayout.astro — shell semantik + injeksi palette + design token.
 //
 // Tanggung jawab (R6.3, R6.4, R11.2):
 //   - Menyusun shell HTML semantik dengan <html lang="id"> (R11.2).
 //   - Me-resolve Palette_Preset terpilih lalu inject CSS custom properties
 //     pada <html> via atribut style (R6.3). Komponen lain hanya memakai
 //     var(--token) sehingga bebas warna literal (R6.4).
+//   - Lapisan ini (di layouts/, dikecualikan dari disiplin literal R6.4)
+//     mendefinisikan token desain tingkat lanjut: warna brand "lime" & "ink"
+//     (gaya health-tech terang dari referensi), tint turunan accent via
+//     color-mix(), bayangan netral lembut, radius besar, plus tipografi
+//     (Sora display + Plus Jakarta Sans body) dan keyframe motion.
 //   - Menyediakan <slot /> untuk section. Tepat satu <h1> berada di Hero,
 //     bukan di sini (Property 13).
-//
-// Warna global (body background/text) diset dari CSS var hasil palette.
 import type { SiteContent } from '../types.ts';
 import palettes, { DEFAULT_PALETTE_ID } from '../palettes.ts';
 import { resolvePalette, paletteToCssVars } from '../lib/palette.ts';
@@ -31,62 +34,186 @@ const cssVars = paletteToCssVars(palette);
     <meta name="description" content={content.description} />
     <title>{content.websiteName}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+    />
   </head>
   <body>
-    <slot />
+    <div class="page-shell">
+      <slot />
+    </div>
     <style is:global>
       :root {
-        --max-width: 1120px;
+        --max-width: 1200px;
         --space: 1rem;
-        /* clean-medical: bentuk tegas/teknis — sudut tajam (R7.2). */
-        --radius: 4px;
-        --shadow: 0 4px 14px rgba(8, 36, 51, 0.12);
+
+        /* Gaya health-tech terang: sudut membulat ramah. */
+        --radius-sm: 12px;
+        --radius: 20px;
+        --radius-lg: 30px;
+        --radius-pill: 999px;
+
+        /* Tipografi: display geometric (Sora) + body humanist (Jakarta). */
+        --font-display: 'Sora', system-ui, -apple-system, 'Segoe UI', sans-serif;
         --font-sans:
-          system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial,
-          sans-serif;
+          'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', Roboto,
+          Helvetica, Arial, sans-serif;
+
+        /* — Warna brand (literal diizinkan di layouts/, di luar disiplin R6.4) —
+           Lime adalah aksen sekunder khas referensi; terlalu terang untuk jadi
+           token kontras (accent tetap biru dari palette). Ink = pill gelap. */
+        --lime: #c6f24e;
+        --lime-strong: #b6e739;
+        --lime-ink: #16240a;
+        --ink: #0e1726;
+        --ink-soft: #1b2436;
+        --on-ink: #f5f7fb;
+
+        /* — Token turunan dari palette (color-mix) — */
+        --accent-strong: color-mix(in srgb, var(--accent) 80%, #06183c);
+        --accent-soft: color-mix(in srgb, var(--accent) 12%, var(--background));
+        --accent-tint: color-mix(in srgb, var(--accent) 7%, var(--background));
+        --on-accent: #ffffff;
+
+        --line: color-mix(in srgb, var(--text) 10%, var(--background));
+        --line-strong: color-mix(in srgb, var(--text) 18%, var(--background));
+        --hairline: color-mix(in srgb, var(--text) 8%, transparent);
+
+        --surface-2: color-mix(in srgb, var(--surface) 60%, var(--background));
+        --surface-raised: #ffffff;
+        --text-soft: color-mix(in srgb, var(--text) 68%, var(--background));
+
+        /* Bayangan netral lembut ala kartu health-tech. */
+        --shadow-sm:
+          0 1px 2px rgba(15, 23, 42, 0.04),
+          0 4px 12px rgba(15, 23, 42, 0.05);
+        --shadow:
+          0 6px 18px rgba(15, 23, 42, 0.06),
+          0 18px 40px -18px rgba(15, 23, 42, 0.12);
+        --shadow-lg:
+          0 12px 28px rgba(15, 23, 42, 0.08),
+          0 40px 80px -30px rgba(15, 23, 42, 0.2);
       }
+
       * {
         box-sizing: border-box;
       }
+
       html {
         font-family: var(--font-sans);
         color: var(--text);
         background: var(--background);
         scroll-behavior: smooth;
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
       }
+
       body {
         margin: 0;
         background: var(--background);
         color: var(--text);
         line-height: 1.6;
         overflow-x: hidden;
+        position: relative;
       }
+
+      .page-shell {
+        position: relative;
+        z-index: 1;
+      }
+
       h1,
       h2,
       h3 {
-        line-height: 1.2;
+        font-family: var(--font-display);
+        line-height: 1.1;
         color: var(--text);
+        letter-spacing: -0.02em;
+        font-weight: 700;
       }
+
+      p {
+        text-wrap: pretty;
+      }
+
       a {
-        color: var(--accent);
+        color: var(--accent-strong);
       }
+
       img {
         max-width: 100%;
         height: auto;
         display: block;
       }
+
       .container {
         width: 100%;
         max-width: var(--max-width);
         margin-inline: auto;
-        padding-inline: clamp(1rem, 4vw, 2rem);
+        padding-inline: clamp(1.1rem, 4vw, 2.25rem);
       }
+
       section {
-        padding-block: clamp(2.5rem, 6vw, 4.5rem);
+        position: relative;
+        padding-block: clamp(3rem, 7vw, 5.5rem);
       }
+
+      /* Eyebrow kecil di atas judul section. */
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-family: var(--font-sans);
+        font-size: 0.74rem;
+        font-weight: 700;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin: 0 0 0.85rem;
+      }
+
       :where(a, button, [tabindex]):focus-visible {
         outline: 3px solid var(--accent);
-        outline-offset: 2px;
+        outline-offset: 3px;
+        border-radius: var(--radius-sm);
+      }
+
+      /* — Motion: reveal saat load, di-stagger via inline delay di komponen. */
+      @keyframes np-rise {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes np-fade {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      [data-reveal] {
+        animation: np-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+        [data-reveal],
+        [style*='animation'] {
+          animation: none !important;
+          opacity: 1 !important;
+          transform: none !important;
+        }
       }
     </style>
   </body>

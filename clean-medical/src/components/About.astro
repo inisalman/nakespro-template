@@ -17,28 +17,148 @@ const paragraphs = (text as string)
   .split(/\n{2,}/)
   .map((p) => p.trim())
   .filter((p) => p.length > 0);
+
+const highlights = [
+  'Asesmen & program terukur',
+  'Fisioterapis ber-STR aktif',
+  'Catatan perkembangan tiap sesi',
+];
 ---
 
 <section class="about" aria-labelledby="about-h">
-  <div class="container about-inner">
-    <h2 id="about-h">Tentang Kami</h2>
-    {paragraphs.map((p) => <p class="about-p">{p}</p>)}
+  <div class="container about-grid">
+    <div class="about-inner">
+      <p class="eyebrow">Tentang Kami</p>
+      <h2 id="about-h">Bersama, kita capai pemulihan optimal</h2>
+      {paragraphs.map((p) => <p class="about-p">{p}</p>)}
+      <ul class="about-checks" role="list">
+        {
+          highlights.map((h) => (
+            <li class="about-check">
+              <span class="about-tick" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 6 9 17l-5-5" />
+                </svg>
+              </span>
+              {h}
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+    <aside class="about-panel" aria-hidden="true">
+      <div class="panel-quote">
+        <span class="panel-mark">+</span>
+        <p>Pemulihan terbaik terjadi di tempat Anda paling nyaman.</p>
+      </div>
+      <div class="panel-stat">
+        <span class="panel-num">10+</span>
+        <span class="panel-label">tahun pengalaman klinis menangani kasus neuro, ortopedi &amp; geriatri</span>
+      </div>
+    </aside>
   </div>
 </section>
 
 <style>
   .about {
-    background: var(--surface);
+    background: var(--background);
+  }
+  .about-grid {
+    display: grid;
+    gap: clamp(1.75rem, 4vw, 3rem);
+    align-items: center;
+  }
+  @media (min-width: 860px) {
+    .about-grid {
+      grid-template-columns: 1.15fr 0.85fr;
+    }
   }
   .about-inner {
-    max-width: 70ch;
+    max-width: 60ch;
   }
   .about h2 {
-    font-size: clamp(1.5rem, 4vw, 2.1rem);
-    margin: 0 0 1rem;
+    font-size: clamp(1.7rem, 3.8vw, 2.6rem);
+    margin: 0 0 1.25rem;
   }
   .about-p {
-    color: var(--text);
+    color: var(--text-soft);
     margin: 0 0 1rem;
+    font-size: 1.02rem;
+  }
+  .about-p:first-of-type {
+    color: var(--text);
+  }
+  .about-checks {
+    list-style: none;
+    margin: 1.5rem 0 0;
+    padding: 0;
+    display: grid;
+    gap: 0.85rem;
+  }
+  .about-check {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .about-tick {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.7rem;
+    height: 1.7rem;
+    border-radius: 50%;
+    background: var(--lime);
+    color: var(--lime-ink);
+    flex: none;
+  }
+
+  .about-panel {
+    display: grid;
+    gap: 1rem;
+  }
+  .panel-quote {
+    position: relative;
+    background: var(--accent);
+    color: var(--on-accent);
+    border-radius: var(--radius-lg);
+    padding: 2rem 1.75rem;
+    box-shadow: var(--shadow);
+  }
+  .panel-mark {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 2rem;
+    color: var(--lime);
+    line-height: 1;
+  }
+  .panel-quote p {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.25rem;
+    line-height: 1.35;
+    margin: 0.6rem 0 0;
+  }
+  .panel-stat {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 1.5rem 1.6rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .panel-num {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 2.4rem;
+    color: var(--accent);
+    line-height: 1;
+    flex: none;
+  }
+  .panel-label {
+    font-size: 0.9rem;
+    color: var(--muted);
   }
 </style>

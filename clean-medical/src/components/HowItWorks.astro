@@ -17,18 +17,26 @@ const howItWorks = steps as HowItWorksStep[];
 
 <section class="how" aria-labelledby="how-h">
   <div class="container">
-    <h2 id="how-h">Cara Kerja</h2>
+    <div class="how-head">
+      <p class="eyebrow">Cara Kerja</p>
+      <h2 id="how-h">Empat langkah mudah menuju solusi Anda</h2>
+    </div>
     <ol class="how-list">
       {
-        howItWorks.map((s) => (
-          <li class="how-step">
+        howItWorks.map((s, i) => (
+          <li class="how-step" data-reveal style={`animation-delay:${0.1 * i}s`}>
             <span class="how-num" aria-hidden="true">
-              {s.step}
+              {String(s.step).padStart(2, '0')}
             </span>
             <div class="how-body">
               <h3 class="how-title">{s.title}</h3>
               <p class="how-desc">{s.description}</p>
             </div>
+            <span class="how-go" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14M13 6l6 6-6 6" />
+              </svg>
+            </span>
           </li>
         ))
       }
@@ -38,43 +46,80 @@ const howItWorks = steps as HowItWorksStep[];
 
 <style>
   .how {
-    background: var(--background);
+    background: var(--surface);
+  }
+  .how-head {
+    text-align: center;
+    max-width: 40ch;
+    margin: 0 auto 2.75rem;
+  }
+  .how-head .eyebrow {
+    justify-content: center;
   }
   .how h2 {
-    font-size: clamp(1.5rem, 4vw, 2.1rem);
-    margin: 0 0 1.5rem;
+    font-size: clamp(1.7rem, 3.8vw, 2.6rem);
+    margin: 0;
   }
   .how-list {
     list-style: none;
     margin: 0;
     padding: 0;
     display: grid;
-    gap: 1.25rem;
-    counter-reset: step;
+    gap: 1rem;
+  }
+  @media (min-width: 760px) {
+    .how-list {
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    }
   }
   .how-step {
-    display: flex;
-    gap: 1rem;
-    align-items: flex-start;
+    position: relative;
+    padding: 1.75rem 1.5rem 1.6rem;
+    background: var(--surface-raised);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    transition:
+      transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 0.3s ease;
+  }
+  .how-step:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow);
   }
   .how-num {
-    flex: none;
-    width: 2.25rem;
-    height: 2.25rem;
-    border-radius: 50%;
-    background: var(--accent);
-    color: var(--background);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
+    display: inline-block;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.6rem;
+    color: var(--accent);
+    margin-bottom: 0.9rem;
   }
   .how-title {
-    margin: 0 0 0.25rem;
-    font-size: 1.1rem;
+    margin: 0 0 0.45rem;
+    font-size: 1.15rem;
+    color: var(--text);
   }
   .how-desc {
     margin: 0;
     color: var(--muted);
+    font-size: 0.94rem;
+  }
+  .how-go {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--accent-soft);
+    color: var(--accent);
+    margin-top: 1.1rem;
+    transition: background 0.25s ease, color 0.25s ease, transform 0.25s ease;
+  }
+  .how-step:hover .how-go {
+    background: var(--lime);
+    color: var(--lime-ink);
+    transform: translateX(3px);
   }
 </style>

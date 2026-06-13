@@ -13,20 +13,41 @@ interface Props {
 const { items } = Astro.props;
 if (isEmptyList(items)) return null;
 const testimonials = items as Testimonial[];
+
+/** Inisial untuk monogram avatar (dekoratif). */
+function initials(name: string): string {
+  return name
+    .trim()
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((w) => w[0]?.toUpperCase() ?? '')
+    .join('');
+}
 ---
 
 <section class="testimonials" aria-labelledby="testimonials-h">
   <div class="container">
-    <h2 id="testimonials-h">Apa Kata Mereka</h2>
+    <div class="testi-head">
+      <p class="eyebrow">Testimoni</p>
+      <h2 id="testimonials-h">Apa kata mereka tentang layanan kami</h2>
+    </div>
     <ul class="testi-grid" role="list">
       {
-        testimonials.map((t) => (
-          <li class="testi-card">
+        testimonials.map((t, i) => (
+          <li class="testi-card" data-reveal style={`animation-delay:${0.08 * i}s`}>
+            <span class="testi-mark" aria-hidden="true">
+              “
+            </span>
             <blockquote class="testi-quote">{t.text}</blockquote>
-            <p class="testi-meta">
-              <span class="testi-name">{t.name}</span>
-              {t.role && <span class="testi-role">{t.role}</span>}
-            </p>
+            <div class="testi-meta">
+              <span class="testi-avatar" aria-hidden="true">
+                {initials(t.name)}
+              </span>
+              <span class="testi-meta-text">
+                <span class="testi-name">{t.name}</span>
+                {t.role && <span class="testi-role">{t.role}</span>}
+              </span>
+            </div>
           </li>
         ))
       }
@@ -36,11 +57,19 @@ const testimonials = items as Testimonial[];
 
 <style>
   .testimonials {
-    background: var(--surface);
+    background: var(--background);
+  }
+  .testi-head {
+    text-align: center;
+    max-width: 36ch;
+    margin: 0 auto 2.5rem;
+  }
+  .testi-head .eyebrow {
+    justify-content: center;
   }
   .testimonials h2 {
-    font-size: clamp(1.5rem, 4vw, 2.1rem);
-    margin: 0 0 1.5rem;
+    font-size: clamp(1.7rem, 3.8vw, 2.6rem);
+    margin: 0;
   }
   .testi-grid {
     list-style: none;
@@ -48,30 +77,70 @@ const testimonials = items as Testimonial[];
     padding: 0;
     display: grid;
     gap: 1.25rem;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   }
   .testi-card {
-    background: var(--background);
-    border-radius: var(--radius);
-    padding: 1.5rem;
-    border: 1px solid var(--surface);
+    position: relative;
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    padding: 2.5rem 1.75rem 1.75rem;
+    transition:
+      transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 0.3s ease;
+  }
+  .testi-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow);
+  }
+  .testi-mark {
+    position: absolute;
+    top: 1rem;
+    left: 1.5rem;
+    font-family: var(--font-display);
+    font-size: 3.6rem;
+    line-height: 1;
+    color: var(--lime-strong);
+    z-index: 0;
   }
   .testi-quote {
-    margin: 0 0 1rem;
+    position: relative;
+    z-index: 1;
+    margin: 0 0 1.5rem;
     color: var(--text);
-    font-style: italic;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.08rem;
+    line-height: 1.5;
   }
   .testi-meta {
-    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+  .testi-avatar {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.7rem;
+    height: 2.7rem;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--on-accent);
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 0.95rem;
+  }
+  .testi-meta-text {
     display: flex;
     flex-direction: column;
   }
   .testi-name {
-    font-weight: 600;
+    font-weight: 700;
     color: var(--text);
   }
   .testi-role {
-    font-size: 0.875rem;
+    font-size: 0.85rem;
     color: var(--muted);
   }
 </style>

@@ -32,87 +32,133 @@ const showMapUnavailable = !hasMaps && (hasHours || hasLocation);
 ---
 
 <section class="contact" aria-labelledby="contact-h">
-  <div class="container contact-grid">
-    <div class="contact-info">
-      <h2 id="contact-h">Kontak &amp; Lokasi</h2>
-      {
-        hasHours && (
-          <div class="contact-block">
-            <h3 class="contact-label">Jam Praktik</h3>
-            <p class="contact-value">{practiceHours}</p>
-          </div>
-        )
-      }
-      {
-        hasLocation && (
-          <div class="contact-block">
-            <h3 class="contact-label">Area Layanan</h3>
-            <p class="contact-value">{location}</p>
-          </div>
-        )
-      }
-      {
-        showMapUnavailable && (
-          <p class="map-unavailable">Peta lokasi tidak tersedia saat ini.</p>
-        )
-      }
-    </div>
-    {
-      hasMaps && (
-        <div class="contact-map">
-          <iframe
-            src={googleMaps}
-            title="Peta lokasi praktik"
-            loading="lazy"
-            referrerpolicy="no-referrer-when-downgrade"
-            allowfullscreen
-          />
+  <div class="container">
+    <div class="contact-card">
+      <div class="contact-grid">
+        <div class="contact-info">
+          <p class="eyebrow">Kontak &amp; Lokasi</p>
+          <h2 id="contact-h">Siap berkunjung ke rumah Anda</h2>
+          {
+            hasHours && (
+              <div class="contact-block">
+                <span class="contact-ico" aria-hidden="true">
+                  🕒
+                </span>
+                <div>
+                  <h3 class="contact-label">Jam Praktik</h3>
+                  <p class="contact-value">{practiceHours}</p>
+                </div>
+              </div>
+            )
+          }
+          {
+            hasLocation && (
+              <div class="contact-block">
+                <span class="contact-ico" aria-hidden="true">
+                  📍
+                </span>
+                <div>
+                  <h3 class="contact-label">Area Layanan</h3>
+                  <p class="contact-value">{location}</p>
+                </div>
+              </div>
+            )
+          }
+          {
+            showMapUnavailable && (
+              <p class="map-unavailable">Peta lokasi tidak tersedia saat ini.</p>
+            )
+          }
         </div>
-      )
-    }
+        {
+          hasMaps && (
+            <div class="contact-map">
+              <iframe
+                src={googleMaps}
+                title="Peta lokasi praktik"
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+                allowfullscreen
+              />
+            </div>
+          )
+        }
+      </div>
+    </div>
   </div>
 </section>
 
 <style>
   .contact {
+    background: var(--background);
+  }
+  .contact-card {
     background: var(--surface);
+    border-radius: var(--radius-lg);
+    padding: clamp(1.5rem, 4vw, 3rem);
   }
   .contact-grid {
     display: grid;
-    gap: 2rem;
-    align-items: start;
+    gap: clamp(1.5rem, 4vw, 2.75rem);
+    align-items: stretch;
   }
-  @media (min-width: 768px) {
+  @media (min-width: 820px) {
     .contact-grid {
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr 1.05fr;
     }
   }
   .contact h2 {
-    font-size: clamp(1.5rem, 4vw, 2.1rem);
-    margin: 0 0 1.25rem;
+    font-size: clamp(1.7rem, 3.8vw, 2.5rem);
+    margin: 0 0 1.75rem;
   }
   .contact-block {
-    margin-bottom: 1.25rem;
+    display: flex;
+    gap: 0.9rem;
+    align-items: flex-start;
+    padding: 1.1rem 0;
+    border-top: 1px solid var(--hairline);
+  }
+  .contact-block:first-of-type {
+    border-top: none;
+    padding-top: 0;
+  }
+  .contact-ico {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.8rem;
+    height: 2.8rem;
+    border-radius: var(--radius-sm);
+    background: var(--surface-raised);
+    box-shadow: var(--shadow-sm);
+    font-size: 1.25rem;
   }
   .contact-label {
-    font-size: 1rem;
-    color: var(--muted);
-    margin: 0 0 0.25rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0.2rem 0 0.3rem;
   }
   .contact-value {
     margin: 0;
-    color: var(--text);
+    color: var(--text-soft);
   }
   .map-unavailable {
     color: var(--muted);
     font-style: italic;
+    margin-top: 1rem;
   }
   .contact-map {
     position: relative;
     width: 100%;
+    min-height: 280px;
     aspect-ratio: 4 / 3;
     border-radius: var(--radius);
     overflow: hidden;
+    box-shadow: var(--shadow);
   }
   .contact-map iframe {
     position: absolute;

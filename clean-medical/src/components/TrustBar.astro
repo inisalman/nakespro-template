@@ -19,27 +19,29 @@ const credentials = items as Credential[];
 <section class="trustbar" aria-labelledby="trustbar-h">
   <div class="container">
     <h2 id="trustbar-h" class="visually-hidden">Kredensial &amp; Sertifikasi</h2>
-    <ul class="trust-list" role="list">
-      {
-        credentials.map((c) => (
-          <li class="trust-item">
-            {c.icon && (
-              <span class="trust-icon" aria-hidden="true">
-                {c.icon}
-              </span>
-            )}
-            <span class="trust-label">{c.label}</span>
-          </li>
-        ))
-      }
-    </ul>
+    <div class="trust-band">
+      <ul class="trust-list" role="list">
+        {
+          credentials.map((c) => (
+            <li class="trust-item">
+              {c.icon && (
+                <span class="trust-icon" aria-hidden="true">
+                  {c.icon}
+                </span>
+              )}
+              <span class="trust-label">{c.label}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
   </div>
 </section>
 
 <style>
   .trustbar {
     background: var(--background);
-    border-bottom: 1px solid var(--surface);
+    padding-block: clamp(1rem, 3vw, 2rem);
   }
   .visually-hidden {
     position: absolute;
@@ -52,24 +54,33 @@ const credentials = items as Credential[];
     white-space: nowrap;
     border: 0;
   }
+  .trust-band {
+    background: var(--lime);
+    border-radius: var(--radius);
+    padding: clamp(1rem, 2.5vw, 1.5rem) clamp(1.25rem, 3vw, 2.25rem);
+    box-shadow: var(--shadow-sm);
+  }
   .trust-list {
     list-style: none;
     margin: 0;
     padding: 0;
     display: flex;
     flex-wrap: wrap;
-    gap: 1rem 2rem;
+    gap: 1rem 2.5rem;
+    align-items: center;
     justify-content: center;
   }
   .trust-item {
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
-    color: var(--text);
-    font-weight: 500;
+    gap: 0.55rem;
+    color: var(--lime-ink);
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(0.95rem, 1.6vw, 1.1rem);
   }
   .trust-icon {
-    font-size: 1.25rem;
-    color: var(--accent);
+    font-size: 1.2rem;
+    line-height: 1;
   }
 </style>

@@ -7,20 +7,72 @@
 
 <footer class="site-footer">
   <div class="container">
-    <p class="powered">Powered by NakesPro</p>
+    <div class="footer-top">
+      <div class="footer-brand">
+        <span class="footer-mark">Fisiomove Homecare</span>
+        <p class="footer-tag">Fisioterapi profesional, langsung ke rumah Anda.</p>
+      </div>
+      <nav class="footer-nav" aria-label="Tautan footer">
+        <a href="#services">Layanan</a>
+        <a href="#services">Cara Kerja</a>
+        <a href="#services">Tentang</a>
+      </nav>
+    </div>
+    <div class="footer-bottom">
+      <p class="powered">Powered by NakesPro</p>
+    </div>
   </div>
 </footer>
 
 <style>
   .site-footer {
-    background: var(--surface);
-    border-top: 1px solid var(--muted);
-    padding-block: 1.5rem;
+    background: var(--ink);
+    color: var(--on-ink);
+    padding-block: clamp(2rem, 5vw, 3rem);
+  }
+  .footer-top {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem 2rem;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid color-mix(in srgb, var(--on-ink) 14%, transparent);
+  }
+  .footer-mark {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--on-ink);
+  }
+  .footer-tag {
+    margin: 0.4rem 0 0;
+    font-size: 0.9rem;
+    color: color-mix(in srgb, var(--on-ink) 68%, transparent);
+    max-width: 38ch;
+  }
+  .footer-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem 1.5rem;
+  }
+  .footer-nav a {
+    color: color-mix(in srgb, var(--on-ink) 82%, transparent);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: color 0.2s ease;
+  }
+  .footer-nav a:hover {
+    color: var(--lime);
+  }
+  .footer-bottom {
+    padding-top: 1.25rem;
   }
   .powered {
     margin: 0;
     font-size: 0.8125rem;
-    color: var(--muted);
-    text-align: center;
+    color: color-mix(in srgb, var(--on-ink) 60%, transparent);
+    letter-spacing: 0.02em;
   }
 </style>

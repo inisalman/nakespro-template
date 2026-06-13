@@ -42,22 +42,27 @@ if (groups.length === 0) return null;
 
 <section class="gallery" aria-labelledby="gallery-h">
   <div class="container">
-    <h2 id="gallery-h">Galeri</h2>
+    <div class="gallery-head">
+      <p class="eyebrow">Galeri Kami</p>
+      <h2 id="gallery-h">Berdedikasi untuk kesejahteraan Anda</h2>
+    </div>
     {
       groups.map((group) => (
         <div class="gallery-group">
           <h3 class="gallery-cat">{group.label}</h3>
           <ul class="gallery-grid" role="list">
-            {group.items.map((photo) => (
-              <li class="gallery-item">
-                <img
-                  src={`/images/${photo.url}`}
-                  alt={resolveAltText(photo)}
-                  width="400"
-                  height="300"
-                  loading="lazy"
-                  decoding="async"
-                />
+            {group.items.map((photo, i) => (
+              <li class="gallery-item" data-reveal style={`animation-delay:${0.05 * i}s`}>
+                <div class="gallery-shot">
+                  <img
+                    src={`/images/${photo.url}`}
+                    alt={resolveAltText(photo)}
+                    width="400"
+                    height="300"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </div>
                 {photo.caption && (
                   <figcaption class="gallery-cap">{photo.caption}</figcaption>
                 )}
@@ -72,19 +77,33 @@ if (groups.length === 0) return null;
 
 <style>
   .gallery {
-    background: var(--background);
+    background: var(--surface);
+  }
+  .gallery-head {
+    text-align: center;
+    max-width: 36ch;
+    margin: 0 auto 2.5rem;
+  }
+  .gallery-head .eyebrow {
+    justify-content: center;
   }
   .gallery h2 {
-    font-size: clamp(1.5rem, 4vw, 2.1rem);
-    margin: 0 0 1.5rem;
+    font-size: clamp(1.7rem, 3.8vw, 2.6rem);
+    margin: 0;
   }
   .gallery-group {
-    margin-bottom: 2rem;
+    margin-bottom: 2.25rem;
+  }
+  .gallery-group:last-child {
+    margin-bottom: 0;
   }
   .gallery-cat {
-    font-size: 1.1rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
     color: var(--muted);
-    margin: 0 0 0.75rem;
+    margin: 0 0 1rem;
   }
   .gallery-grid {
     list-style: none;
@@ -92,20 +111,43 @@ if (groups.length === 0) return null;
     padding: 0;
     display: grid;
     gap: 1rem;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   }
   .gallery-item {
     margin: 0;
-  }
-  .gallery-item img {
-    width: 100%;
-    height: auto;
+    background: var(--surface-raised);
+    border: 1px solid var(--line);
     border-radius: var(--radius);
+    padding: 0.65rem 0.65rem 0.9rem;
+    box-shadow: var(--shadow-sm);
+    transition:
+      transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 0.3s ease;
+  }
+  .gallery-item:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow);
+  }
+  .gallery-shot {
+    position: relative;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    aspect-ratio: 1 / 1;
+  }
+  .gallery-shot img {
+    width: 100%;
+    height: 100%;
     object-fit: cover;
+    transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .gallery-item:hover .gallery-shot img {
+    transform: scale(1.05);
   }
   .gallery-cap {
-    font-size: 0.8125rem;
-    color: var(--muted);
-    margin-top: 0.4rem;
+    font-size: 0.86rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-top: 0.75rem;
+    padding-inline: 0.35rem;
   }
 </style>

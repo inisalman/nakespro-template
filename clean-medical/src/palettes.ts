@@ -15,41 +15,41 @@ import type { Palette } from './lib/palette.ts';
 
 const palettes: Palette[] = [
   {
-    id: 'clinical-blue',
-    name: 'Clinical Blue',
+    id: 'bright-health',
+    name: 'Bright Health',
     tokens: {
-      accent: '#0369a1', // sky-700
+      accent: '#1f6fff', // biru terang health-tech — CTA & aksen
       background: '#ffffff',
-      surface: '#f0f9ff', // sky-50
-      text: '#0c2433',
-      muted: '#3f6079',
+      surface: '#eef1fb', // lavender muda untuk section blok
+      text: '#0f1726',
+      muted: '#4a5570',
     },
   },
   {
-    id: 'teal',
-    name: 'Teal',
+    id: 'sky-clean',
+    name: 'Sky Clean',
     tokens: {
-      accent: '#0f766e', // teal-700
+      accent: '#0b74d1', // biru langit sedikit lebih dalam
       background: '#ffffff',
-      surface: '#f0fdfa', // teal-50
-      text: '#0f2e2b',
-      muted: '#3a5c58',
+      surface: '#eaf3fb',
+      text: '#102433',
+      muted: '#42596c',
     },
   },
   {
-    id: 'sky-slate',
-    name: 'Sky Slate',
+    id: 'ink-lavender',
+    name: 'Ink Lavender',
     tokens: {
-      accent: '#0e7490', // cyan-700
-      background: '#f8fafc', // slate-50
-      surface: '#eef6f9',
-      text: '#11243a',
-      muted: '#415a72',
+      accent: '#3b59e6', // indigo cerah di atas latar lavender
+      background: '#f7f8fc',
+      surface: '#eceefb',
+      text: '#12172b',
+      muted: '#454d6b',
     },
   },
 ];
 
 /** Id preset default clean-medical. Tepat satu default per template (R6.6). */
-export const DEFAULT_PALETTE_ID = 'clinical-blue';
+export const DEFAULT_PALETTE_ID = 'bright-health';
 
 export default palettes;
