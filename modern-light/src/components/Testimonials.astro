@@ -1,0 +1,77 @@
+---
+// components/Testimonials.astro — section 7, Auto-Hide (R3.10, R3.12, R5.3).
+//
+// Guard: testimonials kosong → return null (R5.3). Render SELURUH entri
+// (Property 8). Warna via CSS var saja (R6.4).
+import type { Testimonial } from '../types.ts';
+import { isEmptyList } from '../lib/empty.ts';
+
+interface Props {
+  items?: Testimonial[];
+}
+
+const { items } = Astro.props;
+if (isEmptyList(items)) return null;
+const testimonials = items as Testimonial[];
+---
+
+<section class="testimonials" aria-labelledby="testimonials-h">
+  <div class="container">
+    <h2 id="testimonials-h">Apa Kata Mereka</h2>
+    <ul class="testi-grid" role="list">
+      {
+        testimonials.map((t) => (
+          <li class="testi-card">
+            <blockquote class="testi-quote">{t.text}</blockquote>
+            <p class="testi-meta">
+              <span class="testi-name">{t.name}</span>
+              {t.role && <span class="testi-role">{t.role}</span>}
+            </p>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .testimonials {
+    background: var(--surface);
+  }
+  .testimonials h2 {
+    font-size: clamp(1.5rem, 4vw, 2.1rem);
+    margin: 0 0 1.5rem;
+  }
+  .testi-grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 1.25rem;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  }
+  .testi-card {
+    background: var(--background);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    border: 1px solid var(--surface);
+  }
+  .testi-quote {
+    margin: 0 0 1rem;
+    color: var(--text);
+    font-style: italic;
+  }
+  .testi-meta {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .testi-name {
+    font-weight: 600;
+    color: var(--text);
+  }
+  .testi-role {
+    font-size: 0.875rem;
+    color: var(--muted);
+  }
+</style>

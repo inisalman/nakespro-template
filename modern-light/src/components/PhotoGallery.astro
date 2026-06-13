@@ -1,0 +1,111 @@
+---
+// components/PhotoGallery.astro — section 5, Auto-Hide per kategori (R3.8,
+// R3.13, R5.3, Property 5/8).
+//
+// Aturan render:
+//   - Section dirender bila ada ≥1 foto di kategori mana pun; bila semua
+//     kategori kosong → return null (R5.3).
+//   - Hanya grup kategori tidak kosong yang dirender; grup kosong disembunyikan
+//     (R3.13). Urutan kategori tetap: nakes, ruangan, alat, hasil.
+//   - Tiap gambar: width/height eksplisit, loading="lazy" (below-the-fold,
+//     R10.8 Property 14), format modern (.webp di public/images), alt via
+//     resolveAltText (R11.1).
+// Warna via CSS var saja (R6.4).
+import type { PhotoSet } from '../types.ts';
+import { isEmptyList } from '../lib/empty.ts';
+import { resolveAltText } from '../lib/images.ts';
+
+interface Props {
+  photos?: PhotoSet;
+}
+
+const LABELS: Record<keyof PhotoSet, string> = {
+  nakes: 'Tenaga Kesehatan',
+  ruangan: 'Ruangan',
+  alat: 'Peralatan',
+  hasil: 'Hasil',
+};
+const ORDER: (keyof PhotoSet)[] = ['nakes', 'ruangan', 'alat', 'hasil'];
+
+const { photos } = Astro.props;
+
+const groups = photos
+  ? ORDER.filter((cat) => !isEmptyList(photos[cat])).map((cat) => ({
+      cat,
+      label: LABELS[cat],
+      items: photos[cat],
+    }))
+  : [];
+
+if (groups.length === 0) return null;
+---
+
+<section class="gallery" aria-labelledby="gallery-h">
+  <div class="container">
+    <h2 id="gallery-h">Galeri</h2>
+    {
+      groups.map((group) => (
+        <div class="gallery-group">
+          <h3 class="gallery-cat">{group.label}</h3>
+          <ul class="gallery-grid" role="list">
+            {group.items.map((photo) => (
+              <li class="gallery-item">
+                <img
+                  src={`/images/${photo.url}`}
+                  alt={resolveAltText(photo)}
+                  width="400"
+                  height="300"
+                  loading="lazy"
+                  decoding="async"
+                />
+                {photo.caption && (
+                  <figcaption class="gallery-cap">{photo.caption}</figcaption>
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  .gallery {
+    background: var(--background);
+  }
+  .gallery h2 {
+    font-size: clamp(1.5rem, 4vw, 2.1rem);
+    margin: 0 0 1.5rem;
+  }
+  .gallery-group {
+    margin-bottom: 2rem;
+  }
+  .gallery-cat {
+    font-size: 1.1rem;
+    color: var(--muted);
+    margin: 0 0 0.75rem;
+  }
+  .gallery-grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  }
+  .gallery-item {
+    margin: 0;
+  }
+  .gallery-item img {
+    width: 100%;
+    height: auto;
+    border-radius: var(--radius);
+    object-fit: cover;
+  }
+  .gallery-cap {
+    font-size: 0.8125rem;
+    color: var(--muted);
+    margin-top: 0.4rem;
+  }
+</style>

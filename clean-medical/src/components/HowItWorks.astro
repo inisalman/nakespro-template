@@ -1,0 +1,80 @@
+---
+// components/HowItWorks.astro — section 6, Auto-Hide (R3.9, R3.12, R5.3).
+//
+// Guard: howItWorks kosong → return null (R5.3). Render SELURUH entri terurut
+// sesuai urutan pada data (Property 8). Warna via CSS var saja (R6.4).
+import type { HowItWorksStep } from '../types.ts';
+import { isEmptyList } from '../lib/empty.ts';
+
+interface Props {
+  steps?: HowItWorksStep[];
+}
+
+const { steps } = Astro.props;
+if (isEmptyList(steps)) return null;
+const howItWorks = steps as HowItWorksStep[];
+---
+
+<section class="how" aria-labelledby="how-h">
+  <div class="container">
+    <h2 id="how-h">Cara Kerja</h2>
+    <ol class="how-list">
+      {
+        howItWorks.map((s) => (
+          <li class="how-step">
+            <span class="how-num" aria-hidden="true">
+              {s.step}
+            </span>
+            <div class="how-body">
+              <h3 class="how-title">{s.title}</h3>
+              <p class="how-desc">{s.description}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  .how {
+    background: var(--background);
+  }
+  .how h2 {
+    font-size: clamp(1.5rem, 4vw, 2.1rem);
+    margin: 0 0 1.5rem;
+  }
+  .how-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 1.25rem;
+    counter-reset: step;
+  }
+  .how-step {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+  .how-num {
+    flex: none;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--background);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+  }
+  .how-title {
+    margin: 0 0 0.25rem;
+    font-size: 1.1rem;
+  }
+  .how-desc {
+    margin: 0;
+    color: var(--muted);
+  }
+</style>

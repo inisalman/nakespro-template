@@ -1,0 +1,114 @@
+---
+// components/Hero.astro — section 1, selalu render (R5.5), tidak Auto-Hide.
+//
+// Menampilkan (R3.3, R11.2, R11.4):
+//   - Tepat satu <h1> halaman (websiteName) → struktur heading (Property 13).
+//   - Tagline opsional sebagai sub-judul.
+//   - Foto nakes asli dari photos.nakes[0] dengan width/height eksplisit +
+//     fetchpriority high (above-the-fold, tidak lazy) (R3.3, R10.8, Property 14).
+//   - WhatsApp_CTA above-the-fold dengan accessible name tidak kosong (R3.3,
+//     R3.4, R11.4). CTA selalu tampil di Hero (berbeda dari floating yang
+//     hilang bila invalid); href tetap dibangun dari nomor.
+// Warna hanya via CSS var (R6.4).
+import type { SiteContent } from '../types.ts';
+import { buildWaUrl, isValidWaNumber } from '../lib/whatsapp.ts';
+import { resolveAltText } from '../lib/images.ts';
+
+interface Props {
+  content: SiteContent;
+}
+
+const { content } = Astro.props;
+const heroPhoto = content.photos?.nakes?.[0];
+const heroAlt = heroPhoto
+  ? resolveAltText(heroPhoto)
+  : `Foto ${content.websiteName}`;
+const heroSrc = heroPhoto ? `/images/${heroPhoto.url}` : undefined;
+const waValid = isValidWaNumber(content.waNumber);
+const waHref = buildWaUrl(content.waNumber, content.waMessage);
+---
+
+<section class="hero" aria-labelledby="hero-h">
+  <div class="container hero-grid">
+    <div class="hero-copy">
+      <h1 id="hero-h">{content.websiteName}</h1>
+      {content.tagline && <p class="hero-tagline">{content.tagline}</p>}
+      <p class="hero-desc">{content.description}</p>
+      {
+        waValid && (
+          <a
+            class="hero-cta"
+            href={waHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Hubungi kami via WhatsApp"
+          >
+            Hubungi via WhatsApp
+          </a>
+        )
+      }
+    </div>
+    {
+      heroSrc && (
+        <div class="hero-media">
+          <img
+            src={heroSrc}
+            alt={heroAlt}
+            width="640"
+            height="640"
+            decoding="async"
+            fetchpriority="high"
+          />
+        </div>
+      )
+    }
+  </div>
+</section>
+
+<style>
+  .hero {
+    background: var(--surface);
+  }
+  .hero-grid {
+    display: grid;
+    gap: clamp(1.5rem, 4vw, 3rem);
+    align-items: center;
+  }
+  @media (min-width: 768px) {
+    .hero-grid {
+      grid-template-columns: 1.1fr 0.9fr;
+    }
+  }
+  .hero-copy h1 {
+    font-size: clamp(1.9rem, 5vw, 3rem);
+    margin: 0 0 0.5rem;
+  }
+  .hero-tagline {
+    font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+    color: var(--accent);
+    font-weight: 600;
+    margin: 0 0 0.75rem;
+  }
+  .hero-desc {
+    color: var(--muted);
+    margin: 0 0 1.5rem;
+    max-width: 60ch;
+  }
+  .hero-cta {
+    display: inline-flex;
+    align-items: center;
+    min-height: 48px;
+    padding: 0.85rem 1.5rem;
+    border-radius: var(--radius);
+    background: var(--accent);
+    color: var(--background);
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .hero-media img {
+    width: 100%;
+    height: auto;
+    border-radius: var(--radius);
+    object-fit: cover;
+  }
+</style>

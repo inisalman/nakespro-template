@@ -1,0 +1,93 @@
+---
+// layouts/BaseLayout.astro — shell semantik + injeksi palette.
+//
+// Tanggung jawab (R6.3, R6.4, R11.2):
+//   - Menyusun shell HTML semantik dengan <html lang="id"> (R11.2).
+//   - Me-resolve Palette_Preset terpilih lalu inject CSS custom properties
+//     pada <html> via atribut style (R6.3). Komponen lain hanya memakai
+//     var(--token) sehingga bebas warna literal (R6.4).
+//   - Menyediakan <slot /> untuk section. Tepat satu <h1> berada di Hero,
+//     bukan di sini (Property 13).
+//
+// Warna global (body background/text) diset dari CSS var hasil palette.
+import type { SiteContent } from '../types.ts';
+import palettes, { DEFAULT_PALETTE_ID } from '../palettes.ts';
+import { resolvePalette, paletteToCssVars } from '../lib/palette.ts';
+
+interface Props {
+  content: SiteContent;
+}
+
+const { content } = Astro.props;
+const palette = resolvePalette(palettes, content.palette, DEFAULT_PALETTE_ID);
+const cssVars = paletteToCssVars(palette);
+---
+
+<!doctype html>
+<html lang="id" style={cssVars}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={content.description} />
+    <title>{content.websiteName}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+  </head>
+  <body>
+    <slot />
+    <style is:global>
+      :root {
+        --max-width: 1120px;
+        --space: 1rem;
+        /* clean-medical: bentuk tegas/teknis — sudut tajam (R7.2). */
+        --radius: 4px;
+        --shadow: 0 4px 14px rgba(8, 36, 51, 0.12);
+        --font-sans:
+          system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial,
+          sans-serif;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        font-family: var(--font-sans);
+        color: var(--text);
+        background: var(--background);
+        scroll-behavior: smooth;
+      }
+      body {
+        margin: 0;
+        background: var(--background);
+        color: var(--text);
+        line-height: 1.6;
+        overflow-x: hidden;
+      }
+      h1,
+      h2,
+      h3 {
+        line-height: 1.2;
+        color: var(--text);
+      }
+      a {
+        color: var(--accent);
+      }
+      img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+      }
+      .container {
+        width: 100%;
+        max-width: var(--max-width);
+        margin-inline: auto;
+        padding-inline: clamp(1rem, 4vw, 2rem);
+      }
+      section {
+        padding-block: clamp(2.5rem, 6vw, 4.5rem);
+      }
+      :where(a, button, [tabindex]):focus-visible {
+        outline: 3px solid var(--accent);
+        outline-offset: 2px;
+      }
+    </style>
+  </body>
+</html>

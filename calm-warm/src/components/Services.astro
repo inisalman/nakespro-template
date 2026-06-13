@@ -1,0 +1,72 @@
+---
+// components/Services.astro — section 3, Auto-Hide (R3.6, R3.12, R5.3).
+//
+// Guard: services kosong → return null (R5.3). Bila ada, render SELURUH entri
+// (Property 8). Warna via CSS var saja (R6.4).
+import type { Service } from '../types.ts';
+import { isEmptyList } from '../lib/empty.ts';
+
+interface Props {
+  items?: Service[];
+}
+
+const { items } = Astro.props;
+if (isEmptyList(items)) return null;
+const services = items as Service[];
+---
+
+<section class="services" aria-labelledby="services-h">
+  <div class="container">
+    <h2 id="services-h">Layanan Kami</h2>
+    <ul class="services-grid" role="list">
+      {
+        services.map((s) => (
+          <li class="service-card">
+            {s.icon && (
+              <span class="service-icon" aria-hidden="true">
+                {s.icon}
+              </span>
+            )}
+            <h3 class="service-title">{s.title}</h3>
+            <p class="service-desc">{s.description}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .services {
+    background: var(--background);
+  }
+  .services h2 {
+    font-size: clamp(1.5rem, 4vw, 2.1rem);
+    margin: 0 0 1.5rem;
+  }
+  .services-grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 1.25rem;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  }
+  .service-card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+  }
+  .service-icon {
+    font-size: 1.75rem;
+    color: var(--accent);
+  }
+  .service-title {
+    font-size: 1.15rem;
+    margin: 0.5rem 0 0.4rem;
+  }
+  .service-desc {
+    color: var(--muted);
+    margin: 0;
+  }
+</style>

@@ -1,0 +1,38 @@
+---
+// pages/index.astro — wiring halaman (R3.1, R3.2, R3.16, R5.1, R5.7).
+//
+// Merangkai kesembilan section pada urutan TETAP 1–9 plus FloatingWhatsApp di
+// dalam BaseLayout (Property 6). Tiap section menerima hanya slice SiteContent
+// yang relevan. Auto-Hide diputuskan di dalam masing-masing komponen; urutan
+// relatif yang dirender tetap terjaga (R5.7). Seluruh data berasal dari
+// content.ts (R13.1) — tidak ada konten client di-hardcode di sini.
+import content from '../content.ts';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import TrustBar from '../components/TrustBar.astro';
+import Services from '../components/Services.astro';
+import About from '../components/About.astro';
+import PhotoGallery from '../components/PhotoGallery.astro';
+import HowItWorks from '../components/HowItWorks.astro';
+import Testimonials from '../components/Testimonials.astro';
+import ContactLocation from '../components/ContactLocation.astro';
+import Footer from '../components/Footer.astro';
+import FloatingWhatsApp from '../components/FloatingWhatsApp.astro';
+---
+
+<BaseLayout content={content}>
+  <Hero content={content} />
+  <TrustBar items={content.credentials} />
+  <Services items={content.services} />
+  <About text={content.about} />
+  <PhotoGallery photos={content.photos} />
+  <HowItWorks steps={content.howItWorks} />
+  <Testimonials items={content.testimonials} />
+  <ContactLocation
+    practiceHours={content.practiceHours}
+    location={content.location}
+    googleMaps={content.googleMaps}
+  />
+  <Footer />
+  <FloatingWhatsApp waNumber={content.waNumber} waMessage={content.waMessage} />
+</BaseLayout>

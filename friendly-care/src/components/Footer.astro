@@ -1,0 +1,26 @@
+---
+// components/Footer.astro — selalu render, dikecualikan dari Auto-Hide (R5.5).
+//
+// Menampilkan teks kecil "Powered by NakesPro" (R3.15). Warna hanya via CSS
+// custom properties hasil palette (R6.4) — tanpa nilai warna literal.
+---
+
+<footer class="site-footer">
+  <div class="container">
+    <p class="powered">Powered by NakesPro</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: var(--surface);
+    border-top: 1px solid var(--muted);
+    padding-block: 1.5rem;
+  }
+  .powered {
+    margin: 0;
+    font-size: 0.8125rem;
+    color: var(--muted);
+    text-align: center;
+  }
+</style>

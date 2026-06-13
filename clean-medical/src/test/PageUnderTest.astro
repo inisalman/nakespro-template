@@ -1,0 +1,43 @@
+---
+// test/PageUnderTest.astro — komposisi 9 section + FloatingWhatsApp yang
+// menerima `content` via props (bukan impor statis content.ts).
+//
+// Identik strukturnya dengan pages/index.astro, tetapi memungkinkan PBT
+// meng-inject SiteContent yang di-generate untuk menguji invarian output
+// (urutan section, auto-hide, h1 tunggal, atribut gambar, dll).
+import type { SiteContent } from '../types.ts';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import TrustBar from '../components/TrustBar.astro';
+import Services from '../components/Services.astro';
+import About from '../components/About.astro';
+import PhotoGallery from '../components/PhotoGallery.astro';
+import HowItWorks from '../components/HowItWorks.astro';
+import Testimonials from '../components/Testimonials.astro';
+import ContactLocation from '../components/ContactLocation.astro';
+import Footer from '../components/Footer.astro';
+import FloatingWhatsApp from '../components/FloatingWhatsApp.astro';
+
+interface Props {
+  content: SiteContent;
+}
+
+const { content } = Astro.props;
+---
+
+<BaseLayout content={content}>
+  <Hero content={content} />
+  <TrustBar items={content.credentials} />
+  <Services items={content.services} />
+  <About text={content.about} />
+  <PhotoGallery photos={content.photos} />
+  <HowItWorks steps={content.howItWorks} />
+  <Testimonials items={content.testimonials} />
+  <ContactLocation
+    practiceHours={content.practiceHours}
+    location={content.location}
+    googleMaps={content.googleMaps}
+  />
+  <Footer />
+  <FloatingWhatsApp waNumber={content.waNumber} waMessage={content.waMessage} />
+</BaseLayout>

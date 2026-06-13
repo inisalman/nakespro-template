@@ -1,0 +1,124 @@
+---
+// components/ContactLocation.astro — section 8, Auto-Hide penuh + partial
+// (R3.11, R3.14, R5.3, R5.6, Property 5).
+//
+// Aturan render:
+//   - Section dirender bila ≥1 sub-field (practiceHours, location, googleMaps)
+//     tidak kosong; bila semua kosong → return null (R5.3).
+//   - Render HANYA sub-field tidak kosong, tanpa placeholder (R5.6).
+//   - Bila googleMaps kosong tapi sub-field lain ada: section tetap tampil
+//     dengan indikasi peta tidak tersedia (R3.14).
+//   - Iframe Maps punya title tidak kosong (accessible name) (R11.6).
+// Warna via CSS var saja (R6.4).
+import { isEmptyText } from '../lib/empty.ts';
+
+interface Props {
+  practiceHours?: string;
+  location?: string;
+  googleMaps?: string;
+}
+
+const { practiceHours, location, googleMaps } = Astro.props;
+
+const hasHours = !isEmptyText(practiceHours);
+const hasLocation = !isEmptyText(location);
+const hasMaps = !isEmptyText(googleMaps);
+
+if (!hasHours && !hasLocation && !hasMaps) return null;
+
+// Sub-field non-maps menentukan apakah indikasi "peta tidak tersedia"
+// ditampilkan (hanya bila ada konteks kontak lain namun maps kosong, R3.14).
+const showMapUnavailable = !hasMaps && (hasHours || hasLocation);
+---
+
+<section class="contact" aria-labelledby="contact-h">
+  <div class="container contact-grid">
+    <div class="contact-info">
+      <h2 id="contact-h">Kontak &amp; Lokasi</h2>
+      {
+        hasHours && (
+          <div class="contact-block">
+            <h3 class="contact-label">Jam Praktik</h3>
+            <p class="contact-value">{practiceHours}</p>
+          </div>
+        )
+      }
+      {
+        hasLocation && (
+          <div class="contact-block">
+            <h3 class="contact-label">Area Layanan</h3>
+            <p class="contact-value">{location}</p>
+          </div>
+        )
+      }
+      {
+        showMapUnavailable && (
+          <p class="map-unavailable">Peta lokasi tidak tersedia saat ini.</p>
+        )
+      }
+    </div>
+    {
+      hasMaps && (
+        <div class="contact-map">
+          <iframe
+            src={googleMaps}
+            title="Peta lokasi praktik"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            allowfullscreen
+          />
+        </div>
+      )
+    }
+  </div>
+</section>
+
+<style>
+  .contact {
+    background: var(--surface);
+  }
+  .contact-grid {
+    display: grid;
+    gap: 2rem;
+    align-items: start;
+  }
+  @media (min-width: 768px) {
+    .contact-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .contact h2 {
+    font-size: clamp(1.5rem, 4vw, 2.1rem);
+    margin: 0 0 1.25rem;
+  }
+  .contact-block {
+    margin-bottom: 1.25rem;
+  }
+  .contact-label {
+    font-size: 1rem;
+    color: var(--muted);
+    margin: 0 0 0.25rem;
+  }
+  .contact-value {
+    margin: 0;
+    color: var(--text);
+  }
+  .map-unavailable {
+    color: var(--muted);
+    font-style: italic;
+  }
+  .contact-map {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .contact-map iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+</style>
