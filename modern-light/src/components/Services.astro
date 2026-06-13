@@ -15,20 +15,29 @@ if (isEmptyList(items)) return null;
 const services = items as Service[];
 ---
 
-<section class="services" aria-labelledby="services-h">
+<section id="layanan" class="services" aria-labelledby="services-h">
   <div class="container">
-    <h2 id="services-h">Layanan Kami</h2>
+    <div class="services-header">
+      <p class="services-eyebrow">Apa yang kami lakukan</p>
+      <h2 id="services-h">Layanan Kami</h2>
+    </div>
     <ul class="services-grid" role="list">
       {
-        services.map((s) => (
-          <li class="service-card">
-            {s.icon && (
-              <span class="service-icon" aria-hidden="true">
-                {s.icon}
-              </span>
-            )}
-            <h3 class="service-title">{s.title}</h3>
-            <p class="service-desc">{s.description}</p>
+        services.map((s, i) => (
+          <li class="service-card" style={`--i: ${i}`}>
+            <span class="service-num" aria-hidden="true">
+              {String(i + 1).padStart(2, '0')}
+            </span>
+            <div class="service-body">
+              {s.icon && (
+                <span class="service-icon" aria-hidden="true">
+                  {s.icon}
+                </span>
+              )}
+              <h3 class="service-title">{s.title}</h3>
+              <p class="service-desc">{s.description}</p>
+            </div>
+            <div class="service-line" aria-hidden="true" />
           </li>
         ))
       }
@@ -36,37 +45,243 @@ const services = items as Service[];
   </div>
 </section>
 
+<script>
+  // Trigger reveal animasi saat card masuk viewport
+  const cards = document.querySelectorAll('.service-card');
+  const io = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          (e.target as HTMLElement).classList.add('is-visible');
+          io.unobserve(e.target);
+        }
+      });
+    },
+    { threshold: 0.12 }
+  );
+  cards.forEach((c) => io.observe(c));
+</script>
+
 <style>
   .services {
     background: var(--background);
+    overflow: hidden;
+  }
+
+  /* Header section */
+  .services-header {
+    margin-bottom: clamp(2rem, 5vw, 3.5rem);
+  }
+  .services-eyebrow {
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 0.6rem;
   }
   .services h2 {
-    font-size: clamp(1.5rem, 4vw, 2.1rem);
-    margin: 0 0 1.5rem;
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 800;
+    margin: 0;
+    line-height: 1.1;
+    color: var(--text);
   }
+
+  /* Grid */
   .services-grid {
     list-style: none;
     margin: 0;
     padding: 0;
     display: grid;
     gap: 1.25rem;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   }
+
+  /* Gradient mesh unik per card sebagai pseudo-foto background */
+  .service-card:nth-child(1) { --grad: linear-gradient(135deg, #1a2744 0%, #0d4f3c 50%, #1a3a2a 100%); }
+  .service-card:nth-child(2) { --grad: linear-gradient(135deg, #2d1b4e 0%, #1a3a5c 50%, #0d2d44 100%); }
+  .service-card:nth-child(3) { --grad: linear-gradient(135deg, #3d1a1a 0%, #2d3a1a 50%, #1a3a3a 100%); }
+  .service-card:nth-child(4) { --grad: linear-gradient(135deg, #1a2d3d 0%, #2d4a1a 50%, #1a3a4a 100%); }
+  .service-card:nth-child(5) { --grad: linear-gradient(135deg, #2d2d1a 0%, #1a4a3a 50%, #2d1a3d 100%); }
+  .service-card:nth-child(6) { --grad: linear-gradient(135deg, #1a3d2d 0%, #3d1a2d 50%, #1a2d3d 100%); }
+
+  /* Card */
   .service-card {
-    background: var(--surface);
-    border-radius: var(--radius);
-    padding: 1.5rem;
+    position: relative;
+    border-radius: calc(var(--radius) * 2);
+    padding: clamp(1.75rem, 4vw, 2.5rem);
+    overflow: hidden;
+    cursor: default;
+    border: 1px solid rgba(255,255,255,0.08);
+    transition:
+      box-shadow 0.3s ease,
+      transform 0.3s ease,
+      border-color 0.3s ease;
+    min-height: 260px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+
+    /* Scroll reveal: start hidden */
+    opacity: 0;
+    transform: translateY(32px);
   }
+
+  /* Background gradient mesh */
+  .service-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--grad, linear-gradient(135deg, #1a2744 0%, #0d4f3c 100%));
+    transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    z-index: 0;
+  }
+
+  /* Dark overlay untuk keterbacaan teks */
+  .service-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.75) 0%,
+      rgba(0, 0, 0, 0.35) 60%,
+      rgba(0, 0, 0, 0.15) 100%
+    );
+    z-index: 1;
+    transition: background 0.3s ease;
+  }
+
+  /* Hover: background scale up subtle */
+  .service-card:hover::before {
+    transform: scale(1.06);
+  }
+
+  .service-card:hover::after {
+    background: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.65) 0%,
+      rgba(0, 0, 0, 0.25) 60%,
+      rgba(0, 0, 0, 0.08) 100%
+    );
+  }
+
+  /* Staggered delay per card */
+  .service-card { transition-delay: calc(var(--i) * 0.08s); }
+
+  /* Visible state setelah IntersectionObserver */
+  .service-card.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+    transition:
+      opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1) calc(var(--i) * 0.1s),
+      transform 0.55s cubic-bezier(0.22, 1, 0.36, 1) calc(var(--i) * 0.1s),
+      box-shadow 0.3s ease,
+      border-color 0.3s ease;
+  }
+
+  /* Hover state */
+  .service-card:hover {
+    border-color: rgba(255, 255, 255, 0.18);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35), 0 4px 12px rgba(0, 0, 0, 0.2);
+    transform: translateY(-5px);
+  }
+
+  /* Nomor dekoratif di background */
+  .service-num {
+    position: absolute;
+    top: 0.75rem;
+    right: 1.25rem;
+    font-size: clamp(4.5rem, 9vw, 7rem);
+    font-weight: 800;
+    line-height: 1;
+    color: rgba(255, 255, 255, 0.08);
+    pointer-events: none;
+    user-select: none;
+    z-index: 2;
+    transition: color 0.3s ease;
+  }
+
+  .service-card:hover .service-num {
+    color: rgba(255, 255, 255, 0.13);
+  }
+
+  /* Garis aksen bawah */
+  .service-line {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    width: 0;
+    background: var(--accent);
+    border-radius: 0 2px 0 0;
+    z-index: 3;
+    transition: width 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .service-card:hover .service-line {
+    width: 100%;
+  }
+
+  /* Konten card — di atas semua layer */
+  .service-body {
+    position: relative;
+    z-index: 2;
+  }
+
   .service-icon {
-    font-size: 1.75rem;
-    color: var(--accent);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: calc(var(--radius) * 1.5);
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(4px);
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+    transition: background 0.3s ease, transform 0.3s ease;
   }
+
+  .service-card:hover .service-icon {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.08);
+  }
+
   .service-title {
-    font-size: 1.15rem;
-    margin: 0.5rem 0 0.4rem;
+    font-size: clamp(1.1rem, 2.5vw, 1.3rem);
+    font-weight: 700;
+    margin: 0 0 0.6rem;
+    color: #ffffff;
+    line-height: 1.3;
   }
+
   .service-desc {
-    color: var(--muted);
+    color: rgba(255, 255, 255, 0.75);
     margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.65;
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .service-card {
+      opacity: 1;
+      transform: none;
+      transition: box-shadow 0.2s, border-color 0.2s;
+    }
+    .service-card:hover {
+      transform: none;
+    }
+    .service-card::before {
+      transition: none;
+    }
+    .service-icon {
+      transition: none;
+    }
+    .service-line {
+      transition: none;
+    }
   }
 </style>

@@ -47,6 +47,25 @@ const waHref = buildWaUrl(content.waNumber, content.waMessage);
           </a>
         )
       }
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <span class="hero-stat-num" data-target="1000">0+</span>
+          <span class="hero-stat-label">Pasien Dilayani</span>
+        </div>
+        <div class="hero-stat-divider" aria-hidden="true" />
+        <div class="hero-stat">
+          <span class="hero-stat-num">5 Tahun</span>
+          <span class="hero-stat-label">Pengalaman</span>
+        </div>
+        <div class="hero-stat-divider" aria-hidden="true" />
+        <div class="hero-stat">
+          <span class="hero-stat-num">
+            <span class="hero-stat-stars" aria-hidden="true">★★★★★</span>
+            4.9<span class="hero-stat-of">/5</span>
+          </span>
+          <span class="hero-stat-label">Rating Pasien</span>
+        </div>
+      </div>
     </div>
     {
       heroSrc && (
@@ -66,6 +85,22 @@ const waHref = buildWaUrl(content.waNumber, content.waMessage);
 </section>
 
 <style>
+  @keyframes fadeSlideUp {
+    from {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
   .hero {
     background: var(--surface);
   }
@@ -79,20 +114,28 @@ const waHref = buildWaUrl(content.waNumber, content.waMessage);
       grid-template-columns: 1.1fr 0.9fr;
     }
   }
+
+  /* Animasi per elemen dengan delay bertahap */
   .hero-copy h1 {
     font-size: clamp(1.9rem, 5vw, 3rem);
     margin: 0 0 0.5rem;
+    animation: fadeSlideUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: 0.05s;
   }
   .hero-tagline {
     font-size: clamp(1.1rem, 2.5vw, 1.4rem);
     color: var(--accent);
     font-weight: 600;
     margin: 0 0 0.75rem;
+    animation: fadeSlideUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: 0.2s;
   }
   .hero-desc {
     color: var(--muted);
     margin: 0 0 1.5rem;
     max-width: 60ch;
+    animation: fadeSlideUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: 0.35s;
   }
   .hero-cta {
     display: inline-flex;
@@ -104,6 +147,55 @@ const waHref = buildWaUrl(content.waNumber, content.waMessage);
     color: var(--background);
     font-weight: 600;
     text-decoration: none;
+    animation: fadeSlideUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: 0.5s;
+  }
+  .hero-stats {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-top: 2rem;
+    animation: fadeSlideUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: 0.65s;
+  }
+  .hero-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+  .hero-stat-num {
+    font-size: clamp(1.4rem, 3vw, 1.75rem);
+    font-weight: 800;
+    color: var(--accent);
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+  .hero-stat-of {
+    font-size: 0.9rem;
+    font-weight: 600;
+    opacity: 0.7;
+  }
+  .hero-stat-stars {
+    font-size: 0.75rem;
+    color: #f59e0b;
+    letter-spacing: -0.05em;
+  }
+  .hero-stat-label {
+    font-size: 0.8rem;
+    color: var(--muted);
+    font-weight: 500;
+  }
+  .hero-stat-divider {
+    width: 1px;
+    height: 2.5rem;
+    background: color-mix(in srgb, var(--muted) 30%, transparent);
+    flex-shrink: 0;
+  }
+  .hero-media {
+    animation: fadeIn 0.8s ease both;
+    animation-delay: 0.2s;
   }
   .hero-media img {
     width: 100%;
@@ -111,4 +203,48 @@ const waHref = buildWaUrl(content.waNumber, content.waMessage);
     border-radius: var(--radius);
     object-fit: cover;
   }
+
+  /* Hormati preferensi reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .hero-copy h1,
+    .hero-tagline,
+    .hero-desc,
+    .hero-cta,
+    .hero-stats,
+    .hero-media {
+      animation: none;
+    }
+  }
 </style>
+
+<script>
+  // Count-up animasi untuk stat "1000+"
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!prefersReduced) {
+    const el = document.querySelector('[data-target="1000"]') as HTMLElement | null;
+    if (el) {
+      const duration = 1800;
+      const target = 1000;
+      const start = performance.now();
+      const tick = (now: number) => {
+        const elapsed = now - start;
+        const progress = Math.min(elapsed / duration, 1);
+        // ease-out cubic
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const current = Math.floor(eased * target);
+        el.textContent = current >= target ? '1000+' : `${current}+`;
+        if (progress < 1) requestAnimationFrame(tick);
+      };
+      // Mulai saat elemen masuk viewport
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            requestAnimationFrame(tick);
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.5 });
+      io.observe(el);
+    }
+  }
+</script>

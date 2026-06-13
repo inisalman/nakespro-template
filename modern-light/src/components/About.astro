@@ -4,25 +4,46 @@
 // Guard: about kosong (whitespace-only termasuk) → return null (R5.3).
 // Warna via CSS var saja (R6.4). Konten about bisa multi-paragraf: pisah
 // per baris kosong agar terbaca.
+import type { Photo } from '../types.ts';
 import { isEmptyText } from '../lib/empty.ts';
+import { resolveAltText } from '../lib/images.ts';
 
 interface Props {
   text?: string;
+  photo?: Photo;
 }
 
-const { text } = Astro.props;
+const { text, photo } = Astro.props;
 if (isEmptyText(text)) return null;
 const paragraphs = (text as string)
   .trim()
   .split(/\n{2,}/)
   .map((p) => p.trim())
   .filter((p) => p.length > 0);
+
+const photoSrc = photo ? `/images/${photo.url}` : undefined;
+const photoAlt = photo ? resolveAltText(photo) : '';
 ---
 
 <section class="about" aria-labelledby="about-h">
   <div class="container about-inner">
-    <h2 id="about-h">Tentang Kami</h2>
-    {paragraphs.map((p) => <p class="about-p">{p}</p>)}
+    {photoSrc && (
+      <div class="about-media">
+        <img
+          src={photoSrc}
+          alt={photoAlt}
+          width="600"
+          height="700"
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+    )}
+    <div class="about-copy">
+      <p class="about-eyebrow">Tentang Kami</p>
+      <h2 id="about-h">Kenali Tim Perawat Kami</h2>
+      {paragraphs.map((p) => <p class="about-p">{p}</p>)}
+    </div>
   </div>
 </section>
 
@@ -30,15 +51,77 @@ const paragraphs = (text as string)
   .about {
     background: var(--surface);
   }
+
   .about-inner {
-    max-width: 70ch;
+    display: grid;
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: center;
   }
+
+  @media (min-width: 768px) {
+    .about-inner {
+      grid-template-columns: 0.9fr 1.1fr;
+    }
+  }
+
+  /* Foto */
+  .about-media {
+    position: relative;
+  }
+
+  .about-media::before {
+    content: '';
+    position: absolute;
+    inset: -12px -12px 12px 12px;
+    border: 2px solid color-mix(in srgb, var(--accent) 30%, transparent);
+    border-radius: calc(var(--radius) * 2);
+    z-index: 0;
+  }
+
+  .about-media img {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    max-height: 520px;
+    object-fit: cover;
+    border-radius: calc(var(--radius) * 2);
+    box-shadow: var(--shadow);
+  }
+
+  /* Teks */
+  .about-eyebrow {
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 0.6rem;
+  }
+
   .about h2 {
-    font-size: clamp(1.5rem, 4vw, 2.1rem);
-    margin: 0 0 1rem;
-  }
-  .about-p {
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    font-weight: 800;
+    margin: 0 0 1.25rem;
+    line-height: 1.2;
     color: var(--text);
+  }
+
+  .about-p {
+    color: var(--muted);
     margin: 0 0 1rem;
+    line-height: 1.75;
+    font-size: 0.975rem;
+  }
+
+  .about-p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Mobile: foto di atas teks */
+  @media (max-width: 767px) {
+    .about-media::before {
+      display: none;
+    }
   }
 </style>

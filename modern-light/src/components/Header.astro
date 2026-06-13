@@ -1,0 +1,148 @@
+---
+// components/Header.astro — sticky header dengan logo, nav, dan CTA WhatsApp.
+import type { SiteContent } from '../types.ts';
+import { buildWaUrl, isValidWaNumber } from '../lib/whatsapp.ts';
+
+interface Props {
+  content: SiteContent;
+}
+
+const { content } = Astro.props;
+const waValid = isValidWaNumber(content.waNumber);
+const waHref = buildWaUrl(content.waNumber, content.waMessage);
+---
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="header-logo" href="#" aria-label={content.websiteName}>
+      {content.websiteName}
+    </a>
+
+    <nav class="header-nav" aria-label="Navigasi utama">
+      <a href="#layanan">Layanan</a>
+      <a href="#galeri">Galeri</a>
+      <a href="#kontak">Kontak</a>
+    </nav>
+
+    {waValid && (
+      <a
+        class="header-cta"
+        href={waHref}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Order via WhatsApp"
+      >
+        Order via WhatsApp
+      </a>
+    )}
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--background);
+    border-bottom: 1px solid color-mix(in srgb, var(--muted) 20%, transparent);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  .header-inner {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    height: 64px;
+  }
+
+  .header-logo {
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--text);
+    text-decoration: none;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .header-nav {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    flex: 1;
+    justify-content: center;
+  }
+
+  .header-nav a {
+    padding: 0.4rem 0.85rem;
+    border-radius: calc(var(--radius) / 2);
+    color: var(--text);
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: background 0.15s, color 0.15s;
+  }
+
+  .header-nav a:hover {
+    background: color-mix(in srgb, var(--accent) 10%, transparent);
+    color: var(--accent);
+  }
+
+  .header-cta {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    padding: 0 1.1rem;
+    border-radius: var(--radius);
+    background: var(--accent);
+    color: var(--background);
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-decoration: none;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: opacity 0.15s;
+  }
+
+  .header-cta:hover {
+    opacity: 0.88;
+  }
+
+  /* Mobile: sembunyikan nav, logo truncate, CTA jadi ikon saja */
+  @media (max-width: 640px) {
+    .header-nav {
+      display: none;
+    }
+    .header-logo {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      min-width: 0;
+      flex-shrink: 1;
+    }
+    .header-cta {
+      font-size: 0;
+      padding: 0;
+      width: 40px;
+      height: 40px;
+      justify-content: center;
+      border-radius: 50%;
+    }
+    .header-cta::before {
+      content: '';
+      display: block;
+      width: 20px;
+      height: 20px;
+      background: currentColor;
+      /* ikon WhatsApp via mask */
+      mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z'/%3E%3Cpath d='M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.117 1.528 5.847L.057 23.882l6.196-1.624A11.946 11.946 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.001-1.368l-.359-.214-3.68.965.981-3.595-.234-.369A9.818 9.818 0 1112 21.818z'/%3E%3C/svg%3E");
+      mask-repeat: no-repeat;
+      mask-position: center;
+      mask-size: contain;
+      -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z'/%3E%3Cpath d='M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.117 1.528 5.847L.057 23.882l6.196-1.624A11.946 11.946 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.001-1.368l-.359-.214-3.68.965.981-3.595-.234-.369A9.818 9.818 0 1112 21.818z'/%3E%3C/svg%3E");
+      -webkit-mask-repeat: no-repeat;
+      -webkit-mask-position: center;
+      -webkit-mask-size: contain;
+      flex-shrink: 0;
+    }
+  }
+</style>

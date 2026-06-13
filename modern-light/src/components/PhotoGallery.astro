@@ -12,100 +12,220 @@
 //     resolveAltText (R11.1).
 // Warna via CSS var saja (R6.4).
 import type { PhotoSet } from '../types.ts';
-import { isEmptyList } from '../lib/empty.ts';
 import { resolveAltText } from '../lib/images.ts';
 
 interface Props {
   photos?: PhotoSet;
 }
 
-const LABELS: Record<keyof PhotoSet, string> = {
-  nakes: 'Tenaga Kesehatan',
-  ruangan: 'Ruangan',
-  alat: 'Peralatan',
-  hasil: 'Hasil',
-};
 const ORDER: (keyof PhotoSet)[] = ['nakes', 'ruangan', 'alat', 'hasil'];
 
 const { photos } = Astro.props;
-
-const groups = photos
-  ? ORDER.filter((cat) => !isEmptyList(photos[cat])).map((cat) => ({
-      cat,
-      label: LABELS[cat],
-      items: photos[cat],
-    }))
+const allPhotos = photos
+  ? ORDER.flatMap((cat) => photos[cat] ?? [])
   : [];
 
-if (groups.length === 0) return null;
+if (allPhotos.length === 0) return null;
 ---
 
-<section class="gallery" aria-labelledby="gallery-h">
+<section id="galeri" class="gallery" aria-labelledby="gallery-h">
   <div class="container">
-    <h2 id="gallery-h">Galeri</h2>
-    {
-      groups.map((group) => (
-        <div class="gallery-group">
-          <h3 class="gallery-cat">{group.label}</h3>
-          <ul class="gallery-grid" role="list">
-            {group.items.map((photo) => (
-              <li class="gallery-item">
-                <img
-                  src={`/images/${photo.url}`}
-                  alt={resolveAltText(photo)}
-                  width="400"
-                  height="300"
-                  loading="lazy"
-                  decoding="async"
-                />
-                {photo.caption && (
-                  <figcaption class="gallery-cap">{photo.caption}</figcaption>
-                )}
-              </li>
-            ))}
-          </ul>
-        </div>
-      ))
-    }
+    <div class="gallery-header">
+      <p class="gallery-eyebrow">Dokumentasi</p>
+      <h2 id="gallery-h">Galeri</h2>
+    </div>
+    <ul class="gallery-grid" role="list">
+      {allPhotos.map((photo, i) => (
+        <li class="gallery-item" style={`--i: ${i}`}>
+          <div class="gallery-img-wrap">
+            <img
+              src={`/images/${photo.url}`}
+              alt={resolveAltText(photo)}
+              width="800"
+              height="600"
+              loading="lazy"
+              decoding="async"
+            />
+            {photo.caption && (
+              <div class="gallery-overlay" aria-hidden="true">
+                <p class="gallery-cap">{photo.caption}</p>
+              </div>
+            )}
+          </div>
+        </li>
+      ))}
+    </ul>
   </div>
 </section>
+
+<script>
+  const items = document.querySelectorAll('.gallery-item');
+  const io = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          (e.target as HTMLElement).classList.add('is-visible');
+          io.unobserve(e.target);
+        }
+      });
+    },
+    { threshold: 0.1 }
+  );
+  items.forEach((el) => io.observe(el));
+</script>
 
 <style>
   .gallery {
     background: var(--background);
   }
+
+  .gallery-header {
+    margin-bottom: clamp(2rem, 5vw, 3.5rem);
+  }
+
+  .gallery-eyebrow {
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 0.6rem;
+  }
+
   .gallery h2 {
-    font-size: clamp(1.5rem, 4vw, 2.1rem);
-    margin: 0 0 1.5rem;
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 800;
+    margin: 0;
+    line-height: 1.1;
+    color: var(--text);
   }
-  .gallery-group {
-    margin-bottom: 2rem;
-  }
-  .gallery-cat {
-    font-size: 1.1rem;
-    color: var(--muted);
-    margin: 0 0 0.75rem;
-  }
+
+  /* Masonry-style grid dengan item bervariasi ukuran */
   .gallery-grid {
     list-style: none;
     margin: 0;
     padding: 0;
     display: grid;
-    gap: 1rem;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 0.75rem;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: 220px;
   }
+
+  /* Item pertama dan ke-5 lebih besar */
+  .gallery-item:nth-child(1),
+  .gallery-item:nth-child(5) {
+    grid-column: span 2;
+    grid-row: span 2;
+  }
+
+  /* Reveal animasi */
   .gallery-item {
-    margin: 0;
+    opacity: 0;
+    transform: scale(0.96);
+    transition:
+      opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1) calc(var(--i) * 0.07s),
+      transform 0.5s cubic-bezier(0.22, 1, 0.36, 1) calc(var(--i) * 0.07s);
   }
-  .gallery-item img {
+
+  .gallery-item.is-visible {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  /* Wrapper gambar */
+  .gallery-img-wrap {
+    position: relative;
     width: 100%;
-    height: auto;
-    border-radius: var(--radius);
-    object-fit: cover;
+    height: 100%;
+    overflow: hidden;
+    border-radius: calc(var(--radius) * 1.5);
   }
+
+  .gallery-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .gallery-item:hover .gallery-img-wrap img {
+    transform: scale(1.06);
+  }
+
+  /* Overlay caption */
+  .gallery-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.7) 0%,
+      rgba(0, 0, 0, 0) 55%
+    );
+    display: flex;
+    align-items: flex-end;
+    padding: 1.1rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    border-radius: calc(var(--radius) * 1.5);
+  }
+
+  .gallery-item:hover .gallery-overlay {
+    opacity: 1;
+  }
+
   .gallery-cap {
-    font-size: 0.8125rem;
-    color: var(--muted);
-    margin-top: 0.4rem;
+    color: #fff;
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin: 0;
+    line-height: 1.4;
+    transform: translateY(6px);
+    transition: transform 0.3s ease;
+  }
+
+  .gallery-item:hover .gallery-cap {
+    transform: translateY(0);
+  }
+
+  /* Tablet */
+  @media (max-width: 1024px) {
+    .gallery-grid {
+      grid-template-columns: repeat(3, 1fr);
+      grid-auto-rows: 200px;
+    }
+  }
+
+  /* Mobile */
+  @media (max-width: 640px) {
+    .gallery-grid {
+      grid-template-columns: repeat(2, 1fr);
+      grid-auto-rows: 160px;
+    }
+
+    .gallery-item:nth-child(1),
+    .gallery-item:nth-child(5) {
+      grid-column: span 2;
+      grid-row: span 1;
+    }
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .gallery-item {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+    .gallery-img-wrap img {
+      transition: none;
+    }
+    .gallery-overlay {
+      opacity: 1;
+    }
+    .gallery-cap {
+      transform: none;
+      transition: none;
+    }
   }
 </style>

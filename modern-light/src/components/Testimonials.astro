@@ -13,65 +13,214 @@ interface Props {
 const { items } = Astro.props;
 if (isEmptyList(items)) return null;
 const testimonials = items as Testimonial[];
+// Duplikat untuk seamless infinite loop
+const doubled = [...testimonials, ...testimonials];
 ---
 
 <section class="testimonials" aria-labelledby="testimonials-h">
-  <div class="container">
+  <div class="testi-header container">
+    <p class="testi-eyebrow">Kepercayaan Pasien</p>
     <h2 id="testimonials-h">Apa Kata Mereka</h2>
-    <ul class="testi-grid" role="list">
-      {
-        testimonials.map((t) => (
-          <li class="testi-card">
-            <blockquote class="testi-quote">{t.text}</blockquote>
-            <p class="testi-meta">
-              <span class="testi-name">{t.name}</span>
-              {t.role && <span class="testi-role">{t.role}</span>}
-            </p>
+  </div>
+
+  <!-- Marquee track: overflow hidden, tidak perlu container -->
+  <div class="testi-marquee-outer">
+    <div class="testi-marquee" aria-label="Testimoni pasien">
+      <ul class="testi-track" role="list">
+        {doubled.map((t, i) => (
+          <li class="testi-card" aria-hidden={i >= testimonials.length ? 'true' : undefined}>
+            <div class="testi-stars" aria-hidden="true">★★★★★</div>
+            <blockquote class="testi-quote">
+              <p>{t.text}</p>
+            </blockquote>
+            <footer class="testi-meta">
+              <span class="testi-avatar" aria-hidden="true">
+                {t.name.charAt(0)}
+              </span>
+              <div>
+                <p class="testi-name">{t.name}</p>
+                {t.role && <p class="testi-role">{t.role}</p>}
+              </div>
+            </footer>
           </li>
-        ))
-      }
-    </ul>
+        ))}
+      </ul>
+    </div>
   </div>
 </section>
 
 <style>
   .testimonials {
     background: var(--surface);
+    overflow: hidden;
   }
+
+  .testi-header {
+    margin-bottom: clamp(2rem, 5vw, 3rem);
+  }
+
+  .testi-eyebrow {
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 0.6rem;
+  }
+
   .testimonials h2 {
-    font-size: clamp(1.5rem, 4vw, 2.1rem);
-    margin: 0 0 1.5rem;
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 800;
+    margin: 0;
+    line-height: 1.1;
+    color: var(--text);
   }
-  .testi-grid {
+
+  /* Wrapper luar — batasi lebar dan tengahkan */
+  .testi-marquee-outer {
+    max-width: var(--max-width);
+    margin-inline: auto;
+    padding-inline: clamp(1rem, 4vw, 2rem);
+  }
+
+  /* Marquee container — overflow hidden + fade mask */
+  .testi-marquee {
+    position: relative;
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent 0%,
+      black 6%,
+      black 94%,
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      to right,
+      transparent 0%,
+      black 6%,
+      black 94%,
+      transparent 100%
+    );
+  }
+
+  /* Track yang bergerak */
+  .testi-track {
     list-style: none;
     margin: 0;
-    padding: 0;
-    display: grid;
+    padding: 0.5rem 0;
+    display: flex;
     gap: 1.25rem;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    width: max-content;
+    animation: marquee 28s linear infinite;
   }
+
+  .testi-marquee:hover .testi-track {
+    animation-play-state: paused;
+  }
+
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+
+  /* Card */
   .testi-card {
+    width: 320px;
+    flex-shrink: 0;
     background: var(--background);
-    border-radius: var(--radius);
-    padding: 1.5rem;
-    border: 1px solid var(--surface);
-  }
-  .testi-quote {
-    margin: 0 0 1rem;
-    color: var(--text);
-    font-style: italic;
-  }
-  .testi-meta {
-    margin: 0;
+    border-radius: calc(var(--radius) * 2);
+    padding: 1.75rem;
+    border: 1px solid color-mix(in srgb, var(--muted) 15%, transparent);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+    transition: box-shadow 0.3s ease, transform 0.3s ease, border-color 0.3s ease;
     display: flex;
     flex-direction: column;
+    gap: 1rem;
   }
+
+  .testi-card:hover {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    transform: translateY(-3px);
+    border-color: color-mix(in srgb, var(--accent) 30%, transparent);
+  }
+
+  /* Bintang */
+  .testi-stars {
+    color: var(--accent);
+    font-size: 0.9rem;
+    letter-spacing: 0.1em;
+  }
+
+  /* Quote */
+  .testi-quote {
+    margin: 0;
+    flex: 1;
+  }
+
+  .testi-quote p {
+    margin: 0;
+    color: var(--text);
+    font-size: 0.95rem;
+    line-height: 1.7;
+    font-style: italic;
+  }
+
+  /* Meta */
+  .testi-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 0;
+  }
+
+  .testi-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--accent) 15%, transparent);
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
   .testi-name {
     font-weight: 600;
     color: var(--text);
+    margin: 0;
+    font-size: 0.9rem;
   }
+
   .testi-role {
-    font-size: 0.875rem;
+    font-size: 0.8rem;
     color: var(--muted);
+    margin: 0.1rem 0 0;
+  }
+
+  /* Reduced motion — tampilkan sebagai grid statis */
+  @media (prefers-reduced-motion: reduce) {
+    .testi-track {
+      animation: none;
+      flex-wrap: wrap;
+      width: 100%;
+      padding-inline: clamp(1rem, 4vw, 2rem);
+      max-width: var(--max-width);
+      margin-inline: auto;
+    }
+    .testi-marquee {
+      mask-image: none;
+      -webkit-mask-image: none;
+      overflow: visible;
+    }
+    .testi-card {
+      width: clamp(260px, 30%, 340px);
+    }
+    /* Sembunyikan duplikat saat reduced motion */
+    .testi-card[aria-hidden="true"] {
+      display: none;
+    }
   }
 </style>
