@@ -8,6 +8,7 @@
 // content.ts (R13.1) — tidak ada konten client di-hardcode di sini.
 import content from '../content.ts';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
 import Hero from '../components/Hero.astro';
 import TrustBar from '../components/TrustBar.astro';
 import Services from '../components/Services.astro';
@@ -21,9 +22,10 @@ import FloatingWhatsApp from '../components/FloatingWhatsApp.astro';
 ---
 
 <BaseLayout content={content}>
+  <Header content={content} />
   <Hero content={content} />
   <TrustBar items={content.credentials} />
-  <Services items={content.services} />
+  <Services items={content.services} photos={content.photos} />
   <About text={content.about} />
   <PhotoGallery photos={content.photos} />
   <HowItWorks steps={content.howItWorks} />

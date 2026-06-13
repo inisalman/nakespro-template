@@ -17,7 +17,13 @@ const howItWorks = steps as HowItWorksStep[];
 
 <section class="how" aria-labelledby="how-h">
   <div class="container">
-    <h2 id="how-h">Cara Kerja</h2>
+    <div class="section-head">
+      <span class="section-kicker">Cara Kerja</span>
+      <h2 id="how-h" class="section-title">Mudah & Menyenangkan</h2>
+      <p class="section-lead">
+        Hanya beberapa langkah sederhana untuk mulai dirawat di rumah Anda.
+      </p>
+    </div>
     <ol class="how-list">
       {
         howItWorks.map((s) => (
@@ -37,44 +43,51 @@ const howItWorks = steps as HowItWorksStep[];
 </section>
 
 <style>
-  .how {
-    background: var(--background);
-  }
-  .how h2 {
-    font-size: clamp(1.5rem, 4vw, 2.1rem);
-    margin: 0 0 1.5rem;
-  }
   .how-list {
     list-style: none;
     margin: 0;
     padding: 0;
     display: grid;
     gap: 1.25rem;
-    counter-reset: step;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   }
   .how-step {
-    display: flex;
-    gap: 1rem;
-    align-items: flex-start;
+    position: relative;
+    background: var(--background);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius);
+    padding: 1.75rem 1.5rem 1.5rem;
+    box-shadow: var(--shadow-sm);
+    transition:
+      transform 0.25s ease,
+      box-shadow 0.25s ease;
+  }
+  .how-step:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow);
   }
   .how-num {
-    flex: none;
-    width: 2.25rem;
-    height: 2.25rem;
-    border-radius: 50%;
-    background: var(--accent);
-    color: var(--background);
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    font-weight: 700;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--on-accent);
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+    box-shadow: var(--shadow-sm);
   }
   .how-title {
-    margin: 0 0 0.25rem;
-    font-size: 1.1rem;
+    margin: 0 0 0.4rem;
+    font-size: 1.15rem;
   }
   .how-desc {
     margin: 0;
     color: var(--muted);
+    font-size: 0.98rem;
   }
 </style>

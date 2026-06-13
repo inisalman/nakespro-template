@@ -1,10 +1,13 @@
 // content.ts — sumber data tunggal untuk satu website client (R13.1).
 //
-// Reference_Template (modern-light) diisi konten dummy realistis TANPA
-// placeholder (tanpa lorem/TODO/TBD) dan tanpa gambar rusak (R9.3, R9.5).
-// Seluruh field SiteContent diisi sehingga kesembilan section hidup (R9.5).
+// Template friendly-care diisi konten dummy realistis TANPA placeholder
+// (tanpa lorem/TODO/TBD) dan tanpa gambar rusak (R9.3, R9.5). Seluruh field
+// SiteContent diisi sehingga kesembilan section hidup (R9.5).
 // `assertSiteContent` dipanggil saat impor agar pelanggaran bound
 // menghentikan build sebelum dist/ (R8.5).
+//
+// Profil client: praktik bidan untuk perawatan ibu & bayi (pijat bayi,
+// breast care, yoga ibu hamil, konselor laktasi) dengan model home visit.
 //
 // Foto yang direferensikan harus ada di public/images/ (R8.2, R8.7). Nama
 // berkas di sini cocok dengan berkas .webp di public/images/.
@@ -15,93 +18,95 @@ import { assertSiteContent } from './lib/validate.ts';
 const content: SiteContent = {
   // — Presentasi —
   template: 'friendly-care',
-  palette: 'sunny',
+  palette: 'bubblegum',
 
   // — Wajib —
-  websiteName: 'Klinik Perawat Sehat Bersama',
+  websiteName: 'Bidan Bunda Asih — Perawatan Ibu & Bayi',
   description:
-    'Layanan perawatan kesehatan profesional oleh tenaga kesehatan ' +
-    'bersertifikat. Perawatan luka, homecare lansia, dan konsultasi ' +
-    'kesehatan langsung di rumah Anda dengan jadwal yang fleksibel.',
-  serviceType: 'both',
+    'Layanan kebidanan lembut untuk ibu dan si kecil langsung di rumah ' +
+    'Anda. Pijat bayi, perawatan payudara, yoga ibu hamil, dan konsultasi ' +
+    'laktasi oleh bidan bersertifikat dengan jadwal yang fleksibel.',
+  serviceType: 'homecare',
   waNumber: '081234567890',
 
   // — Turunan Order (opsional) —
   practiceHours:
-    'Senin–Jumat 08.00–20.00 WIB, Sabtu 08.00–15.00 WIB, ' +
-    'kunjungan darurat 24 jam dengan perjanjian.',
+    'Senin–Sabtu 08.00–19.00 WIB, kunjungan rumah dengan perjanjian. ' +
+    'Konsultasi laktasi darurat tersedia di luar jam dengan perjanjian.',
   location:
-    'Melayani area Jakarta Selatan, Depok, dan sekitarnya. ' +
-    'Klinik di Jl. Melati Raya No. 12, Cilandak, Jakarta Selatan.',
+    'Melayani kunjungan rumah area Jakarta Selatan, Depok, dan ' +
+    'sekitarnya. Basis praktik di Jl. Kenanga Raya No. 8, Cilandak, ' +
+    'Jakarta Selatan.',
   googleMaps:
     'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.123!2d106.79!3d-6.29!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sCilandak!5e0!3m2!1sid!2sid!4v1700000000000',
 
   photos: {
     nakes: [
-      { url: 'nakes-1.webp', caption: 'Ns. Rina Wijaya, perawat penanggung jawab' },
-      { url: 'nakes-2.webp', caption: 'Tim perawat saat kunjungan homecare' },
+      { url: 'nakes-1.webp', caption: 'Bidan Sari Utami, A.Md.Keb., penanggung jawab' },
+      { url: 'nakes-2.webp', caption: 'Bidan saat kunjungan rumah mendampingi ibu' },
     ],
     ruangan: [
-      { url: 'ruangan-1.webp', caption: 'Ruang perawatan klinik yang bersih' },
-      { url: 'ruangan-2.webp', caption: 'Ruang tunggu pasien yang nyaman' },
+      { url: 'ruangan-1.webp', caption: 'Suasana sesi pijat bayi yang nyaman di rumah ibu' },
+      { url: 'ruangan-2.webp', caption: 'Sudut tenang untuk sesi yoga ibu hamil' },
     ],
     alat: [
-      { url: 'alat-1.webp', caption: 'Peralatan perawatan luka steril' },
-      { url: 'alat-2.webp', caption: 'Alat pemeriksaan tanda vital' },
+      { url: 'alat-1.webp', caption: 'Perlengkapan pijat bayi yang lembut dan higienis' },
+      { url: 'alat-2.webp', caption: 'Peralatan pendukung perawatan payudara' },
     ],
     hasil: [
-      { url: 'hasil-1.webp', caption: 'Proses perawatan luka diabetik' },
-      { url: 'hasil-2.webp', caption: 'Pendampingan fisioterapi lansia' },
+      { url: 'hasil-1.webp', caption: 'Momen bonding ibu dan bayi setelah sesi pijat' },
+      { url: 'hasil-2.webp', caption: 'Ibu hamil rileks usai sesi prenatal yoga' },
     ],
   },
 
   // — Konten —
-  tagline: 'Perawatan tepercaya, langsung ke rumah Anda',
+  tagline: 'Perawatan lembut untuk ibu dan si kecil, di rumah Anda',
   about:
-    'Klinik Perawat Sehat Bersama didirikan oleh sekelompok perawat ' +
-    'bersertifikat dengan pengalaman lebih dari sepuluh tahun di rumah ' +
-    'sakit rujukan. Kami percaya perawatan kesehatan yang baik dimulai ' +
-    'dari rasa nyaman pasien.\n\n' +
-    'Layanan kami mencakup perawatan luka kronis, pendampingan lansia, ' +
-    'pemasangan dan perawatan kateter, hingga edukasi keluarga. Setiap ' +
-    'tindakan mengikuti standar prosedur klinis dan dicatat secara rapi ' +
-    'agar perkembangan pasien selalu terpantau.',
+    'Bidan Bunda Asih hadir untuk menemani perjalanan setiap ibu, mulai ' +
+    'dari masa kehamilan hingga merawat buah hati. Didampingi bidan ' +
+    'bersertifikat dengan pengalaman lebih dari delapan tahun, kami ' +
+    'percaya perawatan terbaik lahir dari sentuhan yang lembut dan ' +
+    'suasana yang menenangkan.\n\n' +
+    'Layanan kami mencakup pijat bayi, perawatan payudara, kelas yoga ibu ' +
+    'hamil, hingga konsultasi laktasi. Seluruh kunjungan dilakukan di ' +
+    'rumah Anda agar ibu dan bayi tetap nyaman, dengan pendampingan yang ' +
+    'sabar dan edukasi untuk seluruh keluarga.',
 
   credentials: [
-    { label: 'Perawat ber-STR aktif', icon: '🩺' },
-    { label: 'Sertifikat perawatan luka', icon: '🏅' },
-    { label: 'Pelatihan BTCLS', icon: '📋' },
-    { label: 'Mitra resmi BPJS', icon: '🤝' },
+    { label: 'Bidan ber-STR aktif', icon: '🩺' },
+    { label: 'Sertifikat Konselor Laktasi', icon: '🍼' },
+    { label: 'Pelatihan Pijat Bayi', icon: '👶' },
+    { label: 'Sertifikat Prenatal Yoga', icon: '🧘‍♀️' },
   ],
 
   services: [
     {
-      title: 'Perawatan Luka',
+      title: 'Pijat Bayi',
       description:
-        'Perawatan luka diabetik, luka operasi, dan luka kronis dengan ' +
-        'teknik steril dan pemantauan berkala.',
-      icon: '🩹',
+        'Pijat lembut untuk menstimulasi tumbuh kembang, melancarkan ' +
+        'pencernaan, dan membuat bayi tidur lebih nyenyak.',
+      icon: '👶',
     },
     {
-      title: 'Homecare Lansia',
+      title: 'Perawatan Payudara',
       description:
-        'Pendampingan harian, bantuan mobilitas, dan pemantauan kondisi ' +
-        'kesehatan lansia di rumah.',
-      icon: '👵',
+        'Breast care untuk melancarkan ASI, meredakan bengkak, dan ' +
+        'mencegah sumbatan, lengkap dengan edukasi perawatan mandiri.',
+      icon: '🤱',
     },
     {
-      title: 'Pemeriksaan Tanda Vital',
+      title: 'Yoga Ibu Hamil',
       description:
-        'Pengukuran tekanan darah, gula darah, dan saturasi oksigen ' +
-        'lengkap dengan laporan tertulis.',
-      icon: '❤️',
+        'Kelas prenatal yoga untuk menjaga kebugaran, melatih pernapasan, ' +
+        'dan mempersiapkan tubuh ibu menjelang persalinan.',
+      icon: '🧘‍♀️',
     },
     {
-      title: 'Konsultasi Kesehatan',
+      title: 'Konselor Laktasi',
       description:
-        'Konsultasi kebutuhan perawatan dan edukasi keluarga oleh perawat ' +
-        'berpengalaman.',
-      icon: '💬',
+        'Konsultasi menyusui untuk membantu pelekatan yang tepat, ' +
+        'meningkatkan produksi ASI, dan mengatasi kesulitan menyusui.',
+      icon: '🍼',
     },
   ],
 
@@ -109,55 +114,55 @@ const content: SiteContent = {
     {
       step: 1,
       title: 'Hubungi via WhatsApp',
-      description: 'Ceritakan kebutuhan perawatan Anda melalui WhatsApp kami.',
+      description: 'Ceritakan kebutuhan Anda dan si kecil melalui WhatsApp kami.',
     },
     {
       step: 2,
       title: 'Jadwalkan Kunjungan',
       description:
-        'Kami atur jadwal kunjungan sesuai waktu yang paling nyaman untuk Anda.',
+        'Kami atur jadwal kunjungan rumah sesuai waktu yang paling nyaman untuk Anda.',
     },
     {
       step: 3,
-      title: 'Perawatan di Rumah',
+      title: 'Bidan Datang ke Rumah',
       description:
-        'Perawat datang tepat waktu dan melakukan tindakan sesuai standar klinis.',
+        'Bidan datang tepat waktu dan memberikan perawatan dengan lembut dan telaten.',
     },
     {
       step: 4,
-      title: 'Laporan & Tindak Lanjut',
+      title: 'Pendampingan & Tindak Lanjut',
       description:
-        'Anda menerima laporan kondisi dan rekomendasi perawatan berikutnya.',
+        'Anda menerima edukasi perawatan mandiri dan dukungan untuk sesi berikutnya.',
     },
   ],
 
   testimonials: [
     {
-      name: 'Bapak Hadi',
+      name: 'Ibu Dina',
       text:
-        'Perawatan luka ayah saya sangat telaten. Perawatnya ramah dan ' +
-        'selalu menjelaskan setiap tindakan dengan sabar.',
-      role: 'Keluarga pasien, Depok',
+        'Bidannya sangat sabar mengajari saya cara menyusui yang benar. ' +
+        'Sekarang ASI lancar dan bayi saya lebih tenang.',
+      role: 'Ibu menyusui, Jakarta Selatan',
     },
     {
-      name: 'Ibu Sari',
+      name: 'Ibu Rani',
       text:
-        'Sangat terbantu dengan layanan homecare untuk ibu saya. Jadwal ' +
-        'fleksibel dan laporannya jelas setiap kunjungan.',
-      role: 'Keluarga pasien, Jakarta Selatan',
+        'Pijat bayi di rumah benar-benar membantu. Anak saya jadi tidur ' +
+        'lebih nyenyak dan tidak rewel. Bidannya ramah sekali.',
+      role: 'Ibu dari bayi 3 bulan, Depok',
     },
     {
-      name: 'Ibu Lestari',
+      name: 'Ibu Maya',
       text:
-        'Pemeriksaan rutin gula darah jadi mudah tanpa harus antre di ' +
-        'klinik. Hasilnya langsung dicatat dan dijelaskan.',
-      role: 'Pasien homecare',
+        'Ikut kelas yoga ibu hamil bareng Bunda Asih bikin saya lebih ' +
+        'rileks menjelang persalinan. Gerakannya aman dan dipandu dengan teliti.',
+      role: 'Ibu hamil 7 bulan',
     },
   ],
 
   // — CTA WhatsApp —
   waMessage:
-    'Halo Klinik Perawat Sehat Bersama, saya ingin bertanya tentang layanan perawatan di rumah.',
+    'Halo Bidan Bunda Asih, saya ingin bertanya tentang layanan perawatan ibu dan bayi.',
 };
 
 export default assertSiteContent(content);

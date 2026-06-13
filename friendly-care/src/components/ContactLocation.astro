@@ -34,20 +34,37 @@ const showMapUnavailable = !hasMaps && (hasHours || hasLocation);
 <section class="contact" aria-labelledby="contact-h">
   <div class="container contact-grid">
     <div class="contact-info">
-      <h2 id="contact-h">Kontak &amp; Lokasi</h2>
+      <span class="section-kicker">Kontak</span>
+      <h2 id="contact-h" class="contact-title">Kontak &amp; Lokasi</h2>
       {
         hasHours && (
           <div class="contact-block">
-            <h3 class="contact-label">Jam Praktik</h3>
-            <p class="contact-value">{practiceHours}</p>
+            <span class="contact-ic" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="9" />
+                <path d="M12 7v5l3 2" />
+              </svg>
+            </span>
+            <div>
+              <h3 class="contact-label">Jam Praktik</h3>
+              <p class="contact-value">{practiceHours}</p>
+            </div>
           </div>
         )
       }
       {
         hasLocation && (
           <div class="contact-block">
-            <h3 class="contact-label">Area Layanan</h3>
-            <p class="contact-value">{location}</p>
+            <span class="contact-ic" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 21s-7-5.6-7-11a7 7 0 0 1 14 0c0 5.4-7 11-7 11Z" />
+                <circle cx="12" cy="10" r="2.5" />
+              </svg>
+            </span>
+            <div>
+              <h3 class="contact-label">Area Layanan</h3>
+              <p class="contact-value">{location}</p>
+            </div>
           </div>
         )
       }
@@ -74,34 +91,46 @@ const showMapUnavailable = !hasMaps && (hasHours || hasLocation);
 </section>
 
 <style>
-  .contact {
-    background: var(--surface);
-  }
   .contact-grid {
     display: grid;
-    gap: 2rem;
-    align-items: start;
+    gap: 2.5rem;
+    align-items: center;
   }
   @media (min-width: 768px) {
     .contact-grid {
       grid-template-columns: 1fr 1fr;
     }
   }
-  .contact h2 {
-    font-size: clamp(1.5rem, 4vw, 2.1rem);
-    margin: 0 0 1.25rem;
+  .contact-title {
+    font-size: clamp(1.7rem, 4vw, 2.6rem);
+    margin: 0 0 1.75rem;
   }
   .contact-block {
-    margin-bottom: 1.25rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .contact-ic {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    border-radius: 14px;
+    background: var(--accent-soft);
+    color: var(--accent);
   }
   .contact-label {
     font-size: 1rem;
-    color: var(--muted);
-    margin: 0 0 0.25rem;
+    font-family: var(--font-display);
+    color: var(--text);
+    margin: 0 0 0.2rem;
   }
   .contact-value {
     margin: 0;
-    color: var(--text);
+    color: var(--muted);
   }
   .map-unavailable {
     color: var(--muted);
@@ -113,6 +142,8 @@ const showMapUnavailable = !hasMaps && (hasHours || hasLocation);
     aspect-ratio: 4 / 3;
     border-radius: var(--radius);
     overflow: hidden;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--glass-border);
   }
   .contact-map iframe {
     position: absolute;

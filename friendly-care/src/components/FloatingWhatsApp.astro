@@ -47,21 +47,56 @@ const href = show ? buildWaUrl(waNumber, waMessage) : '';
     position: fixed;
     right: clamp(1rem, 4vw, 2rem);
     bottom: clamp(1rem, 4vw, 2rem);
-    z-index: 50;
+    z-index: 70;
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    min-height: 48px;
-    padding: 0.75rem 1.1rem;
+    min-height: 52px;
+    padding: 0.8rem 1.3rem;
     border-radius: 999px;
     background: var(--accent);
-    color: var(--background);
-    font-weight: 600;
+    color: var(--on-accent);
+    font-family: var(--font-display);
+    font-weight: 700;
     text-decoration: none;
-    box-shadow: var(--shadow);
+    box-shadow: var(--shadow-lg);
+    transition:
+      transform 0.2s ease,
+      box-shadow 0.2s ease;
+  }
+  .floating-wa::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 55%, transparent);
+    animation: wa-pulse 2.4s ease-out infinite;
+  }
+  .floating-wa:hover {
+    transform: translateY(-3px) scale(1.03);
   }
   .wa-icon {
     flex: none;
+    position: relative;
+  }
+  .wa-label {
+    position: relative;
+  }
+  @keyframes wa-pulse {
+    0% {
+      box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 55%, transparent);
+    }
+    70% {
+      box-shadow: 0 0 0 16px color-mix(in srgb, var(--accent) 0%, transparent);
+    }
+    100% {
+      box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 0%, transparent);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .floating-wa::before {
+      animation: none;
+    }
   }
   @media (max-width: 480px) {
     .wa-label {
@@ -76,7 +111,7 @@ const href = show ? buildWaUrl(waNumber, waMessage) : '';
       border: 0;
     }
     .floating-wa {
-      min-width: 48px;
+      min-width: 52px;
       justify-content: center;
     }
   }

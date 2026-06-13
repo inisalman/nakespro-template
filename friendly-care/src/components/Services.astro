@@ -2,33 +2,65 @@
 // components/Services.astro — section 3, Auto-Hide (R3.6, R3.12, R5.3).
 //
 // Guard: services kosong → return null (R5.3). Bila ada, render SELURUH entri
-// (Property 8). Warna via CSS var saja (R6.4).
-import type { Service } from '../types.ts';
+// (Property 8). Warna via var(--token)/color-mix saja (R6.4).
+//
+// Kartu layanan besar berbasis gambar: tiap kartu memakai satu foto dari
+// content.photos sebagai latar (di-overlay gelap + sedikit blur) sehingga
+// deskripsi tetap terbaca di depannya. Foto tidak wajib — bila tidak ada foto
+// tersedia, kartu jatuh ke latar aksen lembut tanpa gambar. Pemetaan foto→kartu
+// bersifat dekoratif (CSS background); konten asli tetap dari content.ts (R13.1).
+import type { Service, PhotoSet } from '../types.ts';
 import { isEmptyList } from '../lib/empty.ts';
 
 interface Props {
   items?: Service[];
+  photos?: PhotoSet;
 }
 
-const { items } = Astro.props;
+const { items, photos } = Astro.props;
 if (isEmptyList(items)) return null;
 const services = items as Service[];
+
+// Kumpulkan foto dari seluruh kategori (urutan tetap) sebagai pool latar kartu.
+const ORDER: (keyof PhotoSet)[] = ['hasil', 'ruangan', 'nakes', 'alat'];
+const photoPool: string[] = photos
+  ? ORDER.flatMap((cat) => (photos[cat] ?? []).map((p) => p.url)).filter(Boolean)
+  : [];
+
+// Petakan satu foto per kartu secara bergiliran (round-robin) bila tersedia.
+const cards = services.map((s, i) => ({
+  service: s,
+  bg: photoPool.length > 0 ? `/images/${photoPool[i % photoPool.length]}` : null,
+}));
 ---
 
 <section class="services" aria-labelledby="services-h">
   <div class="container">
-    <h2 id="services-h">Layanan Kami</h2>
+    <div class="section-head">
+      <span class="section-kicker">Layanan Spesialis</span>
+      <h2 id="services-h" class="section-title">Layanan Kami</h2>
+      <p class="section-lead">
+        Perawatan holistik dan penuh kasih untuk menemani perjalanan Anda
+        bersama si kecil.
+      </p>
+    </div>
     <ul class="services-grid" role="list">
       {
-        services.map((s) => (
-          <li class="service-card">
-            {s.icon && (
-              <span class="service-icon" aria-hidden="true">
-                {s.icon}
-              </span>
-            )}
-            <h3 class="service-title">{s.title}</h3>
-            <p class="service-desc">{s.description}</p>
+        cards.map(({ service: s, bg }) => (
+          <li
+            class:list={['service-card', { 'has-image': bg }]}
+            style={bg ? `--card-image: url('${bg}')` : undefined}
+          >
+            <div class="service-overlay" aria-hidden="true" />
+            <div class="service-body">
+              {s.icon && (
+                <span class="service-icon" aria-hidden="true">
+                  {s.icon}
+                </span>
+              )}
+              <h3 class="service-title">{s.title}</h3>
+              <p class="service-desc">{s.description}</p>
+            </div>
           </li>
         ))
       }
@@ -37,36 +69,119 @@ const services = items as Service[];
 </section>
 
 <style>
-  .services {
-    background: var(--background);
-  }
-  .services h2 {
-    font-size: clamp(1.5rem, 4vw, 2.1rem);
-    margin: 0 0 1.5rem;
-  }
   .services-grid {
     list-style: none;
     margin: 0;
     padding: 0;
     display: grid;
-    gap: 1.25rem;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   }
   .service-card {
-    background: var(--surface);
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    min-height: 360px;
     border-radius: var(--radius);
-    padding: 1.5rem;
+    border: 1px solid var(--hairline);
+    background: var(--accent-soft);
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    transition:
+      transform 0.3s ease,
+      box-shadow 0.3s ease;
+  }
+  .service-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  /* Lapisan gambar: di belakang overlay & konten, sedikit blur + zoom-on-hover. */
+  .service-card.has-image::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    background-image: var(--card-image);
+    background-size: cover;
+    background-position: center;
+    filter: blur(2px) saturate(1.05);
+    transform: scale(1.08);
+    transition: transform 0.5s ease;
+  }
+  .service-card.has-image:hover::before {
+    transform: scale(1.15);
+  }
+
+  /* Overlay gelap beraksen agar teks putih kontras (WCAG) di atas foto apa pun. */
+  .service-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+  }
+  .has-image .service-overlay {
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--text) 24%, transparent) 0%,
+        color-mix(in srgb, var(--text) 72%, transparent) 70%,
+        color-mix(in srgb, var(--text) 86%, transparent) 100%
+      );
+  }
+
+  .service-body {
+    position: relative;
+    margin-top: auto;
+    padding: 1.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
   }
   .service-icon {
-    font-size: 1.75rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 18px;
+    background: var(--accent-soft);
     color: var(--accent);
+    font-size: 1.7rem;
+    line-height: 1;
+    margin-bottom: 0.4rem;
+    transition:
+      background 0.25s ease,
+      transform 0.25s ease;
+  }
+  .has-image .service-icon {
+    background: var(--glass-bg);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid var(--glass-border);
+  }
+  .service-card:hover .service-icon {
+    transform: scale(1.06);
   }
   .service-title {
-    font-size: 1.15rem;
-    margin: 0.5rem 0 0.4rem;
+    font-size: 1.4rem;
+    margin: 0;
+    color: var(--text);
+  }
+  .has-image .service-title {
+    color: var(--on-accent);
   }
   .service-desc {
     color: var(--muted);
     margin: 0;
+    font-size: 1rem;
+    line-height: 1.55;
+  }
+  .has-image .service-desc {
+    color: color-mix(in srgb, var(--on-accent) 88%, transparent);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .service-card.has-image::before {
+      transition: none;
+    }
   }
 </style>

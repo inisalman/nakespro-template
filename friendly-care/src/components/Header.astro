@@ -1,0 +1,160 @@
+---
+// components/Header.astro — TopNav kaca (sticky), bukan bagian Auto-Hide.
+//
+// Menampilkan brand (websiteName), tautan navigasi internal ke section, dan
+// WhatsApp_CTA. Tidak memuat <h1> (h1 tunggal ada di Hero, Property 13) —
+// brand dirender sebagai teks non-heading. Tautan nav menunjuk ke id heading
+// section yang ada; bila section ter-Auto-Hide, anchor tetap aman (tidak
+// menyebabkan error). CTA hanya tampil bila nomor valid (R4.4). Warna via
+// var(--token)/color-mix saja (R6.4).
+import type { SiteContent } from '../types.ts';
+import { buildWaUrl, isValidWaNumber } from '../lib/whatsapp.ts';
+
+interface Props {
+  content: SiteContent;
+}
+
+const { content } = Astro.props;
+const waValid = isValidWaNumber(content.waNumber);
+const waHref = buildWaUrl(content.waNumber, content.waMessage);
+
+const navLinks = [
+  { href: '#services-h', label: 'Layanan' },
+  { href: '#about-h', label: 'Tentang' },
+  { href: '#gallery-h', label: 'Galeri' },
+  { href: '#testimonials-h', label: 'Testimoni' },
+  { href: '#contact-h', label: 'Kontak' },
+];
+---
+
+<header class="site-nav">
+  <div class="container nav-inner">
+    <a class="brand" href="#hero-h" aria-label={content.websiteName}>
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+          <path
+            d="M12 21s-6.7-4.35-9.2-8.06C1.2 10.6 1.7 7.3 4.2 6c2-1.05 4.2-.3 5.4 1.2L12 9l2.4-1.8c1.2-1.5 3.4-2.25 5.4-1.2 2.5 1.3 3 4.6 1.4 6.94C18.7 16.65 12 21 12 21Z"
+          ></path>
+        </svg>
+      </span>
+      <span class="brand-name">{content.websiteName}</span>
+    </a>
+
+    <nav class="nav-links" aria-label="Navigasi utama">
+      {navLinks.map((l) => <a href={l.href}>{l.label}</a>)}
+    </nav>
+
+    {
+      waValid && (
+        <a
+          class="nav-cta"
+          href={waHref}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Hubungi kami via WhatsApp"
+        >
+          Buat Janji
+        </a>
+      )
+    }
+  </div>
+</header>
+
+<style>
+  .site-nav {
+    position: sticky;
+    top: 0;
+    z-index: 60;
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--glass-border);
+  }
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: 72px;
+    padding-block: 0.5rem;
+  }
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    text-decoration: none;
+    color: var(--text);
+  }
+  .brand-mark {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    background: var(--accent);
+    color: var(--on-accent);
+    box-shadow: var(--shadow-sm);
+  }
+  .brand-name {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.02rem;
+    letter-spacing: -0.01em;
+    max-width: 16ch;
+    line-height: 1.15;
+  }
+  .nav-links {
+    display: none;
+    align-items: center;
+    gap: 0.35rem;
+  }
+  .nav-links a {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 0.92rem;
+    color: var(--muted);
+    text-decoration: none;
+    padding: 0.5rem 0.85rem;
+    border-radius: var(--radius-pill);
+    transition:
+      color 0.2s ease,
+      background 0.2s ease;
+  }
+  .nav-links a:hover {
+    color: var(--accent);
+    background: var(--accent-soft);
+  }
+  .nav-cta {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0.6rem 1.3rem;
+    border-radius: var(--radius-pill);
+    background: var(--accent);
+    color: var(--on-accent);
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 0.92rem;
+    text-decoration: none;
+    box-shadow: var(--shadow-sm);
+    transition:
+      transform 0.2s ease,
+      box-shadow 0.2s ease;
+  }
+  .nav-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+  }
+  @media (min-width: 880px) {
+    .nav-links {
+      display: flex;
+    }
+  }
+  @media (max-width: 460px) {
+    .nav-cta {
+      display: none;
+    }
+  }
+</style>

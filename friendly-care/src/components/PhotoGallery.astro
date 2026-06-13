@@ -42,7 +42,13 @@ if (groups.length === 0) return null;
 
 <section class="gallery" aria-labelledby="gallery-h">
   <div class="container">
-    <h2 id="gallery-h">Galeri</h2>
+    <div class="section-head">
+      <span class="section-kicker">Dokumentasi</span>
+      <h2 id="gallery-h" class="section-title">Galeri</h2>
+      <p class="section-lead">
+        Momen-momen penuh kasih dalam setiap pelayanan untuk Anda dan buah hati.
+      </p>
+    </div>
     {
       groups.map((group) => (
         <div class="gallery-group">
@@ -50,17 +56,19 @@ if (groups.length === 0) return null;
           <ul class="gallery-grid" role="list">
             {group.items.map((photo) => (
               <li class="gallery-item">
-                <img
-                  src={`/images/${photo.url}`}
-                  alt={resolveAltText(photo)}
-                  width="400"
-                  height="300"
-                  loading="lazy"
-                  decoding="async"
-                />
-                {photo.caption && (
-                  <figcaption class="gallery-cap">{photo.caption}</figcaption>
-                )}
+                <figure class="gallery-fig">
+                  <img
+                    src={`/images/${photo.url}`}
+                    alt={resolveAltText(photo)}
+                    width="400"
+                    height="300"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  {photo.caption && (
+                    <figcaption class="gallery-cap">{photo.caption}</figcaption>
+                  )}
+                </figure>
               </li>
             ))}
           </ul>
@@ -71,41 +79,71 @@ if (groups.length === 0) return null;
 </section>
 
 <style>
-  .gallery {
-    background: var(--background);
-  }
-  .gallery h2 {
-    font-size: clamp(1.5rem, 4vw, 2.1rem);
-    margin: 0 0 1.5rem;
-  }
   .gallery-group {
-    margin-bottom: 2rem;
+    margin-bottom: 2.5rem;
+  }
+  .gallery-group:last-child {
+    margin-bottom: 0;
   }
   .gallery-cat {
-    font-size: 1.1rem;
-    color: var(--muted);
-    margin: 0 0 0.75rem;
+    display: inline-block;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--accent);
+    background: var(--accent-soft);
+    padding: 0.35rem 0.85rem;
+    border-radius: var(--radius-pill);
+    margin: 0 0 1.1rem;
   }
   .gallery-grid {
     list-style: none;
     margin: 0;
     padding: 0;
     display: grid;
-    gap: 1rem;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 1.1rem;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   }
   .gallery-item {
     margin: 0;
   }
-  .gallery-item img {
-    width: 100%;
-    height: auto;
+  .gallery-fig {
+    position: relative;
+    margin: 0;
     border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    aspect-ratio: 4 / 3;
+  }
+  .gallery-fig img {
+    width: 100%;
+    height: 100%;
     object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+  .gallery-fig:hover img {
+    transform: scale(1.07);
   }
   .gallery-cap {
-    font-size: 0.8125rem;
-    color: var(--muted);
-    margin-top: 0.4rem;
+    position: absolute;
+    inset: auto 0 0 0;
+    padding: 1.5rem 1rem 0.85rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--on-accent);
+    background: linear-gradient(
+      to top,
+      color-mix(in srgb, var(--accent) 85%, transparent),
+      transparent
+    );
+    opacity: 0;
+    transform: translateY(8px);
+    transition:
+      opacity 0.3s ease,
+      transform 0.3s ease;
+  }
+  .gallery-fig:hover .gallery-cap,
+  .gallery-fig:focus-within .gallery-cap {
+    opacity: 1;
+    transform: translateY(0);
   }
 </style>
