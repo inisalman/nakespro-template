@@ -56,6 +56,11 @@ const photoAlt = photo ? resolveAltText(photo) : '';
     display: grid;
     gap: clamp(2rem, 5vw, 4rem);
     align-items: center;
+    background: var(--background);
+    border: 1px solid color-mix(in srgb, var(--muted) 14%, transparent);
+    border-radius: calc(var(--radius) * 4);
+    padding: clamp(1.75rem, 4vw, 3.5rem);
+    box-shadow: var(--shadow-card);
   }
 
   @media (min-width: 768px) {
@@ -74,7 +79,7 @@ const photoAlt = photo ? resolveAltText(photo) : '';
     position: absolute;
     inset: -12px -12px 12px 12px;
     border: 2px solid color-mix(in srgb, var(--accent) 30%, transparent);
-    border-radius: calc(var(--radius) * 2);
+    border-radius: calc(var(--radius) * 3);
     z-index: 0;
   }
 
@@ -85,7 +90,7 @@ const photoAlt = photo ? resolveAltText(photo) : '';
     height: 100%;
     max-height: 520px;
     object-fit: cover;
-    border-radius: calc(var(--radius) * 2);
+    border-radius: calc(var(--radius) * 3);
     box-shadow: var(--shadow);
   }
 

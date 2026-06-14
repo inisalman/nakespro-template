@@ -58,6 +58,7 @@ export interface Service {
   title: string; // string (R2.9)
   description: string; // string (R2.9)
   icon?: string; // opsional (R2.9)
+  image?: string; // opsional; nama berkas foto latar di public/images/
 }
 
 /** Langkah pada section HowItWorks. Daftar 0–10 entri (R2.10). */

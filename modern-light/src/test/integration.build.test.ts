@@ -127,7 +127,6 @@ describe('Integration build (R1.5, R1.8, R8.1, R8.3, R10.4)', () => {
     expect(/<script\b[^>]*\bsrc=/.test(html)).toBe(false);
     for (const id of [
       'hero-h',
-      'trustbar-h',
       'services-h',
       'about-h',
       'gallery-h',

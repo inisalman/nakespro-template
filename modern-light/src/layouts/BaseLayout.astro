@@ -76,6 +76,20 @@ const cssVars = paletteToCssVars(palette);
           rgba(0, 0, 0, 0.25) 60%,
           rgba(0, 0, 0, 0.08) 100%
         );
+        /* Service tile (expandable): idle ringan agar foto terlihat, aktif pekat untuk keterbacaan teks. */
+        --overlay-service-idle: linear-gradient(
+          to top,
+          rgba(0, 0, 0, 0.6) 0%,
+          rgba(0, 0, 0, 0.25) 45%,
+          rgba(0, 0, 0, 0.05) 100%
+        );
+        --overlay-service-active: linear-gradient(
+          to top,
+          rgba(0, 0, 0, 0.9) 0%,
+          rgba(0, 0, 0, 0.55) 42%,
+          rgba(0, 0, 0, 0.15) 75%,
+          rgba(0, 0, 0, 0.05) 100%
+        );
         --shadow-card-lift: 0 20px 60px rgba(0, 0, 0, 0.35), 0 4px 12px rgba(0, 0, 0, 0.2);
         --font-sans:
           'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', Roboto,
@@ -124,6 +138,60 @@ const cssVars = paletteToCssVars(palette);
         outline: 3px solid var(--accent);
         outline-offset: 2px;
       }
+
+      /* Scroll-reveal: state awal disuntik via JS (.reveal) supaya pengguna
+         tanpa-JS tetap melihat konten. Section masuk viewport → .is-visible. */
+      .reveal {
+        opacity: 0;
+        transform: translateY(28px);
+        transition:
+          opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+          transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+        will-change: opacity, transform;
+      }
+      .reveal.is-visible {
+        opacity: 1;
+        transform: none;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .reveal,
+        .reveal.is-visible {
+          opacity: 1;
+          transform: none;
+          transition: none;
+        }
+      }
     </style>
+
+    <script>
+      // Global scroll-reveal untuk tiap section (kecuali Hero yang sudah punya
+      // animasi masuk sendiri). Hormati prefers-reduced-motion.
+      const prefersReduced = window.matchMedia(
+        '(prefers-reduced-motion: reduce)'
+      ).matches;
+
+      const targets = Array.from(
+        document.querySelectorAll('main > *, body > section:not(.hero)')
+      ).filter((el) => !el.classList.contains('hero'));
+
+      if (!prefersReduced && 'IntersectionObserver' in window) {
+        targets.forEach((el) => el.classList.add('reveal'));
+
+        const io = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((e) => {
+              if (e.isIntersecting) {
+                (e.target as HTMLElement).classList.add('is-visible');
+                io.unobserve(e.target);
+              }
+            });
+          },
+          { threshold: 0.12, rootMargin: '0px 0px -8% 0px' }
+        );
+
+        targets.forEach((el) => io.observe(el));
+      }
+    </script>
   </body>
 </html>

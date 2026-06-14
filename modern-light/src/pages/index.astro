@@ -10,7 +10,6 @@ import content from '../content.ts';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Hero from '../components/Hero.astro';
-import TrustBar from '../components/TrustBar.astro';
 import Services from '../components/Services.astro';
 import About from '../components/About.astro';
 import PhotoGallery from '../components/PhotoGallery.astro';
@@ -24,9 +23,9 @@ import FloatingWhatsApp from '../components/FloatingWhatsApp.astro';
 <BaseLayout content={content}>
   <Header content={content} />
   <Hero content={content} />
-  <TrustBar items={content.credentials} />
+  {/* TrustBar disembunyikan — kredensial sudah ditampilkan via badge melayang di Hero */}
+  <About text={content.about} photo={{ url: 'profile.webp', caption: 'Tim perawat kami' }} />
   <Services items={content.services} />
-  <About text={content.about} photo={content.photos?.[1]} />
   <PhotoGallery photos={content.photos} />
   <HowItWorks steps={content.howItWorks} />
   <Testimonials items={content.testimonials} />

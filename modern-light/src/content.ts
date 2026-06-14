@@ -36,7 +36,7 @@ const content: SiteContent = {
   googleMaps:
     'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.123!2d106.79!3d-6.29!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sCilandak!5e0!3m2!1sid!2sid!4v1700000000000',
 
-  heroPhoto: { url: 'nakes-1.webp', caption: 'Ns. Rina Wijaya, perawat penanggung jawab' },
+  heroPhoto: { url: 'hero.webp', caption: 'Ns. Rina Wijaya, perawat penanggung jawab' },
 
   photos: [
     { url: 'nakes-1.webp', caption: 'Ns. Rina Wijaya, perawat penanggung jawab' },
@@ -70,32 +70,32 @@ const content: SiteContent = {
 
   services: [
     {
-      title: 'Perawatan Luka',
+      title: 'Perawatan Luka Diabetes',
       description:
-        'Perawatan luka diabetik, luka operasi, dan luka kronis dengan ' +
-        'teknik steril dan pemantauan berkala.',
-      icon: '🩹',
+        'Perawatan luka diabetik dengan teknik steril, pencegahan infeksi, ' +
+        'dan pemantauan berkala untuk mempercepat penyembuhan.',
+      image: 'luka_diabetes.webp',
     },
     {
-      title: 'Homecare Lansia',
+      title: 'Perawatan Luka Kanker',
       description:
-        'Pendampingan harian, bantuan mobilitas, dan pemantauan kondisi ' +
-        'kesehatan lansia di rumah.',
-      icon: '👵',
+        'Penanganan luka kanker secara hati-hati untuk mengurangi nyeri, ' +
+        'mengontrol bau, dan menjaga kenyamanan pasien.',
+      image: 'luka_kanker.webp',
     },
     {
-      title: 'Pemeriksaan Tanda Vital',
+      title: 'Perawatan Luka Bakar',
       description:
-        'Pengukuran tekanan darah, gula darah, dan saturasi oksigen ' +
-        'lengkap dengan laporan tertulis.',
-      icon: '❤️',
+        'Perawatan luka bakar dengan pembersihan, penggantian balutan, ' +
+        'dan pencegahan komplikasi sesuai derajat luka.',
+      image: 'luka_bakar.webp',
     },
     {
-      title: 'Konsultasi Kesehatan',
+      title: 'Perawatan Luka Post Operasi',
       description:
-        'Konsultasi kebutuhan perawatan dan edukasi keluarga oleh perawat ' +
-        'berpengalaman.',
-      icon: '💬',
+        'Perawatan luka pasca operasi dengan teknik steril, penggantian ' +
+        'balutan, dan pemantauan proses penyembuhan untuk mencegah infeksi.',
+      image: 'luka_operasi.webp',
     },
   ],
 
