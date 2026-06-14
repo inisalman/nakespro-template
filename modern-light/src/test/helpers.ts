@@ -17,7 +17,7 @@ import fc from 'fast-check';
 import type {
   Credential,
   HowItWorksStep,
-  PhotoSet,
+  Photo,
   Service,
   SiteContent,
   Testimonial,
@@ -79,13 +79,8 @@ const arbPhoto = fc.record({
   caption: fc.option(fc.string({ minLength: 1, maxLength: 30 }), { nil: undefined }),
 });
 
-/** PhotoSet dengan tiap kategori bisa kosong (0–3 foto). */
-const arbPhotoSet: fc.Arbitrary<PhotoSet> = fc.record({
-  nakes: fc.array(arbPhoto, { maxLength: 3 }),
-  ruangan: fc.array(arbPhoto, { maxLength: 3 }),
-  alat: fc.array(arbPhoto, { maxLength: 3 }),
-  hasil: fc.array(arbPhoto, { maxLength: 3 }),
-});
+/** Galeri foto tunggal 0–6 foto (boleh kosong untuk menguji Auto-Hide). */
+const arbPhotos: fc.Arbitrary<Photo[]> = fc.array(arbPhoto, { maxLength: 6 });
 
 /**
  * Generator SiteContent acak. Field wajib selalu terisi & valid; field
@@ -109,7 +104,8 @@ export const arbSiteContent: fc.Arbitrary<SiteContent> = fc.record({
     fc.constant(''),
     fc.constant('https://maps.example/embed'),
   ),
-  photos: fc.option(arbPhotoSet, { nil: undefined }),
+  photos: fc.option(arbPhotos, { nil: undefined }),
+  heroPhoto: fc.option(arbPhoto, { nil: undefined }),
   tagline: arbMaybeBlank,
   about: arbMaybeBlank,
   credentials: fc.option(fc.array(arbCredential, { maxLength: 5 }), { nil: undefined }),

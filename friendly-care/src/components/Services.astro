@@ -9,23 +9,20 @@
 // deskripsi tetap terbaca di depannya. Foto tidak wajib — bila tidak ada foto
 // tersedia, kartu jatuh ke latar aksen lembut tanpa gambar. Pemetaan foto→kartu
 // bersifat dekoratif (CSS background); konten asli tetap dari content.ts (R13.1).
-import type { Service, PhotoSet } from '../types.ts';
+import type { Service, Photo } from '../types.ts';
 import { isEmptyList } from '../lib/empty.ts';
 
 interface Props {
   items?: Service[];
-  photos?: PhotoSet;
+  photos?: Photo[];
 }
 
 const { items, photos } = Astro.props;
 if (isEmptyList(items)) return null;
 const services = items as Service[];
 
-// Kumpulkan foto dari seluruh kategori (urutan tetap) sebagai pool latar kartu.
-const ORDER: (keyof PhotoSet)[] = ['hasil', 'ruangan', 'nakes', 'alat'];
-const photoPool: string[] = photos
-  ? ORDER.flatMap((cat) => (photos[cat] ?? []).map((p) => p.url)).filter(Boolean)
-  : [];
+// Kumpulkan url foto dari galeri (urutan tetap) sebagai pool latar kartu.
+const photoPool: string[] = (photos ?? []).map((p) => p.url).filter(Boolean);
 
 // Petakan satu foto per kartu secara bergiliran (round-robin) bila tersedia.
 const cards = services.map((s, i) => ({

@@ -42,6 +42,41 @@ const cssVars = paletteToCssVars(palette);
         --space: 1rem;
         --radius: 8px;
         --shadow: 0 6px 20px rgba(15, 23, 42, 0.18);
+        /* Token warna komponen (R6.4): komponen hanya mereferensikan var(--token). */
+        --star: #f59e0b; /* warna bintang rating */
+        --overlay-strong: rgba(0, 0, 0, 0.7); /* dasar gradien overlay foto */
+        --overlay-clear: rgba(0, 0, 0, 0); /* ujung transparan overlay */
+        --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.05);
+        --shadow-card-hover: 0 8px 32px rgba(0, 0, 0, 0.1);
+        /* Service cards: mesh gradient gelap dekoratif + lapisan keterbacaan. */
+        --grad-1: linear-gradient(135deg, #1a2744 0%, #0d4f3c 50%, #1a3a2a 100%);
+        --grad-2: linear-gradient(135deg, #2d1b4e 0%, #1a3a5c 50%, #0d2d44 100%);
+        --grad-3: linear-gradient(135deg, #3d1a1a 0%, #2d3a1a 50%, #1a3a3a 100%);
+        --grad-4: linear-gradient(135deg, #1a2d3d 0%, #2d4a1a 50%, #1a3a4a 100%);
+        --grad-5: linear-gradient(135deg, #2d2d1a 0%, #1a4a3a 50%, #2d1a3d 100%);
+        --grad-6: linear-gradient(135deg, #1a3d2d 0%, #3d1a2d 50%, #1a2d3d 100%);
+        --grad-fallback: linear-gradient(135deg, #1a2744 0%, #0d4f3c 100%);
+        --on-dark: #ffffff; /* teks di atas kartu gelap */
+        --on-dark-muted: rgba(255, 255, 255, 0.75);
+        --on-dark-faint: rgba(255, 255, 255, 0.13);
+        --on-dark-fainter: rgba(255, 255, 255, 0.08);
+        --on-dark-chip: rgba(255, 255, 255, 0.12);
+        --on-dark-chip-hover: rgba(255, 255, 255, 0.2);
+        --hairline-dark: rgba(255, 255, 255, 0.08);
+        --hairline-dark-hover: rgba(255, 255, 255, 0.18);
+        --overlay-card: linear-gradient(
+          to top,
+          rgba(0, 0, 0, 0.75) 0%,
+          rgba(0, 0, 0, 0.35) 60%,
+          rgba(0, 0, 0, 0.15) 100%
+        );
+        --overlay-card-hover: linear-gradient(
+          to top,
+          rgba(0, 0, 0, 0.65) 0%,
+          rgba(0, 0, 0, 0.25) 60%,
+          rgba(0, 0, 0, 0.08) 100%
+        );
+        --shadow-card-lift: 0 20px 60px rgba(0, 0, 0, 0.35), 0 4px 12px rgba(0, 0, 0, 0.2);
         --font-sans:
           'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', Roboto,
           Helvetica, Arial, sans-serif;

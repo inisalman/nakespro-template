@@ -1,43 +1,28 @@
 ---
-// components/PhotoGallery.astro — section 5, Auto-Hide per kategori (R3.8,
+// components/PhotoGallery.astro — section 5, Auto-Hide galeri (R3.8,
 // R3.13, R5.3, Property 5/8).
 //
 // Aturan render:
-//   - Section dirender bila ada ≥1 foto di kategori mana pun; bila semua
-//     kategori kosong → return null (R5.3).
-//   - Hanya grup kategori tidak kosong yang dirender; grup kosong disembunyikan
-//     (R3.13). Urutan kategori tetap: nakes, ruangan, alat, hasil.
+//   - Section dirender bila ada ≥1 foto; bila galeri kosong → return null
+//     (R5.3).
+//   - Seluruh foto dirender pada satu grid tunggal, urutan sesuai daftar
+//     (R3.13).
 //   - Tiap gambar: width/height eksplisit, loading="lazy" (below-the-fold,
 //     R10.8 Property 14), format modern (.webp di public/images), alt via
 //     resolveAltText (R11.1).
 // Warna via CSS var saja (R6.4).
-import type { PhotoSet } from '../types.ts';
-import { isEmptyList } from '../lib/empty.ts';
+import type { Photo } from '../types.ts';
 import { resolveAltText } from '../lib/images.ts';
 
 interface Props {
-  photos?: PhotoSet;
+  photos?: Photo[];
 }
-
-const LABELS: Record<keyof PhotoSet, string> = {
-  nakes: 'Tenaga Kesehatan',
-  ruangan: 'Ruangan',
-  alat: 'Peralatan',
-  hasil: 'Hasil',
-};
-const ORDER: (keyof PhotoSet)[] = ['nakes', 'ruangan', 'alat', 'hasil'];
 
 const { photos } = Astro.props;
 
-const groups = photos
-  ? ORDER.filter((cat) => !isEmptyList(photos[cat])).map((cat) => ({
-      cat,
-      label: LABELS[cat],
-      items: photos[cat],
-    }))
-  : [];
+const items = photos ?? [];
 
-if (groups.length === 0) return null;
+if (items.length === 0) return null;
 ---
 
 <section class="gallery" aria-labelledby="gallery-h">
@@ -46,32 +31,27 @@ if (groups.length === 0) return null;
       <p class="eyebrow">Galeri Kami</p>
       <h2 id="gallery-h">Berdedikasi untuk kesejahteraan Anda</h2>
     </div>
-    {
-      groups.map((group) => (
-        <div class="gallery-group">
-          <h3 class="gallery-cat">{group.label}</h3>
-          <ul class="gallery-grid" role="list">
-            {group.items.map((photo, i) => (
-              <li class="gallery-item" data-reveal style={`animation-delay:${0.05 * i}s`}>
-                <div class="gallery-shot">
-                  <img
-                    src={`/images/${photo.url}`}
-                    alt={resolveAltText(photo)}
-                    width="400"
-                    height="300"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                </div>
-                {photo.caption && (
-                  <figcaption class="gallery-cap">{photo.caption}</figcaption>
-                )}
-              </li>
-            ))}
-          </ul>
-        </div>
-      ))
-    }
+    <ul class="gallery-grid" role="list">
+      {
+        items.map((photo, i) => (
+          <li class="gallery-item" data-reveal style={`animation-delay:${0.05 * i}s`}>
+            <div class="gallery-shot">
+              <img
+                src={`/images/${photo.url}`}
+                alt={resolveAltText(photo)}
+                width="400"
+                height="300"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+            {photo.caption && (
+              <figcaption class="gallery-cap">{photo.caption}</figcaption>
+            )}
+          </li>
+        ))
+      }
+    </ul>
   </div>
 </section>
 
@@ -90,20 +70,6 @@ if (groups.length === 0) return null;
   .gallery h2 {
     font-size: clamp(1.7rem, 3.8vw, 2.6rem);
     margin: 0;
-  }
-  .gallery-group {
-    margin-bottom: 2.25rem;
-  }
-  .gallery-group:last-child {
-    margin-bottom: 0;
-  }
-  .gallery-cat {
-    font-size: 0.78rem;
-    font-weight: 700;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin: 0 0 1rem;
   }
   .gallery-grid {
     list-style: none;

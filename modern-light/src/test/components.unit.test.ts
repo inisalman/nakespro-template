@@ -30,7 +30,8 @@ const baseContent: SiteContent = {
   description: 'Deskripsi layanan',
   serviceType: 'both',
   waNumber: '081234567890',
-  photos: { nakes: [{ url: 'nakes-1.webp', caption: 'Perawat' }], ruangan: [], alat: [], hasil: [] },
+  heroPhoto: { url: 'nakes-1.webp', caption: 'Perawat' },
+  photos: [{ url: 'nakes-1.webp', caption: 'Perawat' }],
 };
 
 describe('Footer (R3.15)', () => {
@@ -41,7 +42,7 @@ describe('Footer (R3.15)', () => {
 });
 
 describe('Hero (R3.3, R11.4)', () => {
-  it('memuat foto nakes dan WA CTA dengan accessible name tidak kosong', async () => {
+  it('memuat heroPhoto dan WA CTA dengan accessible name tidak kosong', async () => {
     const html = await render(Hero, { content: baseContent });
     expect(html).toContain('/images/nakes-1.webp');
     // WA CTA punya aria-label tidak kosong.

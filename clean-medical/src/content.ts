@@ -38,24 +38,18 @@ const content: SiteContent = {
   googleMaps:
     'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.123!2d106.79!3d-6.29!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sCilandak!5e0!3m2!1sid!2sid!4v1700000000000',
 
-  photos: {
-    nakes: [
-      { url: 'nakes-1.webp', caption: 'Ftr. Rina Wijaya, fisioterapis penanggung jawab' },
-      { url: 'nakes-2.webp', caption: 'Sesi latihan mobilisasi bersama fisioterapis' },
-    ],
-    ruangan: [
-      { url: 'ruangan-1.webp', caption: 'Ruang terapi dengan matras rehabilitasi' },
-      { url: 'ruangan-2.webp', caption: 'Area latihan gerak yang lapang dan aman' },
-    ],
-    alat: [
-      { url: 'alat-1.webp', caption: 'Unit TENS untuk terapi nyeri' },
-      { url: 'alat-2.webp', caption: 'Resistance band dan alat latihan fungsional' },
-    ],
-    hasil: [
-      { url: 'hasil-1.webp', caption: 'Latihan pemulihan rentang gerak lutut' },
-      { url: 'hasil-2.webp', caption: 'Pendampingan latihan jalan pasca stroke' },
-    ],
-  },
+  heroPhoto: { url: 'nakes-1.webp', caption: 'Ftr. Rina Wijaya, fisioterapis penanggung jawab' },
+
+  photos: [
+    { url: 'nakes-1.webp', caption: 'Ftr. Rina Wijaya, fisioterapis penanggung jawab' },
+    { url: 'nakes-2.webp', caption: 'Sesi latihan mobilisasi bersama fisioterapis' },
+    { url: 'ruangan-1.webp', caption: 'Ruang terapi dengan matras rehabilitasi' },
+    { url: 'ruangan-2.webp', caption: 'Area latihan gerak yang lapang dan aman' },
+    { url: 'alat-1.webp', caption: 'Unit TENS untuk terapi nyeri' },
+    { url: 'alat-2.webp', caption: 'Resistance band dan alat latihan fungsional' },
+    { url: 'hasil-1.webp', caption: 'Latihan pemulihan rentang gerak lutut' },
+    { url: 'hasil-2.webp', caption: 'Pendampingan latihan jalan pasca stroke' },
+  ],
 
   // — Konten —
   tagline: 'Gerak kembali, pulih di rumah sendiri',

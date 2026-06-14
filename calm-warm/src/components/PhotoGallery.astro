@@ -1,34 +1,27 @@
 ---
-// components/PhotoGallery.astro — section 5, Auto-Hide per kategori (R3.8,
+// components/PhotoGallery.astro — section 5, Auto-Hide galeri (R3.8,
 // R3.13, R5.3, Property 5/8).
 //
 // Aturan render:
-//   - Section dirender bila ada ≥1 foto di kategori mana pun; bila semua
-//     kategori kosong → return null (R5.3).
-//   - SELURUH foto digabung ke SATU grid tunggal (tanpa sub-heading kategori).
-//     Urutan tetap: nakes, ruangan, alat, hasil (R3.13).
+//   - Section dirender bila ada ≥1 foto; bila galeri kosong → return null
+//     (R5.3).
+//   - Seluruh foto digabung ke SATU grid tunggal (tanpa sub-heading kategori),
+//     urutan sesuai daftar (R3.13).
 //   - Tiap gambar: width/height eksplisit, loading="lazy" (below-the-fold,
 //     R10.8 Property 14), format modern (.webp di public/images), alt via
 //     resolveAltText (R11.1).
 // Gaya Bloom & Bone: bingkai foto krem, caption muncul halus saat hover/fokus.
 // Warna via CSS var saja (R6.4).
-import type { PhotoSet } from '../types.ts';
-import { isEmptyList } from '../lib/empty.ts';
+import type { Photo } from '../types.ts';
 import { resolveAltText } from '../lib/images.ts';
 
 interface Props {
-  photos?: PhotoSet;
+  photos?: Photo[];
 }
-
-const ORDER: (keyof PhotoSet)[] = ['nakes', 'ruangan', 'alat', 'hasil'];
 
 const { photos } = Astro.props;
 
-const items = photos
-  ? ORDER.filter((cat) => !isEmptyList(photos[cat])).flatMap(
-      (cat) => photos[cat] ?? [],
-    )
-  : [];
+const items = photos ?? [];
 
 if (items.length === 0) return null;
 ---

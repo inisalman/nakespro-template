@@ -40,24 +40,18 @@ const content: SiteContent = {
   googleMaps:
     'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.123!2d106.79!3d-6.29!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sCilandak!5e0!3m2!1sid!2sid!4v1700000000000',
 
-  photos: {
-    nakes: [
-      { url: 'nakes-1.webp', caption: 'Bidan Sari Utami, A.Md.Keb., penanggung jawab' },
-      { url: 'nakes-2.webp', caption: 'Bidan saat kunjungan rumah mendampingi ibu' },
-    ],
-    ruangan: [
-      { url: 'ruangan-1.webp', caption: 'Suasana sesi pijat bayi yang nyaman di rumah ibu' },
-      { url: 'ruangan-2.webp', caption: 'Sudut tenang untuk sesi yoga ibu hamil' },
-    ],
-    alat: [
-      { url: 'alat-1.webp', caption: 'Perlengkapan pijat bayi yang lembut dan higienis' },
-      { url: 'alat-2.webp', caption: 'Peralatan pendukung perawatan payudara' },
-    ],
-    hasil: [
-      { url: 'hasil-1.webp', caption: 'Momen bonding ibu dan bayi setelah sesi pijat' },
-      { url: 'hasil-2.webp', caption: 'Ibu hamil rileks usai sesi prenatal yoga' },
-    ],
-  },
+  heroPhoto: { url: 'nakes-1.webp', caption: 'Bidan Sari Utami, A.Md.Keb., penanggung jawab' },
+
+  photos: [
+    { url: 'nakes-1.webp', caption: 'Bidan Sari Utami, A.Md.Keb., penanggung jawab' },
+    { url: 'nakes-2.webp', caption: 'Bidan saat kunjungan rumah mendampingi ibu' },
+    { url: 'ruangan-1.webp', caption: 'Suasana sesi pijat bayi yang nyaman di rumah ibu' },
+    { url: 'ruangan-2.webp', caption: 'Sudut tenang untuk sesi yoga ibu hamil' },
+    { url: 'alat-1.webp', caption: 'Perlengkapan pijat bayi yang lembut dan higienis' },
+    { url: 'alat-2.webp', caption: 'Peralatan pendukung perawatan payudara' },
+    { url: 'hasil-1.webp', caption: 'Momen bonding ibu dan bayi setelah sesi pijat' },
+    { url: 'hasil-2.webp', caption: 'Ibu hamil rileks usai sesi prenatal yoga' },
+  ],
 
   // — Konten —
   tagline: 'Perawatan lembut untuk ibu dan si kecil, di rumah Anda',

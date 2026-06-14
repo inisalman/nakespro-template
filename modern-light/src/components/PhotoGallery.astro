@@ -1,29 +1,25 @@
 ---
-// components/PhotoGallery.astro — section 5, Auto-Hide per kategori (R3.8,
+// components/PhotoGallery.astro — section 5, Auto-Hide galeri (R3.8,
 // R3.13, R5.3, Property 5/8).
 //
 // Aturan render:
-//   - Section dirender bila ada ≥1 foto di kategori mana pun; bila semua
-//     kategori kosong → return null (R5.3).
-//   - Hanya grup kategori tidak kosong yang dirender; grup kosong disembunyikan
-//     (R3.13). Urutan kategori tetap: nakes, ruangan, alat, hasil.
+//   - Section dirender bila ada ≥1 foto; bila galeri kosong → return null
+//     (R5.3).
+//   - Seluruh foto dirender pada satu grid tunggal, urutan sesuai daftar
+//     (R3.13).
 //   - Tiap gambar: width/height eksplisit, loading="lazy" (below-the-fold,
 //     R10.8 Property 14), format modern (.webp di public/images), alt via
 //     resolveAltText (R11.1).
 // Warna via CSS var saja (R6.4).
-import type { PhotoSet } from '../types.ts';
+import type { Photo } from '../types.ts';
 import { resolveAltText } from '../lib/images.ts';
 
 interface Props {
-  photos?: PhotoSet;
+  photos?: Photo[];
 }
 
-const ORDER: (keyof PhotoSet)[] = ['nakes', 'ruangan', 'alat', 'hasil'];
-
 const { photos } = Astro.props;
-const allPhotos = photos
-  ? ORDER.flatMap((cat) => photos[cat] ?? [])
-  : [];
+const allPhotos = photos ?? [];
 
 if (allPhotos.length === 0) return null;
 ---
@@ -159,8 +155,8 @@ if (allPhotos.length === 0) return null;
     inset: 0;
     background: linear-gradient(
       to top,
-      rgba(0, 0, 0, 0.7) 0%,
-      rgba(0, 0, 0, 0) 55%
+      var(--overlay-strong) 0%,
+      var(--overlay-clear) 55%
     );
     display: flex;
     align-items: flex-end;
@@ -175,7 +171,7 @@ if (allPhotos.length === 0) return null;
   }
 
   .gallery-cap {
-    color: #fff;
+    color: var(--on-dark);
     font-size: 0.875rem;
     font-weight: 500;
     margin: 0;

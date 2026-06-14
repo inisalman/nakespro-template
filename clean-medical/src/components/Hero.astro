@@ -4,7 +4,7 @@
 // Menampilkan (R3.3, R11.2, R11.4):
 //   - Tepat satu <h1> halaman (websiteName) → struktur heading (Property 13).
 //   - Tagline opsional sebagai sub-judul.
-//   - Foto nakes asli dari photos.nakes[0] dengan width/height eksplisit +
+//   - Foto utama dari content.heroPhoto dengan width/height eksplisit +
 //     fetchpriority high (above-the-fold, tidak lazy) (R3.3, R10.8, Property 14).
 //   - WhatsApp_CTA above-the-fold dengan accessible name tidak kosong (R3.3,
 //     R3.4, R11.4). CTA selalu tampil di Hero (berbeda dari floating yang
@@ -19,7 +19,7 @@ interface Props {
 }
 
 const { content } = Astro.props;
-const heroPhoto = content.photos?.nakes?.[0];
+const heroPhoto = content.heroPhoto;
 const heroAlt = heroPhoto
   ? resolveAltText(heroPhoto)
   : `Foto ${content.websiteName}`;

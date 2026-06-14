@@ -41,15 +41,11 @@ export interface Photo {
 }
 
 /**
- * Kumpulan foto per kategori. Setiap kategori adalah daftar 0–20 foto
- * (R2.6). Kategori kosong memicu Auto-Hide grup tersebut (R3.13).
+ * Galeri foto sebagai satu daftar tunggal 0–20 foto (R2.6). Tanpa kategori:
+ * seluruh foto dirender pada satu grid. Daftar kosong memicu Auto-Hide
+ * section galeri (R3.13).
  */
-export interface PhotoSet {
-  nakes: Photo[]; // 0–20
-  ruangan: Photo[]; // 0–20
-  alat: Photo[]; // 0–20
-  hasil: Photo[]; // 0–20
-}
+export type PhotoGallery = Photo[]; // 0–20
 
 /** Kredensial/sertifikasi nakes untuk TrustBar. Daftar 0–12 entri (R2.8). */
 export interface Credential {
@@ -98,7 +94,8 @@ export interface SiteContent {
   practiceHours?: string; // 0–200 char (R2.5)
   location?: string; // 0–200 char (R2.5)
   googleMaps?: string; // 0–1000 char (R2.5)
-  photos?: PhotoSet; // tiap kategori 0–20 (R2.6, R2.13)
+  heroPhoto?: Photo; // foto utama Hero; bila kosong Hero pakai fallback teks (R2.6)
+  photos?: PhotoGallery; // galeri tunggal 0–20 foto (R2.6, R2.13)
 
   // — Konten (opsional, memicu Auto-Hide) —
   tagline?: string; // 0–160 char (R2.7)

@@ -36,24 +36,18 @@ const content: SiteContent = {
   googleMaps:
     'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.123!2d106.79!3d-6.29!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sCilandak!5e0!3m2!1sid!2sid!4v1700000000000',
 
-  photos: {
-    nakes: [
-      { url: 'nakes-1.webp', caption: 'Ns. Rina Wijaya, perawat penanggung jawab' },
-      { url: 'nakes-2.webp', caption: 'Tim perawat saat kunjungan homecare' },
-    ],
-    ruangan: [
-      { url: 'ruangan-1.webp', caption: 'Ruang perawatan klinik yang bersih' },
-      { url: 'ruangan-2.webp', caption: 'Ruang tunggu pasien yang nyaman' },
-    ],
-    alat: [
-      { url: 'alat-1.webp', caption: 'Peralatan perawatan luka steril' },
-      { url: 'alat-2.webp', caption: 'Alat pemeriksaan tanda vital' },
-    ],
-    hasil: [
-      { url: 'hasil-1.webp', caption: 'Proses perawatan luka diabetik' },
-      { url: 'hasil-2.webp', caption: 'Pendampingan fisioterapi lansia' },
-    ],
-  },
+  heroPhoto: { url: 'nakes-1.webp', caption: 'Ns. Rina Wijaya, perawat penanggung jawab' },
+
+  photos: [
+    { url: 'nakes-1.webp', caption: 'Ns. Rina Wijaya, perawat penanggung jawab' },
+    { url: 'nakes-2.webp', caption: 'Tim perawat saat kunjungan homecare' },
+    { url: 'ruangan-1.webp', caption: 'Ruang perawatan klinik yang bersih' },
+    { url: 'ruangan-2.webp', caption: 'Ruang tunggu pasien yang nyaman' },
+    { url: 'alat-1.webp', caption: 'Peralatan perawatan luka steril' },
+    { url: 'alat-2.webp', caption: 'Alat pemeriksaan tanda vital' },
+    { url: 'hasil-1.webp', caption: 'Proses perawatan luka diabetik' },
+    { url: 'hasil-2.webp', caption: 'Pendampingan fisioterapi lansia' },
+  ],
 
   // — Konten —
   tagline: 'Perawatan tepercaya, langsung ke rumah Anda',

@@ -14,7 +14,6 @@ import type {
   Credential,
   HowItWorksStep,
   Photo,
-  PhotoSet,
   Service,
   SiteContent,
   Testimonial,
@@ -46,7 +45,7 @@ export const BOUNDS = {
   services: { min: 0, max: 12 }, // R2.9
   howItWorks: { min: 0, max: 10 }, // R2.10
   testimonials: { min: 0, max: 20 }, // R2.11
-  photosPerCategory: { min: 0, max: 20 }, // R2.6
+  photos: { min: 0, max: 20 }, // R2.6 (galeri tunggal)
 } as const;
 
 function checkStringLength(
@@ -92,17 +91,9 @@ function validatePhoto(field: string, photo: Photo): void {
   checkNonEmptyUrl(`${field}.url`, photo.url); // R2.6
 }
 
-function validatePhotoSet(photos: PhotoSet): void {
-  const categories: (keyof PhotoSet)[] = ['nakes', 'ruangan', 'alat', 'hasil'];
-  for (const cat of categories) {
-    const list = photos[cat];
-    checkListLength(
-      `photos.${cat}`,
-      list,
-      BOUNDS.photosPerCategory.max,
-    ); // R2.6
-    list.forEach((photo, i) => validatePhoto(`photos.${cat}[${i}]`, photo));
-  }
+function validatePhotos(photos: Photo[]): void {
+  checkListLength('photos', photos, BOUNDS.photos.max); // R2.6
+  photos.forEach((photo, i) => validatePhoto(`photos[${i}]`, photo));
 }
 
 function validateCredentials(items: Credential[]): void {
@@ -206,8 +197,11 @@ export function assertSiteContent(content: SiteContent): SiteContent {
   }
 
   // Opsional — daftar & isi (R2.6, R2.8–R2.11).
+  if (content.heroPhoto !== undefined) {
+    validatePhoto('heroPhoto', content.heroPhoto);
+  }
   if (content.photos !== undefined) {
-    validatePhotoSet(content.photos);
+    validatePhotos(content.photos);
   }
   if (content.credentials !== undefined) {
     validateCredentials(content.credentials);

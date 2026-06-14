@@ -130,12 +130,7 @@ describe('Property 15: validator bounds (R2.3, R2.5–R2.12)', () => {
         (content, emptyUrl) => {
           const bad = {
             ...content,
-            photos: {
-              nakes: [{ url: emptyUrl }],
-              ruangan: [],
-              alat: [],
-              hasil: [],
-            },
+            photos: [{ url: emptyUrl }],
           };
           expect(() => assertSiteContent(bad)).toThrow(/url/);
         },

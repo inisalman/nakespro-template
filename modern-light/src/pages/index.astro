@@ -14,6 +14,7 @@ import TrustBar from '../components/TrustBar.astro';
 import Services from '../components/Services.astro';
 import About from '../components/About.astro';
 import PhotoGallery from '../components/PhotoGallery.astro';
+import HowItWorks from '../components/HowItWorks.astro';
 import Testimonials from '../components/Testimonials.astro';
 import ContactLocation from '../components/ContactLocation.astro';
 import Footer from '../components/Footer.astro';
@@ -25,15 +26,14 @@ import FloatingWhatsApp from '../components/FloatingWhatsApp.astro';
   <Hero content={content} />
   <TrustBar items={content.credentials} />
   <Services items={content.services} />
-  <About text={content.about} photo={content.photos?.nakes?.[1]} />
+  <About text={content.about} photo={content.photos?.[1]} />
   <PhotoGallery photos={content.photos} />
+  <HowItWorks steps={content.howItWorks} />
   <Testimonials items={content.testimonials} />
   <ContactLocation
     practiceHours={content.practiceHours}
     location={content.location}
     googleMaps={content.googleMaps}
-    waNumber={content.waNumber}
-    waMessage={content.waMessage}
   />
   <Footer />
   <FloatingWhatsApp waNumber={content.waNumber} waMessage={content.waMessage} />

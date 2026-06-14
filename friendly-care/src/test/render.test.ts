@@ -59,12 +59,8 @@ describe('Property 5: auto-hide section (R3.12–R3.14, R5.3–R5.6)', () => {
         expect(has('how-h')).toBe(!isEmptyList(content.howItWorks));
         expect(has('testimonials-h')).toBe(!isEmptyList(content.testimonials));
 
-        // PhotoGallery: muncul iff ada ≥1 foto di kategori mana pun.
-        const anyPhoto =
-          !!content.photos &&
-          (['nakes', 'ruangan', 'alat', 'hasil'] as const).some(
-            (c) => !isEmptyList(content.photos![c]),
-          );
+        // PhotoGallery: muncul iff galeri berisi ≥1 foto.
+        const anyPhoto = !isEmptyList(content.photos);
         expect(has('gallery-h')).toBe(anyPhoto);
 
         // ContactLocation: muncul iff ≥1 sub-field tidak kosong.
