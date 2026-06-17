@@ -81,17 +81,15 @@ const hasLocation = !isEmptyText(content.location);
             />
             
           </div>
-
-                <ul class="hero-badges" aria-label="Kredensial">
-                  {badges.map((b, i) => (
-                    <li class="hero-badge-item hero-badge-item--{i + 1}">
-                      <span class="hero-badge-ico" aria-hidden="true">{b.icon}</span>
-                      <span class="hero-badge-txt">{b.label}</span>
-                    </li>
-                  ))}
-                </ul>
-      
-
+            <ul class="hero-badges" aria-label="Kredensial">
+            {badges.map((b, i) => (
+              <li class={`hero-badge-item hero-badge-item--${i + 1}`}>
+                <span class="hero-badge-ico" aria-hidden="true">{b.icon}</span>
+                <span class="hero-badge-txt">{b.label}</span>
+              </li>
+            ))}
+          </ul>
+          
           {(hasHours || hasLocation) && (
             <div class="hero-chips">
               {hasHours && (
@@ -132,21 +130,6 @@ const hasLocation = !isEmptyText(content.location);
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-10px); }
   }
-
-  
-  /* — Hero element stagger + photo + badge animations — */
-  .hero-title,.hero-h1 { animation: fsu .6s cubic-bezier(.22,1,.36,1) both; animation-delay:.05s; }
-  .hero-kicker,.hero-pill,.hero-eyebrow { animation: fsu .6s cubic-bezier(.22,1,.36,1) both; animation-delay:.12s; }
-  .hero-desc { animation: fsu .6s cubic-bezier(.22,1,.36,1) both; animation-delay:.25s; }
-  .hero-actions,.hero-cta-wrap { animation: fsu .6s cubic-bezier(.22,1,.36,1) both; animation-delay:.38s; }
-  .hero-media {
-    position: relative; animation: fi .8s ease both; animation-delay:.2s; }
-  .hero-badge-item {
-    animation: bp .5s cubic-bezier(.22,1,.36,1) both, bf 4s ease-in-out infinite;
-  }
-  .hero-badge-item:nth-child(1) { animation-delay: .7s, .7s; }
-  .hero-badge-item:nth-child(2) { animation-delay: .95s, 1.4s; }
-  .hero-badge-item:nth-child(3) { animation-delay: 1.2s, 2.1s; }
 
   .hero {
     padding-top: clamp(1.75rem, 4vw, 3rem);
@@ -226,10 +209,12 @@ const hasLocation = !isEmptyText(content.location);
   }
 
   .hero-media {
-    position: relative;
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
+  
+    animation: fi .8s ease both;
+    animation-delay: .2s;
   }
   .hero-frame {
     position: relative;
@@ -311,22 +296,10 @@ const hasLocation = !isEmptyText(content.location);
     }
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .hero-title,.hero-h1,.hero-kicker,.hero-pill,.hero-eyebrow,.hero-desc,.hero-actions,.hero-cta-wrap,.hero-media,.hero-badge-item {
-      animation: none;
-    }
-  }
-
-
-  .hero-badges {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    z-index: 2;
-  }
+  .hero-title { animation: fsu .6s cubic-bezier(.22,1,.36,1) both; animation-delay: .05s; }
+  .kicker,.hero-pill,.eyebrow { animation: fsu .6s cubic-bezier(.22,1,.36,1) both; animation-delay: .12s; }
+  .hero-desc { animation: fsu .6s cubic-bezier(.22,1,.36,1) both; animation-delay: .25s; }
+  .hero-actions { animation: fsu .6s cubic-bezier(.22,1,.36,1) both; animation-delay: .38s; }
   .hero-badge-item {
     position: absolute;
     display: inline-flex;
@@ -343,15 +316,27 @@ const hasLocation = !isEmptyText(content.location);
     white-space: nowrap;
     pointer-events: auto;
     z-index: 3;
+    animation: bp .5s cubic-bezier(.22,1,.36,1) both, bf 4s ease-in-out infinite;
   }
-  .hero-badge-item--1 { top: 8%; left: -4%; }
-  .hero-badge-item--2 { top: 44%; right: -5%; }
-  .hero-badge-item--3 { bottom: 9%; left: 2%; }
+  .hero-badge-item:nth-child(1) { top: 8%; left: -4%; animation-delay: .7s, .7s; }
+  .hero-badge-item:nth-child(2) { top: 44%; right: -5%; animation-delay: .95s, 1.4s; }
+  .hero-badge-item:nth-child(3) { bottom: 9%; left: 2%; animation-delay: 1.2s, 2.1s; }
   .hero-badge-ico { font-size: 1.05rem; line-height: 1; }
-  @media (max-width: 640px) {
-    .hero-badge-item { font-size: .73rem; padding: .4rem .6rem; }
-    .hero-badge-item--1 { left: 0; }
-    .hero-badge-item--2 { right: 0; }
+  .hero-badge-txt { }
+  .hero-badges {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-title,.kicker,.hero-pill,.eyebrow,.hero-desc,.hero-actions,.hero-media,.hero-badge-item {
+      animation: none;
+    }
   }
 
 </style>
