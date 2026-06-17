@@ -39,12 +39,12 @@ const hasLocation = !isEmptyText(content.location);
     <div class="hero-card">
       {
         content.tagline && (
-          <span class="kicker">{content.tagline}</span>
+          <span class="kicker" data-reveal style="animation-delay:.05s">{content.tagline}</span>
         )
       }
-      <h1 id="hero-h" class="hero-title">{content.websiteName}</h1>
-      <p class="hero-desc">{content.description}</p>
-      <div class="hero-actions">
+      <h1 id="hero-h" data-reveal style="animation-delay:.12s" class="hero-title">{content.websiteName}</h1>
+      <p class="hero-desc" data-reveal style="animation-delay:.25s">{content.description}</p>
+      <div class="hero-actions" data-reveal style="animation-delay:.35s">
         {
           waValid && (
             <a
@@ -69,7 +69,7 @@ const hasLocation = !isEmptyText(content.location);
 
     {
       heroSrc && (
-        <div class="hero-media">
+        <div class="hero-media" data-reveal style="animation-delay:.2s">
           <div class="hero-frame">
             <img
               src={heroSrc}

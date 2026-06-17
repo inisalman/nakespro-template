@@ -218,7 +218,47 @@ const cssVars = paletteToCssVars(palette);
           transform: translate3d(-2%, 2%, 0) rotate(-6deg);
         }
       }
+      
+      /* — Page-load stagger reveal — */
+      [data-reveal] {
+        animation: np-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+      }
+      @keyframes np-rise {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes np-fade {
+        from { opacity: 0; }
+        to   { opacity: 1; }
+      }
+
+      
+      /* ── Fade-in per section saat masuk viewport ────────────────────── */
+      .reveal-ready section {
+        opacity: 0;
+        transform: translateY(26px);
+        transition:
+          opacity 0.7s ease,
+          transform 0.7s ease;
+        will-change: opacity, transform;
+      }
+      .reveal-ready section.is-visible {
+        opacity: 1;
+        transform: none;
+      }
+
       @media (prefers-reduced-motion: reduce) {
+        [data-reveal] {
+          animation: none !important;
+          opacity: 1 !important;
+          transform: none !important;
+        }
         .blob {
           animation: none;
         }
@@ -227,5 +267,29 @@ const cssVars = paletteToCssVars(palette);
         }
       }
     </style>
+    <script is:inline>
+      document.documentElement.classList.add('reveal-ready');
+      const revealEls = document.querySelectorAll('section');
+      const reveal = (el) => el.classList.add('is-visible');
+      if ('IntersectionObserver' in window) {
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (entry.isIntersecting) {
+                reveal(entry.target);
+                io.unobserve(entry.target);
+              }
+            }
+          },
+          { threshold: 0.12, rootMargin: '0px 0px -8% 0px' },
+        );
+        requestAnimationFrame(() => {
+          revealEls.forEach((el) => io.observe(el));
+        });
+      } else {
+        revealEls.forEach(reveal);
+      }
+    </script>
+
   </body>
 </html>

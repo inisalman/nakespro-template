@@ -34,17 +34,17 @@ const badge = content.credentials?.[0];
     <div class="hero-copy">
       {
         content.tagline && (
-          <span class="hero-pill">
+          <span class="hero-pill" data-reveal style="animation-delay:.05s">
             <span class="hero-pill-dot" aria-hidden="true" />
             {content.tagline}
           </span>
         )
       }
-      <h1 id="hero-h" class="hero-title">
+      <h1 id="hero-h" data-reveal style="animation-delay:.12s" class="hero-title">
         <span class="hero-mark">{content.websiteName}</span>
       </h1>
-      <p class="hero-desc">{content.description}</p>
-      <div class="hero-actions">
+      <p class="hero-desc" data-reveal style="animation-delay:.25s">{content.description}</p>
+      <div class="hero-actions" data-reveal style="animation-delay:.35s">
         {
           waValid && (
             <a
@@ -77,7 +77,7 @@ const badge = content.credentials?.[0];
 
     {
       heroSrc && (
-        <div class="hero-media">
+        <div class="hero-media" data-reveal style="animation-delay:.2s">
           <div class="hero-frame">
             <img
               src={heroSrc}
