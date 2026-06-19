@@ -49,7 +49,15 @@ const waHref = buildWaUrl(content.waNumber, content.waMessage);
       }
       <div class="hero-stats">
         <div class="hero-stat">
-          <span class="hero-stat-num" data-target="1000">0+</span>
+          <div class="hero-stat-row">
+            <ul class="hero-stat-avatars" aria-label="Pasien kami">
+              <li><img src="/images/avatar-1.webp" alt="" width="36" height="36" loading="lazy" decoding="async" /></li>
+              <li><img src="/images/avatar-2.webp" alt="" width="36" height="36" loading="lazy" decoding="async" /></li>
+              <li><img src="/images/avatar-3.webp" alt="" width="36" height="36" loading="lazy" decoding="async" /></li>
+              <li><img src="/images/avatar-4.webp" alt="" width="36" height="36" loading="lazy" decoding="async" /></li>
+            </ul>
+            <span class="hero-stat-num" data-target="1000">0+</span>
+          </div>
           <span class="hero-stat-label">Pasien Dilayani</span>
         </div>
         <div class="hero-stat-divider" aria-hidden="true" />
@@ -102,6 +110,16 @@ const waHref = buildWaUrl(content.waNumber, content.waMessage);
       )
     }
   </div>
+  <a
+    class="hero-scroll"
+    href="#tentang"
+    aria-label="Scroll ke bawah untuk informasi selengkapnya"
+  >
+    <span class="hero-scroll-txt">Selengkapnya</span>
+    <span class="hero-scroll-mouse" aria-hidden="true">
+      <span class="hero-scroll-wheel"></span>
+    </span>
+  </a>
 </section>
 
 <style>
@@ -123,6 +141,14 @@ const waHref = buildWaUrl(content.waNumber, content.waMessage);
 
   .hero {
     background: var(--surface);
+    /* Hero memenuhi sisa viewport pertama (setelah sticky header 64px),
+       lalu section berikutnya muncul saat di-scroll. min-height (bukan
+       height) agar tetap tumbuh bila konten lebih tinggi di layar kecil. */
+    min-height: calc(100vh - 64px); /* fallback browser tanpa svh */
+    min-height: calc(100svh - 64px); /* akurat di mobile address-bar */
+    display: flex;
+    align-items: center;
+    position: relative;
   }
   .hero-grid {
     display: grid;
@@ -212,6 +238,43 @@ const waHref = buildWaUrl(content.waNumber, content.waMessage);
     height: 2.5rem;
     background: color-mix(in srgb, var(--muted) 30%, transparent);
     flex-shrink: 0;
+  }
+
+  /* Avatar group: 4 foto wajah bertumpuk di samping angka "1000+".
+     Self-contained — foto diunduh ke public/images/, tidak ada request runtime. */
+  .hero-stat-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .hero-stat-avatars {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .hero-stat-avatars li + li {
+    margin-left: -0.65rem; /* overlap horizontal antar avatar */
+  }
+  .hero-stat-avatars img {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+    /* ring tipis pakai var(--background) palette + shadow halus dari var */
+    box-shadow:
+      0 0 0 2px var(--background),
+      0 1px 4px color-mix(in srgb, var(--muted) 40%, transparent);
+  }
+  @media (max-width: 640px) {
+    .hero-stat-avatars img {
+      width: 28px;
+      height: 28px;
+    }
+    .hero-stat-avatars li + li {
+      margin-left: -0.5rem;
+    }
   }
   .hero-media {
     animation: fadeIn 0.8s ease both;
@@ -304,6 +367,72 @@ const waHref = buildWaUrl(content.waNumber, content.waMessage);
     }
   }
 
+  /* Indikator "Selengkapnya" di bawah hero full-screen */
+  @keyframes scrollBob {
+    0%,
+    100% {
+      transform: translateY(0);
+      opacity: 0.85;
+    }
+    50% {
+      transform: translateY(6px);
+      opacity: 1;
+    }
+  }
+  @keyframes scrollWheel {
+    0% {
+      transform: translateY(0);
+      opacity: 0;
+    }
+    40% {
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(10px);
+      opacity: 0;
+    }
+  }
+  .hero-scroll {
+    position: absolute;
+    left: 50%;
+    bottom: 1.25rem;
+    transform: translateX(-50%);
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    animation: scrollBob 2s ease-in-out infinite;
+  }
+  .hero-scroll:hover {
+    color: var(--accent);
+  }
+  .hero-scroll-mouse {
+    width: 24px;
+    height: 38px;
+    border: 2px solid currentColor;
+    border-radius: 999px;
+    display: flex;
+    justify-content: center;
+    padding-top: 6px;
+  }
+  .hero-scroll-wheel {
+    width: 3px;
+    height: 8px;
+    border-radius: 999px;
+    background: currentColor;
+    animation: scrollWheel 1.6s ease-in-out infinite;
+  }
+  @media (max-width: 640px) {
+    .hero-scroll-txt {
+      display: none; /* mobile: cukup ikon mouse */
+    }
+  }
+
   /* Hormati preferensi reduced motion */
   @media (prefers-reduced-motion: reduce) {
     .hero-copy h1,
@@ -312,7 +441,9 @@ const waHref = buildWaUrl(content.waNumber, content.waMessage);
     .hero-cta,
     .hero-stats,
     .hero-media,
-    .hero-badge {
+    .hero-badge,
+    .hero-scroll,
+    .hero-scroll-wheel {
       animation: none;
     }
   }

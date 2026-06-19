@@ -25,7 +25,7 @@ const photoSrc = photo ? `/images/${photo.url}` : undefined;
 const photoAlt = photo ? resolveAltText(photo) : '';
 ---
 
-<section class="about" aria-labelledby="about-h">
+<section class="about" id="tentang" aria-labelledby="about-h">
   <div class="container about-inner">
     {photoSrc && (
       <div class="about-media">

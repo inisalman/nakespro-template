@@ -13,7 +13,6 @@ import Hero from '../components/Hero.astro';
 import Services from '../components/Services.astro';
 import About from '../components/About.astro';
 import PhotoGallery from '../components/PhotoGallery.astro';
-import HowItWorks from '../components/HowItWorks.astro';
 import Testimonials from '../components/Testimonials.astro';
 import ContactLocation from '../components/ContactLocation.astro';
 import Footer from '../components/Footer.astro';
@@ -27,7 +26,7 @@ import FloatingWhatsApp from '../components/FloatingWhatsApp.astro';
   <About text={content.about} photo={{ url: 'profile.webp', caption: 'Tim perawat kami' }} />
   <Services items={content.services} />
   <PhotoGallery photos={content.photos} />
-  <HowItWorks steps={content.howItWorks} />
+  {/* HowItWorks disembunyikan — alur pemesanan sudah jelas via Hero CTA & WhatsApp */}
   <Testimonials items={content.testimonials} />
   <ContactLocation
     practiceHours={content.practiceHours}

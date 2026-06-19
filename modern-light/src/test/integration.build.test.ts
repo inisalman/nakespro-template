@@ -130,7 +130,6 @@ describe('Integration build (R1.5, R1.8, R8.1, R8.3, R10.4)', () => {
       'services-h',
       'about-h',
       'gallery-h',
-      'how-h',
       'testimonials-h',
       'contact-h',
     ]) {
