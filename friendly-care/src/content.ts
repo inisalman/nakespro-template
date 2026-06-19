@@ -80,6 +80,7 @@ const content: SiteContent = {
         'Pijat lembut untuk menstimulasi tumbuh kembang, melancarkan ' +
         'pencernaan, dan membuat bayi tidur lebih nyenyak.',
       icon: '👶',
+      image: 'pijat_bayi.webp',
     },
     {
       title: 'Perawatan Payudara',

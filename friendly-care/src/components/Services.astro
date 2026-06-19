@@ -4,11 +4,17 @@
 // Guard: services kosong → return null (R5.3). Bila ada, render SELURUH entri
 // (Property 8). Warna via var(--token)/color-mix saja (R6.4).
 //
-// Kartu layanan besar berbasis gambar: tiap kartu memakai satu foto dari
-// content.photos sebagai latar (di-overlay gelap + sedikit blur) sehingga
-// deskripsi tetap terbaca di depannya. Foto tidak wajib — bila tidak ada foto
-// tersedia, kartu jatuh ke latar aksen lembut tanpa gambar. Pemetaan foto→kartu
-// bersifat dekoratif (CSS background); konten asli tetap dari content.ts (R13.1).
+// Carousel dengan navigasi prev/next + dots indikator + infinite loop.
+// Progressive enhancement: tanpa JS → scroll-snap slider; dengan JS → carousel
+// penuh dengan loop tak hingga (klon di kedua ujung). Foto dari service.image
+// diprioritaskan, fallback round-robin dari galeri photos, fallback terakhir
+// accent-soft solid.
+//
+// Catatan arsitektur: VIEWPORT (`.carousel-viewport`) adalah jendela klip
+// `overflow:hidden`, dan TRACK (`.carousel-track`) adalah target
+// `transform: translateX`. Keduanya WAJIB elemen terpisah — bila track
+// sekaligus jadi klip, geseran track ikut membawa jendela, sehingga slide
+// tidak pernah benar-benar berganti (lihat bug sebelumnya).
 import type { Service, Photo } from '../types.ts';
 import { isEmptyList } from '../lib/empty.ts';
 
@@ -21,164 +27,607 @@ const { items, photos } = Astro.props;
 if (isEmptyList(items)) return null;
 const services = items as Service[];
 
-// Kumpulkan url foto dari galeri (urutan tetap) sebagai pool latar kartu.
+// Pool foto dari galeri sebagai fallback round-robin.
 const photoPool: string[] = (photos ?? []).map((p) => p.url).filter(Boolean);
 
-// Petakan satu foto per kartu secara bergiliran (round-robin) bila tersedia.
-const cards = services.map((s, i) => ({
-  service: s,
-  bg: photoPool.length > 0 ? `/images/${photoPool[i % photoPool.length]}` : null,
-}));
+const cards = services.map((s, i) => {
+  const preferred = s.image;
+  const poolBg = photoPool.length > 0 ? photoPool[i % photoPool.length] : null;
+  return {
+    service: s,
+    bg: preferred ? `/images/${preferred}` : (poolBg ? `/images/${poolBg}` : null),
+  };
+});
+
+const hasMultiple = cards.length > 1;
 ---
 
 <section class="services" aria-labelledby="services-h">
   <div class="container">
     <div class="section-head">
       <span class="section-kicker">Layanan Spesialis</span>
-      <h2 id="services-h" class="section-title" data-reveal style="animation-delay:.10s">Layanan Kami</h2>
+      <h2 id="services-h" class="section-title" data-reveal style="animation-delay:.10s">
+        Layanan Kami
+      </h2>
       <p class="section-lead">
         Perawatan holistik dan penuh kasih untuk menemani perjalanan Anda
         bersama si kecil.
       </p>
     </div>
-    <ul class="services-grid" role="list">
+
+    <div class="carousel" data-carousel>
+      <div class="carousel-viewport" data-carousel-viewport>
+        <div
+          class="carousel-track"
+          data-carousel-track
+          role="region"
+          aria-label="Kartu layanan"
+          aria-roledescription="carousel"
+          tabindex="0"
+        >
+          {
+            cards.map(({ service: s, bg }, idx) => (
+              <article
+                id={`service-card-${idx}`}
+                class:list={['carousel-card', { 'has-image': bg }]}
+                style={bg ? `--card-image: url('${bg}')` : undefined}
+                aria-roledescription="slide"
+                aria-label={`Layanan ${idx + 1}: ${s.title}`}
+                data-card
+              >
+                <div class="card-image-layer" aria-hidden="true" />
+                <div class="card-gradient" aria-hidden="true" />
+                <div class="card-body">
+                  <div class="card-body-top">
+                    {s.icon && (
+                      <span class="card-icon" aria-hidden="true">{s.icon}</span>
+                    )}
+                    <h3 class="card-title">{s.title}</h3>
+                  </div>
+                  <p class="card-desc">{s.description}</p>
+                </div>
+              </article>
+            ))
+          }
+        </div>
+      </div>
+
       {
-        cards.map(({ service: s, bg }) => (
-          <li
-            class:list={['service-card', { 'has-image': bg }]}
-            style={bg ? `--card-image: url('${bg}')` : undefined}
-          >
-            <div class="service-overlay" aria-hidden="true" />
-            <div class="service-body">
-              {s.icon && (
-                <span class="service-icon" aria-hidden="true">
-                  {s.icon}
-                </span>
-              )}
-              <h3 class="service-title">{s.title}</h3>
-              <p class="service-desc">{s.description}</p>
-            </div>
-          </li>
-        ))
+        hasMultiple && (
+          <>
+            <button
+              class="carousel-btn carousel-prev"
+              data-carousel-prev
+              aria-label="Layanan sebelumnya"
+              type="button"
+            >
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                <path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <button
+              class="carousel-btn carousel-next"
+              data-carousel-next
+              aria-label="Layanan selanjutnya"
+              type="button"
+            >
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+
+            <ol class="carousel-dots" data-carousel-dots role="list">
+              {cards.map((_, idx) => (
+                <li class="carousel-dot">
+                  <button
+                    class="carousel-dot-btn"
+                    data-carousel-dot={idx}
+                    aria-label={`Langsung ke layanan ${idx + 1}`}
+                    type="button"
+                  />
+                </li>
+              ))}
+            </ol>
+          </>
+        )
       }
-    </ul>
+    </div>
   </div>
 </section>
 
 <style>
-  .services-grid {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: grid;
-    gap: 1.5rem;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  }
-  .service-card {
+  /* ── Carousel wrapper ── */
+  .carousel {
     position: relative;
-    isolation: isolate;
+  }
+
+  /* ── Viewport (klip overflow). Default tanpa JS: track di dalam ── */
+  .carousel-viewport {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .carousel-viewport::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* ── Track: container flex kartu. Selalu flex; tanpa JS memakai ──
+     scroll-snap di viewport; dengan JS memakai transform di track. */
+  .carousel-track {
+    display: flex;
+    gap: 1.25rem;
+  }
+
+  /* Mode carousel (JS aktif): viewport jadi jendela, track jadi target geser. */
+  .carousel-enabled .carousel-viewport {
     overflow: hidden;
-    min-height: 360px;
+    scroll-snap-type: none;
+  }
+  .carousel-enabled .carousel-track {
+    /* Gap tetap terlihat sebagai pemisah antar kartu + sisa ruang jadi peek. */
+    gap: 1.25rem;
+    transition: transform 0.45s cubic-bezier(.25,1,.25,1);
+    will-change: transform;
+  }
+
+  /* ── Card ── */
+  .carousel-card {
+    flex: 0 0 clamp(320px, 78%, 540px);
+    scroll-snap-align: start;
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 4 / 3;
     border-radius: var(--radius);
     border: 1px solid var(--hairline);
     background: var(--accent-soft);
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--shadow-md);
     display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
     transition:
-      transform 0.3s ease,
-      box-shadow 0.3s ease;
+      transform 0.35s ease,
+      box-shadow 0.35s ease;
   }
-  .service-card:hover {
-    transform: translateY(-8px);
-    box-shadow: var(--shadow-lg);
+  .carousel-card:last-child {
+    scroll-snap-align: end;
+  }
+  .carousel-card.has-image {
+    background: transparent;
   }
 
-  /* Lapisan gambar: di belakang overlay & konten, sedikit blur + zoom-on-hover. */
-  .service-card.has-image::before {
-    content: '';
+  /* Mode JS — multi-card + peek: responsif, satuan geser = 1 kartu + gap. */
+  .carousel-enabled .carousel-card {
+    /* Mobile: 1 kartu dominan (~80%) + peek kartu berikutnya. */
+    flex: 0 0 80%;
+    scroll-snap-align: none;
+  }
+  @media (min-width: 640px) {
+    .carousel-enabled .carousel-card {
+      /* Tablet: 2 kartu utuh + peek. */
+      flex: 0 0 calc((100% - 1.25rem) / 2);
+    }
+  }
+  @media (min-width: 1024px) {
+    .carousel-enabled .carousel-card {
+      /* Desktop: 3 kartu utuh. */
+      flex: 0 0 calc((100% - 2.5rem) / 3);
+    }
+  }
+
+  @media (min-width: 640px) {
+    .carousel-card {
+      aspect-ratio: 16 / 9;
+    }
+  }
+
+  /* ── Lapisan foto ── */
+  .card-image-layer {
     position: absolute;
     inset: 0;
-    z-index: -2;
-    background-image: var(--card-image);
+    z-index: 0;
     background-size: cover;
     background-position: center;
-    filter: blur(2px) saturate(1.05);
-    transform: scale(1.08);
-    transition: transform 0.5s ease;
+    transform: scale(1.01);
+    transition: transform 0.6s cubic-bezier(.25,1,.25,1);
   }
-  .service-card.has-image:hover::before {
-    transform: scale(1.15);
+  .has-image .card-image-layer {
+    background-image: var(--card-image);
+  }
+  .carousel-card:hover .card-image-layer {
+    transform: scale(1.06);
   }
 
-  /* Overlay gelap beraksen agar teks putih kontras (WCAG) di atas foto apa pun. */
-  .service-overlay {
+  /* ── Overlay gradien ── */
+  .card-gradient {
     position: absolute;
     inset: 0;
-    z-index: -1;
+    z-index: 1;
+    pointer-events: none;
   }
-  .has-image .service-overlay {
+  .has-image .card-gradient {
     background:
       linear-gradient(
         180deg,
-        color-mix(in srgb, var(--text) 24%, transparent) 0%,
-        color-mix(in srgb, var(--text) 72%, transparent) 70%,
-        color-mix(in srgb, var(--text) 86%, transparent) 100%
+        transparent 20%,
+        color-mix(in srgb, var(--text) 12%, transparent) 45%,
+        color-mix(in srgb, var(--text) 68%, transparent) 75%,
+        color-mix(in srgb, var(--text) 90%, transparent) 100%
       );
   }
 
-  .service-body {
+  /* ── Badan konten ── */
+  .card-body {
     position: relative;
-    margin-top: auto;
-    padding: 1.75rem;
+    z-index: 2;
+    padding: 1.75rem 1.75rem 2rem;
     display: flex;
     flex-direction: column;
     gap: 0.55rem;
   }
-  .service-icon {
+  .card-body-top {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  /* ── Icon ── */
+  .card-icon {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 56px;
-    height: 56px;
-    border-radius: 18px;
+    min-width: 48px;
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
     background: var(--accent-soft);
     color: var(--accent);
-    font-size: 1.7rem;
+    font-size: 1.4rem;
     line-height: 1;
-    margin-bottom: 0.4rem;
     transition:
       background 0.25s ease,
       transform 0.25s ease;
   }
-  .has-image .service-icon {
+  .has-image .card-icon {
     background: var(--glass-bg);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     border: 1px solid var(--glass-border);
-  }
-  .service-card:hover .service-icon {
-    transform: scale(1.06);
-  }
-  .service-title {
-    font-size: 1.4rem;
-    margin: 0;
-    color: var(--text);
-  }
-  .has-image .service-title {
     color: var(--on-accent);
   }
-  .service-desc {
+
+  /* ── Judul ── */
+  .card-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin: 0;
+    color: var(--text);
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+  }
+  .has-image .card-title {
+    color: var(--on-accent);
+  }
+
+  /* ── Deskripsi ── */
+  .card-desc {
     color: var(--muted);
     margin: 0;
     font-size: 1rem;
-    line-height: 1.55;
+    line-height: 1.6;
+    max-width: 48ch;
   }
-  .has-image .service-desc {
-    color: color-mix(in srgb, var(--on-accent) 88%, transparent);
+  .has-image .card-desc {
+    color: color-mix(in srgb, var(--on-accent) 90%, transparent);
   }
+
+  /* ── Navigation buttons ── */
+  .carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid var(--hairline);
+    background: var(--glass-bg, var(--surface));
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: var(--text);
+    cursor: pointer;
+    transition:
+      background 0.25s ease,
+      box-shadow 0.25s ease,
+      opacity 0.25s ease;
+    box-shadow: var(--shadow-sm);
+  }
+  .carousel-enabled .carousel-btn {
+    display: flex;
+  }
+  .carousel-btn:hover {
+    background: var(--accent-soft);
+    box-shadow: var(--shadow-md);
+  }
+  .carousel-btn:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  .carousel-btn:disabled {
+    opacity: 0.3;
+    cursor: default;
+  }
+  .carousel-prev {
+    left: 0.75rem;
+  }
+  .carousel-next {
+    right: 0.75rem;
+  }
+
+  /* ── Dots ── */
+  .carousel-dots {
+    display: none;
+    list-style: none;
+    margin: 1.25rem 0 0;
+    padding: 0;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+  .carousel-enabled .carousel-dots {
+    display: flex;
+  }
+  .carousel-dot {
+    margin: 0;
+    line-height: 0;
+  }
+  .carousel-dot-btn {
+    display: block;
+    width: 10px;
+    height: 10px;
+    padding: 0;
+    border-radius: 50%;
+    border: none;
+    background: var(--hairline);
+    cursor: pointer;
+    transition:
+      background 0.3s ease,
+      transform 0.3s ease;
+  }
+  .carousel-dot-btn:hover {
+    background: var(--accent);
+    opacity: 0.6;
+  }
+  .carousel-dot-btn[aria-current="true"] {
+    background: var(--accent);
+    transform: scale(1.3);
+  }
+  .carousel-dot-btn:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  /* ── Reduced motion ── */
   @media (prefers-reduced-motion: reduce) {
-    .service-card.has-image::before {
-      transition: none;
+    .carousel-enabled .carousel-track {
+      transition-duration: 0.01ms !important;
+    }
+    .card-image-layer {
+      transition-duration: 0.01ms !important;
     }
   }
 </style>
+
+<script>
+  class Carousel {
+    private viewport!: HTMLElement;
+    private track!: HTMLElement;
+    private prevBtn!: HTMLElement | null;
+    private nextBtn!: HTMLElement | null;
+    private dots!: NodeListOf<HTMLElement>;
+    /** Jumlah slide ASLI (tanpa klon). */
+    private count = 0;
+    private touchStartX = 0;
+    private touchDeltaX = 0;
+    private touching = false;
+    /** Klon sudah dipasang? Dipakai agar cloning hanya sekali. */
+    private looped = false;
+    private resizeTimer: number | undefined;
+
+    constructor(el: HTMLElement) {
+      el.classList.add('carousel-enabled');
+
+      const viewport = el.querySelector('[data-carousel-viewport]') as HTMLElement | null;
+      const track = el.querySelector('[data-carousel-track]') as HTMLElement | null;
+      if (!viewport || !track) return;
+
+      this.viewport = viewport;
+      this.track = track;
+      this.prevBtn = el.querySelector('[data-carousel-prev]');
+      this.nextBtn = el.querySelector('[data-carousel-next]');
+      this.dots = el.querySelectorAll('[data-carousel-dot]');
+      this.count = this.dots.length || track.querySelectorAll('.carousel-card').length;
+
+      if (this.count < 2) return;
+
+      // Infinite loop: klon slide terakhir di depan pertama, dan slide
+      // pertama setelah terakhir, sehingga track bisa "nyesat" melewati ujung
+      // lalu diam-diam reposition ke slide asli tanpa transisi.
+      this.setupLoop();
+
+      this.track.addEventListener('keydown', this.onKeydown);
+      this.viewport.addEventListener('touchstart', this.onTouchStart, { passive: true });
+      this.viewport.addEventListener('touchmove', this.onTouchMove, { passive: true });
+      this.viewport.addEventListener('touchend', this.onTouchEnd);
+      this.prevBtn?.addEventListener('click', () => this.prev());
+      this.nextBtn?.addEventListener('click', () => this.next());
+      this.dots.forEach((dot, i) => {
+        dot.addEventListener('click', () => this.goTo(i));
+      });
+
+      // Posisikan ke slide asli pertama (di balik 1 klon depan).
+      requestAnimationFrame(() => this.goTo(0, true));
+
+      // Resize: debounce agar tidak "lompat" saat orientasi/viewport berubah.
+      window.addEventListener('resize', this.onResize);
+    }
+
+    private setupLoop() {
+      if (this.looped) return;
+      const cards = Array.from(this.track.children) as HTMLElement[];
+      if (cards.length === 0) return;
+      // Klon seluruh set di kedua ujung agar loop tak hingga mulus bahkan saat
+      // viewport memuat beberapa kartu (peek/multi-card). Setiap klon disembunyikan
+      // dari AT dan dihapus id-nya untuk menghindari duplikat.
+      const cloneSet = (where: 'before' | 'after') => {
+        cards.forEach((c) => {
+          const clone = c.cloneNode(true) as HTMLElement;
+          clone.setAttribute('aria-hidden', 'true');
+          clone.removeAttribute('id');
+          if (where === 'before') this.track.insertBefore(clone, cards[0]);
+          else this.track.appendChild(clone);
+        });
+      };
+      cloneSet('before');
+      cloneSet('after');
+      this.looped = true;
+    }
+
+    /** Satuan geser = lebar 1 kartu + gap. Dibaca dari kartu asli pertama. */
+    private slideWidth(): number {
+      const card = this.track.querySelector<HTMLElement>('.carousel-card');
+      if (!card) return this.viewport.offsetWidth;
+      const gap = parseFloat(
+        getComputedStyle(this.track).gap || '0',
+      ) || 0;
+      return card.offsetWidth + gap;
+    }
+
+    /**
+     * Indeks posisi MENTAH pada track penuh [0, 3·count). Slide asli menempati
+     * rentang "home" [count, 2·count); klon di kedua sisinya. Saat navigasi
+     * menembus ujung, index masuk ke wilayah klon, animasi berjalan, lalu
+     * maybeReposition() menjepret kembali ke home tanpa transisi → ilusi loop
+     * tak hingga yang mulus di kedua arah.
+     */
+    private index = 0;
+
+    /** Indeks logis slide asli (0-based) untuk dots. */
+    private get current(): number {
+      return (((this.index - this.count) % this.count) + this.count) % this.count;
+    }
+
+    /**
+     * Geser ke slide asli `i` (untuk klik dot / init). Langsung ke posisi
+     * home-nya dengan animasi — tidak perlu melalui klon.
+     * @param skipTransition lompat instan tanpa animasi (init/reposition).
+     */
+    goTo(i: number, skipTransition = false) {
+      this.index =
+        this.count + (((i % this.count) + this.count) % this.count);
+      this.applyTransform(skipTransition);
+      this.updateDots();
+      this.maybeReposition();
+    }
+
+    private applyTransform(skipTransition: boolean) {
+      const offset = this.index * this.slideWidth();
+      if (skipTransition) {
+        this.track.style.transition = 'none';
+      }
+      this.track.style.transform = `translateX(-${offset}px)`;
+      if (skipTransition) {
+        // Paksa reflow agar transform "commit" sebelum transition dihidupkan
+        // kembali (mencegah transisi tambahan saat reposition).
+        void this.track.offsetWidth;
+        this.track.style.transition = '';
+      }
+    }
+
+    /** Bila berhenti pada wilayah klon, jepret ke home tanpa animasi. */
+    private maybeReposition = () => {
+      const onTransitionEnd = () => {
+        if (this.index >= 2 * this.count) {
+          this.index -= this.count;
+          this.applyTransform(true);
+        } else if (this.index < this.count) {
+          this.index += this.count;
+          this.applyTransform(true);
+        }
+        this.track.removeEventListener('transitionend', onTransitionEnd);
+      };
+      // Hindari penumpukan listener bila navigasi beruntun.
+      this.track.addEventListener('transitionend', onTransitionEnd, { once: true });
+    };
+
+    prev() {
+      this.index--;
+      this.applyTransform(false);
+      this.updateDots();
+      this.maybeReposition();
+    }
+
+    next() {
+      this.index++;
+      this.applyTransform(false);
+      this.updateDots();
+      this.maybeReposition();
+    }
+
+    private updateDots() {
+      this.dots.forEach((dot, i) => {
+        dot.setAttribute('aria-current', i === this.current ? 'true' : 'false');
+      });
+    }
+
+    private onKeydown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        this.prev();
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        this.next();
+      }
+    };
+
+    private onTouchStart = (e: TouchEvent) => {
+      this.touching = true;
+      this.touchStartX = e.touches[0].clientX;
+      this.track.style.transition = 'none';
+    };
+
+    private onTouchMove = (e: TouchEvent) => {
+      if (!this.touching) return;
+      this.touchDeltaX = e.touches[0].clientX - this.touchStartX;
+      const offset = this.index * this.slideWidth() - this.touchDeltaX;
+      this.track.style.transform = `translateX(-${offset}px)`;
+    };
+
+    private onTouchEnd = () => {
+      if (!this.touching) return;
+      this.touching = false;
+      this.track.style.transition = '';
+      if (Math.abs(this.touchDeltaX) > 50) {
+        if (this.touchDeltaX > 0) this.prev();
+        else this.next();
+      } else {
+        this.goTo(this.current);
+      }
+      this.touchDeltaX = 0;
+    };
+
+    private onResize = () => {
+      window.clearTimeout(this.resizeTimer);
+      this.resizeTimer = window.setTimeout(() => this.goTo(this.current, true), 150);
+    };
+  }
+
+  document.querySelectorAll('[data-carousel]').forEach((el) => {
+    new Carousel(el as HTMLElement);
+  });
+</script>
+
+
