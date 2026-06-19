@@ -85,6 +85,40 @@ const cssVars = paletteToCssVars(palette);
         --shadow: 0 16px 36px -22px color-mix(in srgb, var(--ink) 55%, transparent);
         --shadow-lg: 0 30px 60px -28px color-mix(in srgb, var(--ink) 60%, transparent);
 
+        /* Service tile (expandable, gaya modern-light): token latar tile.
+           Mesh hangat editorial (terakota + sage + arang) sebagai fallback bila
+           tidak ada foto. Overlay netral-tipis; lebih pekat saat tile aktif demi
+           keterbacaan teks putih di atasnya. Literal hanya di sini (R6.4). */
+        --grad-1: linear-gradient(135deg, color-mix(in srgb, var(--accent) 42%, var(--ink)) 0%, color-mix(in srgb, var(--sage-deep) 60%, var(--ink)) 50%, var(--ink) 100%);
+        --grad-2: linear-gradient(135deg, color-mix(in srgb, var(--sage-deep) 70%, var(--ink)) 0%, color-mix(in srgb, var(--accent) 38%, var(--ink)) 50%, color-mix(in srgb, var(--ink) 80%, #000) 100%);
+        --grad-3: linear-gradient(135deg, var(--ink) 0%, color-mix(in srgb, var(--accent) 40%, var(--ink)) 50%, color-mix(in srgb, var(--sage-deep) 55%, var(--ink)) 100%);
+        --grad-4: linear-gradient(135deg, color-mix(in srgb, var(--accent) 35%, var(--ink)) 0%, color-mix(in srgb, var(--ink) 85%, #000) 50%, color-mix(in srgb, var(--sage-deep) 50%, var(--ink)) 100%);
+        --grad-5: linear-gradient(135deg, color-mix(in srgb, var(--sage-deep) 60%, var(--ink)) 0%, var(--ink) 50%, color-mix(in srgb, var(--accent) 36%, var(--ink)) 100%);
+        --grad-6: linear-gradient(135deg, color-mix(in srgb, var(--ink) 88%, #000) 0%, color-mix(in srgb, var(--accent) 42%, var(--ink)) 50%, color-mix(in srgb, var(--sage-deep) 58%, var(--ink)) 100%);
+        --grad-fallback: linear-gradient(135deg, color-mix(in srgb, var(--accent) 45%, var(--ink)) 0%, color-mix(in srgb, var(--sage-deep) 55%, var(--ink)) 100%);
+        /* Teks di atas tile gelap/foto (overlay) — krem hangat (on-ink) untuk kontras. */
+        --on-dark: var(--on-ink);
+        --on-dark-muted: color-mix(in srgb, var(--on-ink) 82%, transparent);
+        --on-dark-faint: color-mix(in srgb, var(--on-ink) 16%, transparent);
+        --on-dark-chip: color-mix(in srgb, var(--on-ink) 14%, transparent);
+        --hairline-dark: color-mix(in srgb, var(--on-ink) 10%, transparent);
+        --hairline-dark-hover: color-mix(in srgb, var(--on-ink) 22%, transparent);
+        /* Overlay foto: idle tipis, aktif pekat untuk keterbacaan. */
+        --overlay-service-idle: linear-gradient(
+          to top,
+          rgba(43, 39, 34, 0.58) 0%,
+          rgba(43, 39, 34, 0.24) 45%,
+          rgba(43, 39, 34, 0.05) 100%
+        );
+        --overlay-service-active: linear-gradient(
+          to top,
+          rgba(43, 39, 34, 0.9) 0%,
+          rgba(43, 39, 34, 0.54) 42%,
+          rgba(43, 39, 34, 0.16) 75%,
+          rgba(43, 39, 34, 0.05) 100%
+        );
+        --shadow-card-lift: 0 24px 60px -16px color-mix(in srgb, var(--ink) 48%, transparent), 0 8px 20px rgba(43, 39, 34, 0.16);
+
         --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
         --font-sans:
           'Mulish', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica,

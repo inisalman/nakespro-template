@@ -25,7 +25,7 @@ import FloatingWhatsApp from '../components/FloatingWhatsApp.astro';
   <Header content={content} />
   <Hero content={content} />
   <TrustBar items={content.credentials} />
-  <Services items={content.services} />
+  <Services items={content.services} photos={content.photos} />
   <About text={content.about} quote={content.testimonials?.[0]} />
   <PhotoGallery photos={content.photos} />
   <HowItWorks steps={content.howItWorks} />

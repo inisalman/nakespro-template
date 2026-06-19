@@ -123,7 +123,7 @@ describe('Property 8: seluruh entri data tidak kosong dirender (R3.5–R3.11)', 
           expect(n).toBe(content.credentials!.length);
         }
         if (!isEmptyList(content.services)) {
-          const n = (html.match(/ data-card/g) || []).length;
+          const n = (html.match(/class="service-card"/g) || []).length;
           expect(n).toBe(content.services!.length);
         }
         if (!isEmptyList(content.howItWorks)) {

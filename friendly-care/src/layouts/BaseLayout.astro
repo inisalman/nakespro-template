@@ -73,6 +73,41 @@ const cssVars = paletteToCssVars(palette);
         --hairline: color-mix(in srgb, var(--accent) 14%, transparent);
         --on-accent: var(--background);
 
+        /* Service tile (expandable, gaya modern-light): token latar tile.
+           Mesh pastel hangat (accent-tinted) sebagai fallback bila tidak ada
+           foto. Overlay tipis agar foto tetap terasa cerah; lebih pekat saat
+           tile aktif demi keterbacaan teks putih di atasnya. Literal hanya di
+           sini (R6.4), komponen mereferensikan var(--token). */
+        --grad-1: linear-gradient(135deg, color-mix(in srgb, var(--accent) 55%, #fff4e6) 0%, color-mix(in srgb, var(--accent) 30%, #ffe9d6) 50%, #ffd9e4 100%);
+        --grad-2: linear-gradient(135deg, color-mix(in srgb, var(--accent) 35%, #fff0e0) 0%, color-mix(in srgb, var(--accent) 18%, #ffe1ee) 50%, #e7d9ff 100%);
+        --grad-3: linear-gradient(135deg, color-mix(in srgb, var(--accent) 28%, #ffeaf0) 0%, #ffd6e8 50%, color-mix(in srgb, var(--accent) 22%, #ffe0d0) 100%);
+        --grad-4: linear-gradient(135deg, color-mix(in srgb, var(--accent) 22%, #ffe6f0) 0%, color-mix(in srgb, var(--accent) 16%, #fde0ff) 50%, #e3f0ff 100%);
+        --grad-5: linear-gradient(135deg, color-mix(in srgb, var(--accent) 30%, #ffe9e6) 0%, color-mix(in srgb, var(--accent) 20%, #ffe4f2) 50%, #e8f5ff 100%);
+        --grad-6: linear-gradient(135deg, color-mix(in srgb, var(--accent) 26%, #fff0e8) 0%, color-mix(in srgb, var(--accent) 24%, #ffd9ea) 50%, #eef0ff 100%);
+        --grad-fallback: linear-gradient(135deg, color-mix(in srgb, var(--accent) 40%, #fff0e6) 0%, color-mix(in srgb, var(--accent) 20%, #ffd9e4) 100%);
+        /* Teks di atas tile gelap/foto (overlay) — putih untuk kontras. */
+        --on-dark: #ffffff;
+        --on-dark-muted: rgba(255, 255, 255, 0.82);
+        --on-dark-faint: rgba(255, 255, 255, 0.16);
+        --on-dark-chip: rgba(255, 255, 255, 0.14);
+        --hairline-dark: rgba(255, 255, 255, 0.10);
+        --hairline-dark-hover: rgba(255, 255, 255, 0.22);
+        /* Overlay foto: idle tipis (foto tetap cerah), aktif pekat untuk keterbacaan. */
+        --overlay-service-idle: linear-gradient(
+          to top,
+          rgba(0, 0, 0, 0.55) 0%,
+          rgba(0, 0, 0, 0.22) 45%,
+          rgba(0, 0, 0, 0.04) 100%
+        );
+        --overlay-service-active: linear-gradient(
+          to top,
+          rgba(0, 0, 0, 0.88) 0%,
+          rgba(0, 0, 0, 0.52) 42%,
+          rgba(0, 0, 0, 0.14) 75%,
+          rgba(0, 0, 0, 0.04) 100%
+        );
+        --shadow-card-lift: 0 24px 60px -14px color-mix(in srgb, var(--accent) 32%, transparent), 0 8px 22px rgba(0, 0, 0, 0.14);
+
         --font-display: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
         --font-sans:
           'Be Vietnam Pro', system-ui, -apple-system, 'Segoe UI', Roboto,

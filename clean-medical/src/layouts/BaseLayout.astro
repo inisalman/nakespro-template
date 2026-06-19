@@ -95,6 +95,40 @@ const cssVars = paletteToCssVars(palette);
         --shadow-lg:
           0 12px 28px rgba(15, 23, 42, 0.08),
           0 40px 80px -30px rgba(15, 23, 42, 0.2);
+
+        /* Service tile (expandable, gaya modern-light): token latar tile.
+           mesh biru-klinis lembut (ink health-tech) sebagai fallback bila tidak
+           ada foto. Overlay netral-tipis; lebih pekat saat tile aktif demi
+           keterbacaan teks putih di atasnya. Literal hanya di sini (R6.4). */
+        --grad-1: linear-gradient(135deg, var(--ink) 0%, color-mix(in srgb, var(--accent) 40%, var(--ink)) 55%, color-mix(in srgb, var(--accent) 22%, var(--ink)) 100%);
+        --grad-2: linear-gradient(135deg, color-mix(in srgb, var(--accent) 32%, var(--ink)) 0%, var(--ink-soft) 50%, var(--ink) 100%);
+        --grad-3: linear-gradient(135deg, var(--ink-soft) 0%, color-mix(in srgb, var(--accent) 38%, var(--ink)) 55%, var(--ink) 100%);
+        --grad-4: linear-gradient(135deg, color-mix(in srgb, var(--accent) 26%, var(--ink)) 0%, var(--ink) 50%, color-mix(in srgb, var(--accent) 34%, var(--ink)) 100%);
+        --grad-5: linear-gradient(135deg, var(--ink) 0%, color-mix(in srgb, var(--accent) 30%, var(--ink-soft)) 55%, var(--ink-soft) 100%);
+        --grad-6: linear-gradient(135deg, color-mix(in srgb, var(--accent) 36%, var(--ink)) 0%, var(--ink-soft) 50%, var(--ink) 100%);
+        --grad-fallback: linear-gradient(135deg, color-mix(in srgb, var(--accent) 40%, var(--ink)) 0%, var(--ink) 100%);
+        /* Teks di atas tile gelap/foto (overlay) — putih untuk kontras. */
+        --on-dark: #ffffff;
+        --on-dark-muted: rgba(255, 255, 255, 0.82);
+        --on-dark-faint: rgba(255, 255, 255, 0.16);
+        --on-dark-chip: rgba(255, 255, 255, 0.14);
+        --hairline-dark: rgba(255, 255, 255, 0.10);
+        --hairline-dark-hover: rgba(255, 255, 255, 0.22);
+        /* Overlay foto: idle tipis, aktif pekat untuk keterbacaan. */
+        --overlay-service-idle: linear-gradient(
+          to top,
+          rgba(14, 23, 38, 0.58) 0%,
+          rgba(14, 23, 38, 0.24) 45%,
+          rgba(14, 23, 38, 0.05) 100%
+        );
+        --overlay-service-active: linear-gradient(
+          to top,
+          rgba(14, 23, 38, 0.9) 0%,
+          rgba(14, 23, 38, 0.54) 42%,
+          rgba(14, 23, 38, 0.16) 75%,
+          rgba(14, 23, 38, 0.05) 100%
+        );
+        --shadow-card-lift: 0 24px 60px -16px rgba(15, 23, 42, 0.30), 0 8px 20px rgba(15, 23, 42, 0.14);
       }
 
       * {

@@ -2,26 +2,40 @@
 // components/Services.astro — section 3, Auto-Hide (R3.6, R3.12, R5.3).
 //
 // Guard: services kosong → return null (R5.3). Bila ada, render SELURUH entri
-// (Property 8). Warna via CSS var saja (R6.4).
-import type { Service } from '../types.ts';
+// (Property 8). Warna via var(--token)/color-mix saja (R6.4).
+//
+// Tile accordion (gaya modern-light): tile tumpuk vertikal di mobile/tablet,
+// jadi baris horizontal di layar lebar; satu tile aktif (melebar + reveal
+// deskripsi) pada satu waktu via hover/focus/click + keyboard. Latar tiap tile:
+// service.image → fallback round-robin dari galeri photos → terakhir mesh biru-
+// klinis token (--grad-N). Overlay gelap menjamin keterbacaan teks putih.
+//
+// Catatan: kelas `has-image` sengaja TIDAK dipakai di kartu — kondisi ada-foto
+// ditandai via atribut `data-has-image` agar regex kontrak `class="service-card"`
+// tetap akurat (Property 8).
+import type { Service, Photo } from '../types.ts';
 import { isEmptyList } from '../lib/empty.ts';
 
 interface Props {
   items?: Service[];
+  photos?: Photo[];
 }
 
-const { items } = Astro.props;
+const { items, photos } = Astro.props;
 if (isEmptyList(items)) return null;
 const services = items as Service[];
-// Kartu kedua disorot (gaya "featured" biru ala referensi) bila ada.
-const featured = services.length > 1 ? 1 : -1;
+
+// Pool foto galeri sebagai fallback round-robin.
+const photoPool: string[] = (photos ?? []).map((p) => p.url).filter(Boolean);
+
+const pad = (n: number) => String(n + 1).padStart(2, '0');
 ---
 
 <section class="services" id="layanan" aria-labelledby="services-h">
   <div class="container">
     <div class="services-head">
       <p class="eyebrow">Layanan</p>
-      <h2 id="services-h">Empat fokus terapi untuk pemulihan Anda</h2>
+      <h2 id="services-h" data-reveal style="animation-delay:.10s">Layanan Kami</h2>
       <p class="services-lead">
         Setiap program disusun dari asesmen menyeluruh menjadi rencana
         terukur, lalu dijalankan langsung di rumah Anda.
@@ -29,105 +43,368 @@ const featured = services.length > 1 ? 1 : -1;
     </div>
     <ul class="services-grid" role="list">
       {
-        services.map((s, i) => (
-          <li
-            class="service-card"
-            data-featured={i === featured ? '' : undefined}
-            data-reveal
-            style={`animation-delay:${0.08 * i}s`}
-          >
-            {s.icon && (
-              <span class="service-icon" aria-hidden="true">
-                {s.icon}
-              </span>
-            )}
-            <h3 class="service-title">{s.title}</h3>
-            <p class="service-desc">{s.description}</p>
-          </li>
-        ))
+        services.map((s, i) => {
+          const preferred = s.image;
+          const poolBg = photoPool.length > 0 ? photoPool[i % photoPool.length] : null;
+          const bg = preferred ? `/images/${preferred}` : (poolBg ? `/images/${poolBg}` : null);
+          return (
+            <li
+              class="service-card"
+              data-active={i === 0 ? 'true' : 'false'}
+              data-has-image={bg ? '' : undefined}
+              tabindex="0"
+              role="button"
+              aria-expanded={i === 0 ? 'true' : 'false'}
+              style={`--i: ${i}${bg ? `; --card-img: url('${bg}')` : ''}`}
+            >
+              <span class="service-num" aria-hidden="true">{pad(i)}</span>
+              <div class="service-body">
+                <h3 class="service-title">{s.title}</h3>
+                <div class="service-reveal">
+                  <p class="service-desc">{s.description}</p>
+                  <span class="service-more" aria-hidden="true">
+                    Pelajari layanan
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M5 12h14M13 6l6 6-6 6" />
+                    </svg>
+                  </span>
+                </div>
+              </div>
+              <div class="service-line" aria-hidden="true" />
+            </li>
+          );
+        })
       }
     </ul>
   </div>
 </section>
 
+<script>
+  const prefersReduced = window.matchMedia(
+    '(prefers-reduced-motion: reduce)'
+  ).matches;
+  const cards = Array.from(
+    document.querySelectorAll<HTMLElement>('.service-card')
+  );
+
+  // Reveal saat masuk viewport
+  if (!prefersReduced && 'IntersectionObserver' in window) {
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            (e.target as HTMLElement).classList.add('is-visible');
+            io.unobserve(e.target);
+          }
+        });
+      },
+      { threshold: 0.12 }
+    );
+    cards.forEach((c) => io.observe(c));
+  } else {
+    cards.forEach((c) => c.classList.add('is-visible'));
+  }
+
+  // Expandable tile: hanya satu kartu aktif. Hover (desktop) / klik & keyboard.
+  const activate = (target: HTMLElement) => {
+    cards.forEach((c) => {
+      const on = c === target;
+      c.dataset.active = on ? 'true' : 'false';
+      c.setAttribute('aria-expanded', on ? 'true' : 'false');
+    });
+  };
+
+  const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+  cards.forEach((card) => {
+    if (finePointer) {
+      card.addEventListener('mouseenter', () => activate(card));
+      card.addEventListener('focus', () => activate(card));
+    }
+    card.addEventListener('click', () => activate(card));
+    card.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        activate(card);
+      }
+    });
+  });
+</script>
+
 <style>
   .services {
     background: var(--background);
+    overflow: hidden;
   }
   .services-head {
     text-align: center;
     max-width: 46ch;
-    margin: 0 auto 2.75rem;
-  }
-  .services-head .eyebrow {
-    justify-content: center;
-  }
-  .services h2 {
-    font-size: clamp(1.7rem, 3.8vw, 2.6rem);
-    margin: 0 0 0.85rem;
-  }
-  .services-lead {
-    color: var(--text-soft);
-    margin: 0;
-    font-size: 1rem;
+    margin: 0 auto clamp(2rem, 4vw, 2.75rem);
   }
 
+  /* Grid: tumpuk vertikal di mobile/tablet, jadi baris horizontal di layar lebar */
   .services-grid {
     list-style: none;
     margin: 0;
     padding: 0;
     display: grid;
     gap: 1rem;
-    grid-template-columns: repeat(auto-fit, minmax(232px, 1fr));
+    grid-template-columns: 1fr;
   }
+  @media (min-width: 1024px) {
+    .services-grid {
+      display: flex;
+      flex-wrap: nowrap;
+      align-items: stretch;
+      justify-content: center;
+      gap: 1rem;
+    }
+  }
+
+  /* Gradient mesh unik per card (fallback bila tidak ada foto) */
+  .service-card:nth-child(1) { --grad: var(--grad-1); }
+  .service-card:nth-child(2) { --grad: var(--grad-2); }
+  .service-card:nth-child(3) { --grad: var(--grad-3); }
+  .service-card:nth-child(4) { --grad: var(--grad-4); }
+  .service-card:nth-child(5) { --grad: var(--grad-5); }
+  .service-card:nth-child(6) { --grad: var(--grad-6); }
+
+  /* Card */
   .service-card {
-    background: var(--surface-raised);
-    border: 1px solid var(--line);
+    position: relative;
     border-radius: var(--radius);
-    padding: 1.85rem 1.6rem;
-    box-shadow: var(--shadow-sm);
+    padding: clamp(1.75rem, 3vw, 2.5rem);
+    overflow: hidden;
+    isolation: isolate;
+    border: 1px solid var(--hairline-dark);
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
     transition:
-      transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
-      box-shadow 0.3s ease;
+      box-shadow 0.5s cubic-bezier(0.23, 1, 0.32, 1),
+      flex-basis 0.5s cubic-bezier(0.23, 1, 0.32, 1),
+      border-color 0.4s ease;
+
+    /* Scroll reveal: start hidden */
+    opacity: 0;
+    transform: translateY(32px);
   }
-  .service-card:hover {
-    transform: translateY(-6px);
-    box-shadow: var(--shadow);
+
+  /* Layar lebar: kartu jadi tile yang bisa melebar */
+  @media (min-width: 1024px) {
+    .service-card {
+      flex: 0 0 280px;
+      min-height: 560px;
+      cursor: pointer;
+    }
+    .service-card[data-active='true'] {
+      flex-basis: 520px;
+    }
   }
-  .service-card[data-featured] {
-    background: var(--accent);
-    border-color: var(--accent);
-    box-shadow: var(--shadow);
+  @media (min-width: 1280px) {
+    .service-card {
+      flex-basis: 300px;
+      min-height: 620px;
+    }
+    .service-card[data-active='true'] {
+      flex-basis: 560px;
+    }
   }
-  .service-icon {
+
+  /* Background: foto/mesh dengan zoom halus */
+  .service-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--grad, var(--grad-fallback));
+    background-size: cover;
+    background-position: center;
+    transform: scale(1.03);
+    transition: transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+    z-index: -2;
+  }
+  .service-card[data-has-image]::before {
+    background-image: var(--card-img);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+  .service-card[data-active='true']::before {
+    transform: scale(1.08);
+  }
+
+  /* Overlay gradien dari bawah — lebih pekat saat aktif untuk keterbacaan */
+  .service-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--overlay-service-idle);
+    z-index: -1;
+    transition: background 0.5s ease;
+  }
+  .service-card[data-active='true']::after {
+    background: var(--overlay-service-active);
+  }
+
+  /* Staggered delay per card untuk reveal */
+  .service-card { transition-delay: calc(var(--i) * 0.06s); }
+
+  /* Visible state setelah IntersectionObserver */
+  .service-card.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+    transition:
+      opacity 0.6s cubic-bezier(0.23, 1, 0.32, 1) calc(var(--i) * 0.09s),
+      transform 0.6s cubic-bezier(0.23, 1, 0.32, 1) calc(var(--i) * 0.09s),
+      flex-basis 0.5s cubic-bezier(0.23, 1, 0.32, 1),
+      box-shadow 0.5s ease,
+      border-color 0.4s ease;
+  }
+
+  /* Kartu aktif: terangkat + bayangan */
+  .service-card[data-active='true'] {
+    border-color: var(--hairline-dark-hover);
+    box-shadow: var(--shadow-card-lift);
+  }
+
+  /* Nomor badge pill di pojok atas */
+  .service-num {
+    position: absolute;
+    top: 1.1rem;
+    left: 1.1rem;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 3.1rem;
-    height: 3.1rem;
-    border-radius: var(--radius-sm);
-    background: var(--accent-soft);
-    font-size: 1.6rem;
-    line-height: 1;
-    margin-bottom: 1.1rem;
+    min-width: 2.1rem;
+    height: 2.1rem;
+    padding: 0 0.55rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: var(--on-dark);
+    background: var(--on-dark-chip);
+    border: 1px solid var(--on-dark-faint);
+    backdrop-filter: blur(8px);
+    border-radius: var(--radius-pill);
+    z-index: 2;
+    transition: background 0.4s ease, color 0.4s ease, transform 0.4s ease;
   }
-  [data-featured] .service-icon {
-    background: color-mix(in srgb, var(--on-accent) 22%, transparent);
-  }
-  .service-title {
-    font-size: 1.18rem;
-    margin: 0 0 0.5rem;
-    color: var(--text);
-  }
-  .service-desc {
-    color: var(--muted);
-    margin: 0;
-    font-size: 0.94rem;
-  }
-  [data-featured] .service-title {
+  .service-card[data-active='true'] .service-num {
+    background: var(--accent);
     color: var(--on-accent);
+    transform: scale(1.05);
   }
-  [data-featured] .service-desc {
-    color: color-mix(in srgb, var(--on-accent) 82%, var(--accent));
+
+  /* Garis aksen bawah */
+  .service-line {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 4px;
+    width: 0;
+    background: var(--accent);
+    border-radius: 0 4px 0 0;
+    z-index: 3;
+    transition: width 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+  .service-card[data-active='true'] .service-line {
+    width: 100%;
+  }
+
+  /* Konten card */
+  .service-body {
+    position: relative;
+    z-index: 2;
+  }
+
+  .service-title {
+    font-size: clamp(1.3rem, 2.8vw, 1.6rem);
+    font-weight: 700;
+    margin: 0;
+    color: var(--on-dark);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+
+  /* Detail yang terungkap saat kartu aktif */
+  .service-reveal {
+    display: grid;
+    grid-template-rows: 1fr;
+    overflow: hidden;
+    transition:
+      grid-template-rows 0.5s cubic-bezier(0.23, 1, 0.32, 1),
+      opacity 0.4s ease,
+      margin-top 0.5s ease;
+    margin-top: 0.9rem;
+  }
+  /* Di layar lebar, detail disembunyikan sampai kartu aktif */
+  @media (min-width: 1024px) {
+    .service-reveal {
+      grid-template-rows: 0fr;
+      opacity: 0;
+      margin-top: 0;
+    }
+    .service-card[data-active='true'] .service-reveal {
+      grid-template-rows: 1fr;
+      opacity: 1;
+      margin-top: 0.9rem;
+    }
+  }
+  .service-reveal > * {
+    min-height: 0;
+  }
+
+  .service-desc {
+    color: var(--on-dark-muted);
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.65;
+  }
+
+  /* "Pelajari layanan" link */
+  .service-more {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 1rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--on-dark);
+  }
+  .service-more svg {
+    transition: transform 0.3s ease;
+  }
+  .service-card[data-active='true'] .service-more svg {
+    transform: translateX(4px);
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .service-card {
+      opacity: 1;
+      transform: none;
+      transition: flex-basis 0.3s ease, box-shadow 0.2s, border-color 0.2s;
+    }
+    .service-card::before,
+    .service-card[data-active='true']::before {
+      transform: none;
+      transition: none;
+    }
+    .service-reveal {
+      transition: opacity 0.2s ease;
+    }
+    .service-line {
+      transition: width 0.2s ease;
+    }
   }
 </style>
