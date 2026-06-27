@@ -36,7 +36,7 @@ const baseContent: SiteContent = {
 
 describe('Footer (R3.15)', () => {
   it('selalu memuat "Powered by NakesPro"', async () => {
-    const html = await render(Footer);
+    const html = await render(Footer, { content: baseContent });
     expect(html).toContain('Powered by NakesPro');
   });
 });

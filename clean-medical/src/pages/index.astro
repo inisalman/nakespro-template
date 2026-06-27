@@ -35,6 +35,6 @@ import Header from '../components/Header.astro';
     location={content.location}
     googleMaps={content.googleMaps}
   />
-  <Footer />
+  <Footer content={content} />
   <FloatingWhatsApp waNumber={content.waNumber} waMessage={content.waMessage} />
 </BaseLayout>

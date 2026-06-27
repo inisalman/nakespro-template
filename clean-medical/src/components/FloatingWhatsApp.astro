@@ -37,10 +37,11 @@ const href = show ? buildWaUrl(waNumber, waMessage) : '';
           focusable="false"
           fill="currentColor"
         >
-          <path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm0 18.15h-.01a8.2 8.2 0 0 1-4.18-1.15l-.3-.18-3.11.82.83-3.04-.2-.31a8.23 8.23 0 0 1-1.26-4.38c0-4.54 3.7-8.24 8.24-8.24 2.2 0 4.27.86 5.82 2.42a8.18 8.18 0 0 1 2.41 5.83c0 4.54-3.69 8.24-8.23 8.24Zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.25-.64.81-.79.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.01-.38.11-.51.11-.11.25-.29.37-.43.13-.14.17-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.41-.42-.56-.42l-.48-.01c-.17 0-.43.06-.66.31-.23.25-.86.85-.86 2.07 0 1.22.89 2.4 1.01 2.56.12.17 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.14-1.18-.06-.1-.22-.16-.47-.28Z" />
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+          <path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.117 1.528 5.847L.057 23.882l6.196-1.624A11.946 11.946 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.001-1.368l-.359-.214-3.68.965.981-3.595-.234-.369A9.818 9.818 0 1112 21.818z"/>
         </svg>
       </span>
-      <span class="wa-label">Chat fisioterapis</span>
+      <span class="wa-label">Chat Sekarang</span>
     </a>
   )
 }
@@ -53,37 +54,46 @@ const href = show ? buildWaUrl(waNumber, waMessage) : '';
     z-index: 50;
     display: inline-flex;
     align-items: center;
-    gap: 0.6rem;
-    min-height: 56px;
-    padding: 0.5rem 1.35rem 0.5rem 0.5rem;
+    gap: 0.75rem;
+    padding: 0.5rem 1.25rem 0.5rem 0.5rem;
     border-radius: var(--radius-pill);
     background: var(--ink);
     color: var(--on-ink);
     font-weight: 700;
+    font-size: 0.95rem;
     text-decoration: none;
-    box-shadow: var(--shadow-lg);
+    box-shadow: var(--shadow-xl);
     transition:
-      transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
-      background 0.25s ease;
+      transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+      background 0.25s ease,
+      box-shadow 0.3s ease;
   }
+
   .floating-wa:hover {
-    transform: translateY(-2px) scale(1.02);
+    transform: translateY(-4px) scale(1.02);
     background: var(--ink-soft);
+    box-shadow: var(--wa-shadow);
   }
+
   .wa-badge {
     position: relative;
     z-index: 1;
-    display: inline-flex;
+    display: flex;
     align-items: center;
     justify-content: center;
     width: 44px;
     height: 44px;
     border-radius: 50%;
-    background: var(--lime);
-    color: var(--lime-ink);
+    background: var(--wa-green);
+    color: var(--white);
     flex: none;
+    transition: transform 0.3s ease;
   }
-  /* Cincin pulsa lembut untuk menarik perhatian tanpa mengganggu. */
+
+  .floating-wa:hover .wa-badge {
+    transform: scale(1.05);
+  }
+
   .wa-pulse {
     position: absolute;
     left: 0.5rem;
@@ -92,27 +102,29 @@ const href = show ? buildWaUrl(waNumber, waMessage) : '';
     height: 44px;
     transform: translateY(-50%);
     border-radius: 50%;
-    background: var(--lime);
+    background: var(--wa-green);
     z-index: 0;
-    animation: wa-ping 2.6s cubic-bezier(0, 0, 0.2, 1) infinite;
+    animation: wa-ping 2.5s cubic-bezier(0, 0, 0.2, 1) infinite;
   }
+
   @keyframes wa-ping {
     0% {
       transform: translateY(-50%) scale(1);
-      opacity: 0.5;
+      opacity: 0.6;
     }
-    70%,
-    100% {
-      transform: translateY(-50%) scale(1.6);
+    75%, 100% {
+      transform: translateY(-50%) scale(1.8);
       opacity: 0;
     }
   }
+
   @media (prefers-reduced-motion: reduce) {
     .wa-pulse {
       animation: none;
       display: none;
     }
   }
+
   @media (max-width: 480px) {
     .wa-label {
       position: absolute;

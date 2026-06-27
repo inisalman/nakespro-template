@@ -38,6 +38,6 @@ const { content } = Astro.props;
     location={content.location}
     googleMaps={content.googleMaps}
   />
-  <Footer />
+  <Footer content={content} />
   <FloatingWhatsApp waNumber={content.waNumber} waMessage={content.waMessage} />
 </BaseLayout>

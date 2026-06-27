@@ -26,12 +26,19 @@ const highlights = [
 ---
 
 <section class="about" aria-labelledby="about-h">
+  <div class="about-glow" aria-hidden="true"></div>
   <div class="container about-grid">
-    <div class="about-inner">
+    <div class="about-content">
       <p class="eyebrow">Tentang Kami</p>
-      <h2 id="about-h">Bersama, kita capai pemulihan optimal</h2>
-      {paragraphs.map((p) => <p class="about-p">{p}</p>)}
-      <ul class="about-checks" role="list">
+      <h2 id="about-h" data-reveal style="animation-delay:.1s">
+        Bersama, kita capai pemulihan optimal
+      </h2>
+      {paragraphs.map((p, i) => (
+        <p class:list={['about-p', { 'about-p--lead': i === 0 }]} data-reveal style={`animation-delay:${0.15 + i * 0.05}s`}>
+          {p}
+        </p>
+      ))}
+      <ul class="about-checks" role="list" data-reveal style="animation-delay:.3s">
         {
           highlights.map((h) => (
             <li class="about-check">
@@ -47,13 +54,26 @@ const highlights = [
       </ul>
     </div>
     <aside class="about-panel" aria-hidden="true">
-      <div class="panel-quote">
-        <span class="panel-mark">+</span>
+      <div class="panel-card panel-quote">
+        <div class="panel-icon">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+          </svg>
+        </div>
         <p>Pemulihan terbaik terjadi di tempat Anda paling nyaman.</p>
       </div>
-      <div class="panel-stat">
+      <div class="panel-card panel-stat">
         <span class="panel-num">10+</span>
-        <span class="panel-label">tahun pengalaman klinis menangani kasus neuro, ortopedi &amp; geriatri</span>
+        <div class="panel-info">
+          <span class="panel-title">Tahun Pengalaman</span>
+          <span class="panel-desc">Kasus neuro, ortopedi &amp; geriatri</span>
+        </div>
+      </div>
+      <div class="panel-card panel-highlight">
+        <div class="highlight-ring">
+          <span class="highlight-value">98%</span>
+        </div>
+        <span class="highlight-label">Tingkat Kepuasan Pasien</span>
       </div>
     </aside>
   </div>
@@ -61,104 +81,230 @@ const highlights = [
 
 <style>
   .about {
-    background: var(--background);
+    position: relative;
+    background: var(--surface-2);
+    overflow: hidden;
   }
+
+  .about-glow {
+    position: absolute;
+    top: -20%;
+    right: -15%;
+    width: 50vw;
+    height: 50vw;
+    background: radial-gradient(circle, color-mix(in srgb, var(--accent) 8%, transparent) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
   .about-grid {
+    position: relative;
     display: grid;
-    gap: clamp(1.75rem, 4vw, 3rem);
+    gap: clamp(3rem, 6vw, 5rem);
     align-items: center;
+    z-index: 1;
   }
-  @media (min-width: 860px) {
+
+  @media (min-width: 992px) {
     .about-grid {
-      grid-template-columns: 1.15fr 0.85fr;
+      grid-template-columns: 1.1fr 0.9fr;
     }
   }
-  .about-inner {
-    max-width: 60ch;
+
+  .about-content {
+    max-width: 600px;
   }
+
   .about h2 {
-    font-size: clamp(1.7rem, 3.8vw, 2.6rem);
-    margin: 0 0 1.25rem;
+    font-size: clamp(2rem, 4.5vw, 2.75rem);
+    margin: 0 0 1.5rem;
+    line-height: 1.2;
+    color: var(--text);
+    letter-spacing: -0.025em;
   }
+
   .about-p {
     color: var(--text-soft);
-    margin: 0 0 1rem;
-    font-size: 1.02rem;
+    margin: 0 0 1.5rem;
+    font-size: 1.05rem;
+    line-height: 1.8;
   }
-  .about-p:first-of-type {
+
+  .about-p--lead {
     color: var(--text);
+    font-size: 1.15rem;
+    font-weight: 600;
+    line-height: 1.6;
+    letter-spacing: -0.01em;
   }
+
   .about-checks {
     list-style: none;
-    margin: 1.5rem 0 0;
+    margin: 2rem 0 0;
     padding: 0;
     display: grid;
-    gap: 0.85rem;
+    gap: 1rem;
   }
+
   .about-check {
     display: flex;
     align-items: center;
-    gap: 0.7rem;
-    font-weight: 600;
+    gap: 0.85rem;
+    font-weight: 700;
     color: var(--text);
+    font-size: 1.02rem;
   }
+
   .about-tick {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 1.7rem;
-    height: 1.7rem;
+    width: 2rem;
+    height: 2rem;
     border-radius: 50%;
-    background: var(--lime);
-    color: var(--lime-ink);
+    background: var(--accent);
+    color: var(--on-accent);
     flex: none;
+    box-shadow: 0 4px 10px color-mix(in srgb, var(--accent) 25%, transparent);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .about-check:hover .about-tick {
+    transform: scale(1.1) rotate(5deg);
+    background: var(--accent-strong);
   }
 
   .about-panel {
     display: grid;
-    gap: 1rem;
+    gap: 1.25rem;
   }
-  .panel-quote {
-    position: relative;
-    background: var(--accent);
-    color: var(--on-accent);
+
+  .panel-card {
+    background: var(--surface-raised);
+    border: 1px solid var(--line);
     border-radius: var(--radius-lg);
-    padding: 2rem 1.75rem;
-    box-shadow: var(--shadow);
+    padding: 1.75rem;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   }
-  .panel-mark {
+
+  .panel-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow);
+    border-color: color-mix(in srgb, var(--accent) 15%, transparent);
+  }
+
+  /* Luxurious quote block card */
+  .panel-quote {
+    background: linear-gradient(135deg, var(--ink) 0%, color-mix(in srgb, var(--accent) 70%, var(--ink)) 100%);
+    border: 1px solid var(--white-05);
+    color: var(--on-accent);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .panel-quote::before {
+    content: '"';
+    position: absolute;
+    right: 1.5rem;
+    bottom: -2rem;
+    font-size: 8rem;
     font-family: var(--font-display);
     font-weight: 800;
-    font-size: 2rem;
-    color: var(--lime);
+    color: var(--white-05);
     line-height: 1;
+    pointer-events: none;
   }
+
+  .panel-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    background: var(--white-10);
+    border: 1px solid var(--white-12);
+    border-radius: var(--radius);
+    margin-bottom: 1.25rem;
+    color: var(--lime);
+    box-shadow: 0 4px 12px var(--black-15);
+  }
+
   .panel-quote p {
     font-family: var(--font-display);
     font-weight: 600;
     font-size: 1.25rem;
-    line-height: 1.35;
-    margin: 0.6rem 0 0;
+    line-height: 1.5;
+    margin: 0;
+    color: var(--white);
+    letter-spacing: -0.015em;
+    text-shadow: 0 2px 4px var(--black-20);
   }
+
   .panel-stat {
-    background: var(--surface);
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    padding: 1.5rem 1.6rem;
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 1.5rem;
   }
+
   .panel-num {
     font-family: var(--font-display);
     font-weight: 800;
-    font-size: 2.4rem;
+    font-size: 2.75rem;
     color: var(--accent);
     line-height: 1;
     flex: none;
+    text-shadow: 0 2px 4px color-mix(in srgb, var(--accent) 15%, transparent);
   }
-  .panel-label {
-    font-size: 0.9rem;
-    color: var(--muted);
+
+  .panel-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .panel-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--text);
+  }
+
+  .panel-desc {
+    font-size: 0.85rem;
+    color: var(--text-soft);
+  }
+
+  .panel-highlight {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.5rem 1.75rem;
+  }
+
+  .highlight-ring {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 4px solid var(--lime);
+    background: color-mix(in srgb, var(--lime) 8%, transparent);
+    flex: none;
+    box-shadow: 0 2px 8px color-mix(in srgb, var(--lime) 20%, transparent);
+  }
+
+  .highlight-value {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.15rem;
+    color: var(--accent-strong);
+  }
+
+  .highlight-label {
+    font-size: 0.95rem;
+    color: var(--text-soft);
+    font-weight: 600;
+    letter-spacing: -0.01em;
   }
 </style>

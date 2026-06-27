@@ -20,20 +20,29 @@ const credentials = items as Credential[];
   <div class="container">
     <h2 id="trustbar-h" class="visually-hidden">Kredensial &amp; Sertifikasi</h2>
     <div class="trust-band">
-      <ul class="trust-list" role="list">
-        {
-          credentials.map((c) => (
-            <li class="trust-item">
-              {c.icon && (
-                <span class="trust-icon" aria-hidden="true">
-                  {c.icon}
-                </span>
-              )}
-              <span class="trust-label">{c.label}</span>
-            </li>
-          ))
-        }
-      </ul>
+      <div class="trust-content">
+        <span class="trust-badge">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+            <polyline points="22 4 12 14.01 9 11.01"/>
+          </svg>
+          <span>Terverifikasi</span>
+        </span>
+        <ul class="trust-list" role="list">
+          {
+            credentials.map((c) => (
+              <li class="trust-item">
+                {c.icon && (
+                  <span class="trust-icon" aria-hidden="true">
+                    {c.icon}
+                  </span>
+                )}
+                <span class="trust-label">{c.label}</span>
+              </li>
+            )
+          )}
+        </ul>
+      </div>
     </div>
   </div>
 </section>
@@ -41,7 +50,7 @@ const credentials = items as Credential[];
 <style>
   .trustbar {
     background: var(--background);
-    padding-block: clamp(1rem, 3vw, 2rem);
+    padding-block: clamp(1rem, 2.5vw, 2rem);
   }
   .visually-hidden {
     position: absolute;
@@ -55,10 +64,56 @@ const credentials = items as Credential[];
     border: 0;
   }
   .trust-band {
-    background: var(--lime);
-    border-radius: var(--radius);
-    padding: clamp(1rem, 2.5vw, 1.5rem) clamp(1.25rem, 3vw, 2.25rem);
-    box-shadow: var(--shadow-sm);
+    background: linear-gradient(135deg, var(--lime) 0%, color-mix(in srgb, var(--lime) 90%, var(--white)) 100%);
+    border: 1px solid var(--trust-border);
+    border-radius: var(--radius-lg);
+    padding: clamp(1.25rem, 3vw, 1.75rem) clamp(1.5rem, 5vw, 3rem);
+    box-shadow: 0 10px 30px -10px color-mix(in srgb, var(--lime-ink) 15%, transparent);
+    position: relative;
+    overflow: hidden;
+  }
+  .trust-band::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--shimmer-grad);
+    transform: translateX(-100%);
+    animation: shimmer 8s infinite linear;
+  }
+  @keyframes shimmer {
+    100% { transform: translateX(100%); }
+  }
+  .trust-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+  }
+  @media (min-width: 900px) {
+    .trust-content {
+      flex-direction: row;
+      justify-content: space-between;
+      gap: 2rem;
+    }
+  }
+  .trust-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.45rem 1rem;
+    background: var(--trust-badge-bg);
+    border: 1px solid var(--trust-badge-border);
+    border-radius: var(--radius-pill);
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: var(--lime-ink);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+    box-shadow: var(--trust-shadow-inset);
   }
   .trust-list {
     list-style: none;
@@ -69,18 +124,40 @@ const credentials = items as Credential[];
     gap: 1rem 2.5rem;
     align-items: center;
     justify-content: center;
+    flex: 1;
   }
   .trust-item {
     display: inline-flex;
     align-items: center;
-    gap: 0.55rem;
+    gap: 0.6rem;
     color: var(--lime-ink);
     font-family: var(--font-display);
     font-weight: 700;
-    font-size: clamp(0.95rem, 1.6vw, 1.1rem);
+    font-size: clamp(0.9rem, 1.4vw, 1.05rem);
+    transition: transform 0.25s ease;
+  }
+  .trust-item:hover {
+    transform: scale(1.03);
   }
   .trust-icon {
-    font-size: 1.2rem;
+    font-size: 1.25rem;
     line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    filter: drop-shadow(0 2px 4px var(--black-05));
+  }
+  .trust-label {
+    letter-spacing: -0.01em;
+  }
+  @media (max-width: 640px) {
+    .trust-content {
+      align-items: center;
+      text-align: center;
+    }
+    .trust-list {
+      flex-direction: column;
+      gap: 0.85rem;
+    }
   }
 </style>

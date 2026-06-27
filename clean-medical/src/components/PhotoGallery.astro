@@ -26,15 +26,19 @@ if (items.length === 0) return null;
 ---
 
 <section class="gallery" id="galeri" aria-labelledby="gallery-h">
+  <div class="gallery-bg" aria-hidden="true"></div>
   <div class="container">
     <div class="gallery-head">
       <p class="eyebrow">Galeri Kami</p>
-      <h2 id="gallery-h">Berdedikasi untuk kesejahteraan Anda</h2>
+      <h2 id="gallery-h" data-reveal style="animation-delay:.1s">Berdedikasi untuk kesejahteraan Anda</h2>
+      <p class="gallery-lead" data-reveal style="animation-delay:.15s">
+        Dokumentasi kegiatan dan momen berharga bersama pasien kami.
+      </p>
     </div>
     <ul class="gallery-grid" role="list">
       {
         items.map((photo, i) => (
-          <li class="gallery-item" data-reveal style={`animation-delay:${0.05 * i}s`}>
+          <li class="gallery-item" data-reveal style={`animation-delay:${0.05 * (i + 1)}s`}>
             <div class="gallery-shot">
               <img
                 src={`/images/${photo.url}`}
@@ -44,6 +48,13 @@ if (items.length === 0) return null;
                 loading="lazy"
                 decoding="async"
               />
+              <div class="gallery-overlay" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="11" cy="11" r="8"/>
+                  <path d="m21 21-4.35-4.35"/>
+                  <path d="M11 8v6M8 11h6"/>
+                </svg>
+              </div>
             </div>
             {photo.caption && (
               <figcaption class="gallery-cap">{photo.caption}</figcaption>
@@ -57,63 +68,118 @@ if (items.length === 0) return null;
 
 <style>
   .gallery {
-    background: var(--surface);
+    position: relative;
+    background: var(--background);
+    overflow: hidden;
   }
+
+  .gallery-bg {
+    position: absolute;
+    bottom: -30%;
+    right: -15%;
+    width: 50vw;
+    height: 50vw;
+    background: radial-gradient(circle, color-mix(in srgb, var(--accent) 6%, transparent) 0%, transparent 65%);
+    pointer-events: none;
+  }
+
   .gallery-head {
     text-align: center;
-    max-width: 36ch;
-    margin: 0 auto 2.5rem;
+    max-width: 600px;
+    margin: 0 auto clamp(3rem, 6vw, 4.5rem);
   }
-  .gallery-head .eyebrow {
-    justify-content: center;
+
+  .gallery-head h2 {
+    font-size: clamp(2rem, 4.5vw, 2.75rem);
+    margin: 0 0 1rem;
+    color: var(--text);
   }
-  .gallery h2 {
-    font-size: clamp(1.7rem, 3.8vw, 2.6rem);
-    margin: 0;
+
+  .gallery-lead {
+    color: var(--text-soft);
+    margin: 0.75rem 0 0;
+    font-size: 1.05rem;
+    line-height: 1.7;
   }
+
   .gallery-grid {
     list-style: none;
     margin: 0;
     padding: 0;
     display: grid;
-    gap: 1rem;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   }
+
   .gallery-item {
     margin: 0;
     background: var(--surface-raised);
     border: 1px solid var(--line);
-    border-radius: var(--radius);
-    padding: 0.65rem 0.65rem 0.9rem;
+    border-radius: var(--radius-xl);
+    overflow: hidden;
     box-shadow: var(--shadow-sm);
-    transition:
-      transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
-      box-shadow 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   }
+
   .gallery-item:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow);
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-lg);
+    border-color: color-mix(in srgb, var(--accent) 20%, transparent);
   }
+
   .gallery-shot {
     position: relative;
-    border-radius: var(--radius-sm);
     overflow: hidden;
-    aspect-ratio: 1 / 1;
+    aspect-ratio: 4 / 3;
+    background: var(--surface-2);
   }
+
   .gallery-shot img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
   }
+
   .gallery-item:hover .gallery-shot img {
-    transform: scale(1.05);
+    transform: scale(1.06);
   }
+
+  .gallery-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--gallery-overlay-bg);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    color: white;
+  }
+
+  .gallery-item:hover .gallery-overlay {
+    opacity: 1;
+  }
+
+  .gallery-overlay svg {
+    transform: scale(0.8);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .gallery-item:hover .gallery-overlay svg {
+    transform: scale(1);
+  }
+
   .gallery-cap {
-    font-size: 0.86rem;
-    font-weight: 600;
+    font-size: 0.95rem;
+    font-weight: 700;
     color: var(--text);
-    margin-top: 0.75rem;
-    padding-inline: 0.35rem;
+    margin: 0;
+    padding: 1.25rem 1.5rem;
+    line-height: 1.4;
+    border-top: 1px solid var(--line);
+    letter-spacing: -0.015em;
   }
 </style>

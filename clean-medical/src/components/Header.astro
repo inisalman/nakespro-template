@@ -15,7 +15,12 @@ const waHref = buildWaUrl(content.waNumber, content.waMessage);
 <header class="site-header">
   <div class="container header-inner">
     <a class="header-logo" href="#" aria-label={content.websiteName}>
-      {content.websiteName}
+      <span class="logo-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+        </svg>
+      </span>
+      <span class="logo-text">{content.websiteName}</span>
     </a>
 
     <nav class="header-nav" aria-label="Navigasi utama">
@@ -32,117 +37,300 @@ const waHref = buildWaUrl(content.waNumber, content.waMessage);
         rel="noopener noreferrer"
         aria-label="Chat via WhatsApp"
       >
-        Order via WhatsApp
+        <span class="cta-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+            <path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.117 1.528 5.847L.057 23.882l6.196-1.624A11.946 11.946 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.001-1.368l-.359-.214-3.68.965.981-3.595-.234-.369A9.818 9.818 0 1112 21.818z"/>
+          </svg>
+        </span>
+        <span class="cta-text">Hubungi Kami</span>
       </a>
     )}
+
+    <button class="mobile-menu-btn" aria-label="Buka menu" aria-expanded="false">
+      <span class="menu-bar"></span>
+      <span class="menu-bar"></span>
+      <span class="menu-bar"></span>
+    </button>
+  </div>
+
+  <div class="mobile-nav" aria-hidden="true">
+    <nav class="mobile-nav-inner">
+      <a href="#layanan">Layanan</a>
+      <a href="#galeri">Galeri</a>
+      <a href="#kontak">Kontak</a>
+      {waValid && (
+        <a href={waHref} class="mobile-cta" target="_blank" rel="noopener noreferrer">
+          Hubungi Kami
+        </a>
+      )}
+    </nav>
   </div>
 </header>
+
+<script>
+  const header = document.querySelector('.site-header') as HTMLElement;
+  const mobileBtn = document.querySelector('.mobile-menu-btn') as HTMLButtonElement;
+  const mobileNav = document.querySelector('.mobile-nav') as HTMLElement;
+  const mobileLinks = mobileNav.querySelectorAll('a');
+
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 60) {
+      header.classList.add('scrolled');
+    } else {
+      header.classList.remove('scrolled');
+    }
+  });
+
+  mobileBtn?.addEventListener('click', () => {
+    const isOpen = mobileBtn.getAttribute('aria-expanded') === 'true';
+    mobileBtn.setAttribute('aria-expanded', String(!isOpen));
+    mobileNav.setAttribute('aria-hidden', String(isOpen));
+    header.classList.toggle('menu-open', !isOpen);
+  });
+
+  mobileLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      mobileBtn.setAttribute('aria-expanded', 'false');
+      mobileNav.setAttribute('aria-hidden', 'true');
+      header.classList.remove('menu-open');
+    });
+  });
+</script>
 
 <style>
   .site-header {
     position: sticky;
     top: 0;
     z-index: 100;
-    background: var(--background);
+    background: var(--header-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     border-bottom: 1px solid var(--hairline);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .site-header.scrolled {
+    background: var(--header-bg-scrolled);
+    box-shadow: var(--shadow-sm);
+    border-bottom-color: var(--line);
   }
 
   .header-inner {
     display: flex;
     align-items: center;
-    gap: 1rem;
-    height: 64px;
+    gap: 2rem;
+    height: 80px;
+    transition: height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .site-header.scrolled .header-inner {
+    height: 70px;
   }
 
   .header-logo {
-    font-family: var(--font-display);
-    font-weight: 700;
-    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
     color: var(--text);
     text-decoration: none;
-    white-space: nowrap;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.15rem;
+    letter-spacing: -0.02em;
     flex-shrink: 0;
-    letter-spacing: -0.01em;
+  }
+
+  .logo-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: var(--accent-soft);
+    border: 1px solid var(--hairline-accent);
+    border-radius: var(--radius-sm);
+    color: var(--accent);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .header-logo:hover .logo-icon {
+    background: var(--accent);
+    color: var(--on-accent);
+    transform: scale(1.05) rotate(5deg);
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--accent) 30%, transparent);
   }
 
   .header-nav {
     display: flex;
     align-items: center;
-    gap: 0.25rem;
+    gap: 0.75rem;
     flex: 1;
     justify-content: center;
   }
 
   .header-nav a {
-    padding: 0.4rem 0.85rem;
-    border-radius: calc(var(--radius-sm) / 2);
-    color: var(--text);
+    position: relative;
+    padding: 0.6rem 1.1rem;
+    border-radius: var(--radius-pill);
+    color: var(--text-soft);
     text-decoration: none;
     font-size: 0.95rem;
-    font-weight: 500;
-    transition: background 0.15s, color 0.15s;
+    font-weight: 600;
+    transition: all 0.25s ease;
   }
 
   .header-nav a:hover {
-    background: var(--accent-tint);
-    color: var(--accent);
+    color: var(--accent-strong);
+    background: var(--accent-soft);
   }
 
   .header-cta {
     display: inline-flex;
     align-items: center;
-    min-height: 40px;
-    padding: 0 1.1rem;
+    gap: 0.6rem;
+    padding: 0 1.5rem;
+    height: 46px;
     border-radius: var(--radius-pill);
     background: var(--accent);
     color: var(--on-accent);
-    font-weight: 600;
+    font-weight: 700;
     font-size: 0.9rem;
     text-decoration: none;
-    white-space: nowrap;
     flex-shrink: 0;
-    transition: opacity 0.15s;
+    box-shadow: 0 4px 14px color-mix(in srgb, var(--accent) 25%, transparent);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .cta-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease;
   }
 
   .header-cta:hover {
-    opacity: 0.88;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px color-mix(in srgb, var(--accent) 35%, transparent);
+    background: var(--accent-strong);
   }
 
-  @media (max-width: 640px) {
-    .header-nav {
+  .header-cta:hover .cta-icon {
+    transform: scale(1.1);
+  }
+
+  .mobile-menu-btn {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 44px;
+    height: 44px;
+    padding: 10px;
+    border: 1px solid var(--line);
+    background: var(--surface-raised);
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+    margin-left: auto;
+    transition: all 0.3s ease;
+  }
+
+  .mobile-menu-btn:hover {
+    background: var(--accent-soft);
+    border-color: var(--accent);
+  }
+
+  .menu-bar {
+    display: block;
+    width: 100%;
+    height: 2px;
+    background: var(--text);
+    border-radius: 2px;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+  }
+
+  .site-header.menu-open .menu-bar:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+    background: var(--accent);
+  }
+
+  .site-header.menu-open .menu-bar:nth-child(2) {
+    opacity: 0;
+  }
+
+  .site-header.menu-open .menu-bar:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+    background: var(--accent);
+  }
+
+  .mobile-nav {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--header-bg-mobile);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--line);
+    box-shadow: var(--shadow-lg);
+    padding: 1.5rem;
+    transform: translateY(-10px);
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .site-header.menu-open .mobile-nav {
+    display: block;
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  .mobile-nav-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .mobile-nav-inner a {
+    padding: 0.9rem 1.25rem;
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.05rem;
+    transition: all 0.25s ease;
+    border-left: 3px solid transparent;
+  }
+
+  .mobile-nav-inner a:hover {
+    background: var(--accent-soft);
+    color: var(--accent-strong);
+    border-left-color: var(--accent);
+  }
+
+  .mobile-cta {
+    background: var(--accent) !important;
+    color: var(--on-accent) !important;
+    text-align: center;
+    font-weight: 700;
+    margin-top: 1rem;
+    border-left: none !important;
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--accent) 20%, transparent);
+  }
+
+  .mobile-cta:hover {
+    background: var(--accent-strong) !important;
+  }
+
+  @media (max-width: 768px) {
+    .header-nav,
+    .header-cta {
       display: none;
     }
-    .header-logo {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      min-width: 0;
-      flex-shrink: 1;
-    }
-    .header-cta {
-      font-size: 0;
-      padding: 0;
-      width: 40px;
-      height: 40px;
-      justify-content: center;
-      border-radius: 50%;
-    }
-    .header-cta::before {
-      content: '';
-      display: block;
-      width: 20px;
-      height: 20px;
-      background: currentColor;
-      mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z'/%3E%3Cpath d='M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.117 1.528 5.847L.057 23.882l6.196-1.624A11.946 11.946 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.001-1.368l-.359-.214-3.68.965.981-3.595-.234-.369A9.818 9.818 0 1112 21.818z'/%3E%3C/svg%3E");
-      mask-repeat: no-repeat;
-      mask-position: center;
-      mask-size: contain;
-      -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z'/%3E%3Cpath d='M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.117 1.528 5.847L.057 23.882l6.196-1.624A11.946 11.946 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.001-1.368l-.359-.214-3.68.965.981-3.595-.234-.369A9.818 9.818 0 1112 21.818z'/%3E%3C/svg%3E");
-      -webkit-mask-repeat: no-repeat;
-      -webkit-mask-position: center;
-      -webkit-mask-size: contain;
-      flex-shrink: 0;
+
+    .mobile-menu-btn {
+      display: flex;
     }
   }
 </style>

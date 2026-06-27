@@ -18,33 +18,33 @@ const palettes: Palette[] = [
     id: 'bright-health',
     name: 'Bright Health',
     tokens: {
-      accent: '#1f6fff', // biru terang health-tech — CTA & aksen
+      accent: '#2563eb',
       background: '#ffffff',
-      surface: '#eef1fb', // lavender muda untuk section blok
-      text: '#0f1726',
-      muted: '#4a5570',
+      surface: '#f0f4f8',
+      text: '#0f172a',
+      muted: '#475569',
     },
   },
   {
     id: 'sky-clean',
     name: 'Sky Clean',
     tokens: {
-      accent: '#0b74d1', // biru langit sedikit lebih dalam
+      accent: '#0284c7',
       background: '#ffffff',
-      surface: '#eaf3fb',
-      text: '#102433',
-      muted: '#42596c',
+      surface: '#f0f9ff',
+      text: '#0c4a6e',
+      muted: '#0369a1',
     },
   },
   {
-    id: 'ink-lavender',
-    name: 'Ink Lavender',
+    id: 'teal-medical',
+    name: 'Teal Medical',
     tokens: {
-      accent: '#3b59e6', // indigo cerah di atas latar lavender
-      background: '#f7f8fc',
-      surface: '#eceefb',
-      text: '#12172b',
-      muted: '#454d6b',
+      accent: '#0d9488',
+      background: '#f8fafc',
+      surface: '#ecfeff',
+      text: '#134e4a',
+      muted: '#0f766e',
     },
   },
 ];
