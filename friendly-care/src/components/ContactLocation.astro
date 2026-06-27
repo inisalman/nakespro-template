@@ -93,57 +93,82 @@ const showMapUnavailable = !hasMaps && (hasHours || hasLocation);
 <style>
   .contact-grid {
     display: grid;
-    gap: 2.5rem;
+    gap: clamp(2.5rem, 6vw, 4.5rem);
     align-items: center;
   }
   @media (min-width: 768px) {
     .contact-grid {
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1.05fr 0.95fr;
     }
   }
   .contact-title {
-    font-size: clamp(1.7rem, 4vw, 2.6rem);
-    margin: 0 0 1.75rem;
+    font-size: clamp(1.85rem, 4.5vw, 2.6rem);
+    font-weight: 800;
+    margin: 0 0 2rem;
+    line-height: 1.2;
+    letter-spacing: -0.03em;
   }
   .contact-block {
     display: flex;
     align-items: flex-start;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
+    gap: 1.15rem;
+    margin-bottom: 1.75rem;
+    padding: 1.25rem 1.5rem;
+    background: linear-gradient(135deg, var(--glass-bg) 0%, color-mix(in srgb, var(--surface) 15%, var(--glass-bg)) 100%);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
+  }
+  .contact-block:hover {
+    transform: translateY(-3px);
+    border-color: var(--accent);
   }
   .contact-ic {
     flex: none;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 46px;
-    height: 46px;
-    border-radius: 14px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
     background: var(--accent-soft);
-    color: var(--accent);
+    color: var(--accent-strong);
+    box-shadow: var(--shadow-xs);
+    border: 1px solid var(--hairline-accent);
   }
   .contact-label {
-    font-size: 1rem;
+    font-size: 0.95rem;
     font-family: var(--font-display);
-    color: var(--text);
-    margin: 0 0 0.2rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--accent-strong);
+    margin: 0 0 0.35rem;
   }
   .contact-value {
     margin: 0;
-    color: var(--muted);
+    color: var(--text);
+    font-size: 1.02rem;
+    line-height: 1.6;
   }
   .map-unavailable {
     color: var(--muted);
     font-style: italic;
+    background: var(--accent-soft);
+    padding: 1rem 1.5rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--hairline-accent);
+    margin: 0;
   }
   .contact-map {
     position: relative;
     width: 100%;
     aspect-ratio: 4 / 3;
-    border-radius: var(--radius);
+    border-radius: var(--radius-lg);
     overflow: hidden;
-    box-shadow: var(--shadow);
-    border: 1px solid var(--glass-border);
+    box-shadow: var(--shadow-xl);
+    border: 6px solid var(--background);
   }
   .contact-map iframe {
     position: absolute;

@@ -148,20 +148,13 @@ const pad = (n: number) => String(n + 1).padStart(2, '0');
     overflow: hidden;
   }
 
-  /* Header section */
-  .section-head {
-    text-align: center;
-    max-width: 44rem;
-    margin: 0 auto clamp(2rem, 4vw, 3rem);
-  }
-
   /* Grid: tumpuk vertikal di mobile/tablet, jadi baris horizontal di layar lebar */
   .services-grid {
     list-style: none;
     margin: 0;
     padding: 0;
     display: grid;
-    gap: 1rem;
+    gap: 1.25rem;
     grid-template-columns: 1fr;
   }
   @media (min-width: 1024px) {
@@ -170,7 +163,7 @@ const pad = (n: number) => String(n + 1).padStart(2, '0');
       flex-wrap: nowrap;
       align-items: stretch;
       justify-content: center;
-      gap: 1rem;
+      gap: 1.25rem;
     }
   }
 
@@ -185,19 +178,21 @@ const pad = (n: number) => String(n + 1).padStart(2, '0');
   /* Card */
   .service-card {
     position: relative;
-    border-radius: var(--radius);
-    padding: clamp(1.75rem, 3vw, 2.5rem);
+    border-radius: var(--radius-lg);
+    padding: clamp(1.75rem, 3.5vw, 2.75rem);
     overflow: hidden;
     isolation: isolate;
     border: 1px solid var(--hairline-dark);
-    min-height: 300px;
+    min-height: 320px;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
+    box-shadow: var(--shadow-sm);
     transition:
-      box-shadow 0.5s cubic-bezier(0.23, 1, 0.32, 1),
-      flex-basis 0.5s cubic-bezier(0.23, 1, 0.32, 1),
-      border-color 0.4s ease;
+      box-shadow 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+      flex-basis 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 0.4s ease,
+      transform 0.4s ease;
 
     /* Scroll reveal: start hidden */
     opacity: 0;
@@ -207,21 +202,21 @@ const pad = (n: number) => String(n + 1).padStart(2, '0');
   /* Layar lebar: kartu jadi tile yang bisa melebar */
   @media (min-width: 1024px) {
     .service-card {
-      flex: 0 0 280px;
+      flex: 0 0 260px;
       min-height: 560px;
       cursor: pointer;
     }
     .service-card[data-active='true'] {
-      flex-basis: 520px;
+      flex-basis: 540px;
     }
   }
   @media (min-width: 1280px) {
     .service-card {
-      flex-basis: 300px;
-      min-height: 620px;
+      flex-basis: 280px;
+      min-height: 600px;
     }
     .service-card[data-active='true'] {
-      flex-basis: 560px;
+      flex-basis: 580px;
     }
   }
 
@@ -233,8 +228,8 @@ const pad = (n: number) => String(n + 1).padStart(2, '0');
     background: var(--grad, var(--grad-fallback));
     background-size: cover;
     background-position: center;
-    transform: scale(1.03);
-    transition: transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+    transform: scale(1.01);
+    transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
     z-index: -2;
   }
   .service-card[data-has-image]::before {
@@ -242,6 +237,9 @@ const pad = (n: number) => String(n + 1).padStart(2, '0');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+  }
+  .service-card:hover::before {
+    transform: scale(1.05);
   }
   .service-card[data-active='true']::before {
     transform: scale(1.08);
@@ -254,25 +252,26 @@ const pad = (n: number) => String(n + 1).padStart(2, '0');
     inset: 0;
     background: var(--overlay-service-idle);
     z-index: -1;
-    transition: background 0.5s ease;
+    transition: background 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   }
   .service-card[data-active='true']::after {
     background: var(--overlay-service-active);
   }
 
   /* Staggered delay per card untuk reveal */
-  .service-card { transition-delay: calc(var(--i) * 0.06s); }
+  .service-card { transition-delay: calc(var(--i) * 0.05s); }
 
   /* Visible state setelah IntersectionObserver */
   .service-card.is-visible {
     opacity: 1;
     transform: translateY(0);
     transition:
-      opacity 0.6s cubic-bezier(0.23, 1, 0.32, 1) calc(var(--i) * 0.09s),
-      transform 0.6s cubic-bezier(0.23, 1, 0.32, 1) calc(var(--i) * 0.09s),
-      flex-basis 0.5s cubic-bezier(0.23, 1, 0.32, 1),
-      box-shadow 0.5s ease,
-      border-color 0.4s ease;
+      opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1) calc(var(--i) * 0.08s),
+      transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) calc(var(--i) * 0.08s),
+      flex-basis 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 0.4s ease,
+      transform 0.4s ease;
   }
 
   /* Kartu aktif: terangkat + bayangan */
@@ -284,29 +283,31 @@ const pad = (n: number) => String(n + 1).padStart(2, '0');
   /* Nomor badge pill di pojok atas */
   .service-num {
     position: absolute;
-    top: 1.1rem;
-    left: 1.1rem;
+    top: 1.25rem;
+    left: 1.25rem;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 2.1rem;
-    height: 2.1rem;
-    padding: 0 0.55rem;
+    min-width: 2.3rem;
+    height: 2.3rem;
+    padding: 0 0.65rem;
     font-size: 0.8rem;
-    font-weight: 700;
+    font-weight: 800;
     letter-spacing: 0.02em;
     color: var(--on-dark);
     background: var(--on-dark-chip);
     border: 1px solid var(--on-dark-faint);
-    backdrop-filter: blur(8px);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border-radius: var(--radius-pill);
     z-index: 2;
-    transition: background 0.4s ease, color 0.4s ease, transform 0.4s ease;
+    transition: background 0.4s ease, color 0.4s ease, transform 0.4s ease, box-shadow 0.4s ease;
   }
   .service-card[data-active='true'] .service-num {
     background: var(--accent);
     color: var(--background);
-    transform: scale(1.05);
+    transform: scale(1.08);
+    box-shadow: 0 0 12px color-mix(in srgb, var(--accent) 50%, transparent);
   }
 
   /* Garis aksen bawah */
@@ -314,12 +315,12 @@ const pad = (n: number) => String(n + 1).padStart(2, '0');
     position: absolute;
     bottom: 0;
     left: 0;
-    height: 4px;
+    height: 5px;
     width: 0;
     background: var(--accent);
-    border-radius: 0 4px 0 0;
+    border-radius: 0 5px 0 0;
     z-index: 3;
-    transition: width 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+    transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   }
   .service-card[data-active='true'] .service-line {
     width: 100%;
@@ -332,12 +333,12 @@ const pad = (n: number) => String(n + 1).padStart(2, '0');
   }
 
   .service-title {
-    font-size: clamp(1.3rem, 2.8vw, 1.6rem);
-    font-weight: 700;
+    font-size: clamp(1.35rem, 3vw, 1.7rem);
+    font-weight: 800;
     margin: 0;
     color: var(--on-dark);
-    line-height: 1.2;
-    letter-spacing: -0.01em;
+    line-height: 1.25;
+    letter-spacing: -0.02em;
   }
 
   /* Detail yang terungkap saat kartu aktif */
@@ -346,10 +347,10 @@ const pad = (n: number) => String(n + 1).padStart(2, '0');
     grid-template-rows: 1fr;
     overflow: hidden;
     transition:
-      grid-template-rows 0.5s cubic-bezier(0.23, 1, 0.32, 1),
+      grid-template-rows 0.6s cubic-bezier(0.16, 1, 0.3, 1),
       opacity 0.4s ease,
-      margin-top 0.5s ease;
-    margin-top: 0.9rem;
+      margin-top 0.6s ease;
+    margin-top: 0.95rem;
   }
   /* Di layar lebar, detail disembunyikan sampai kartu aktif */
   @media (min-width: 1024px) {
@@ -361,7 +362,7 @@ const pad = (n: number) => String(n + 1).padStart(2, '0');
     .service-card[data-active='true'] .service-reveal {
       grid-template-rows: 1fr;
       opacity: 1;
-      margin-top: 0.9rem;
+      margin-top: 0.95rem;
     }
   }
   .service-reveal > * {
@@ -371,24 +372,25 @@ const pad = (n: number) => String(n + 1).padStart(2, '0');
   .service-desc {
     color: var(--on-dark-muted);
     margin: 0;
-    font-size: 0.95rem;
-    line-height: 1.65;
+    font-size: 0.96rem;
+    line-height: 1.7;
   }
 
   /* "Pelajari layanan" link */
   .service-more {
     display: inline-flex;
     align-items: center;
-    gap: 0.4rem;
-    margin-top: 1rem;
+    gap: 0.45rem;
+    margin-top: 1.1rem;
     font-size: 0.85rem;
-    font-weight: 600;
+    font-weight: 700;
     color: var(--on-dark);
+    letter-spacing: 0.02em;
   }
   .service-more svg {
-    transition: transform 0.3s ease;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   }
-  .service-card[data-active='true'] .service-more svg {
+  .service-card:hover .service-more svg {
     transform: translateX(4px);
   }
 

@@ -52,61 +52,65 @@ const cssVars = paletteToCssVars(palette);
       :root {
         --max-width: 1200px;
         --space: 1rem;
-        /* friendly-care: ramah/cerah — sangat rounded (R7.4). */
-        --radius: 24px;
-        --radius-sm: 16px;
+        /* friendly-care: ramah/cerah — sangat rounded (R7.4) & premium. */
+        --radius-xs: 8px;
+        --radius-sm: 14px;
+        --radius: 20px;
+        --radius-md: 26px;
+        --radius-lg: 36px;
+        --radius-xl: 44px;
         --radius-pill: 999px;
 
-        /* Bayangan halus bernuansa aksen (soft maternal-care). */
-        --shadow: 0 18px 40px -16px color-mix(in srgb, var(--accent) 38%, transparent);
-        --shadow-sm: 0 8px 24px -10px color-mix(in srgb, var(--accent) 30%, transparent);
-        --shadow-lg: 0 30px 60px -22px color-mix(in srgb, var(--accent) 45%, transparent);
+        /* Premium multi-layered accent-tinted shadows. */
+        --shadow-xs: 0 2px 4px color-mix(in srgb, var(--accent) 3%, transparent);
+        --shadow-sm: 0 4px 12px -2px color-mix(in srgb, var(--accent) 8%, transparent);
+        --shadow: 0 12px 28px -8px color-mix(in srgb, var(--accent) 16%, transparent);
+        --shadow-lg: 0 24px 48px -12px color-mix(in srgb, var(--accent) 24%, transparent);
+        --shadow-xl: 0 36px 72px -16px color-mix(in srgb, var(--accent) 30%, transparent);
 
-        /* Panel kaca translusen di atas latar. */
-        --glass-bg: color-mix(in srgb, var(--background) 78%, transparent);
-        --glass-border: color-mix(in srgb, var(--accent) 16%, transparent);
+        /* Soft premium glass surfaces. */
+        --glass-bg: rgba(255, 255, 255, 0.72);
+        --glass-border: color-mix(in srgb, var(--accent) 12%, transparent);
 
-        /* Permukaan turunan untuk variasi tanpa warna literal di komponen. */
+        /* Palette derived surfaces. */
+        --accent-strong: color-mix(in srgb, var(--accent) 88%, #000);
+        --accent-soft: color-mix(in srgb, var(--accent) 8%, var(--background));
+        --accent-softer: color-mix(in srgb, var(--accent) 4%, var(--background));
         --surface-2: color-mix(in srgb, var(--surface) 60%, var(--background));
-        --accent-soft: color-mix(in srgb, var(--accent) 14%, var(--background));
-        --accent-softer: color-mix(in srgb, var(--accent) 8%, var(--background));
-        --hairline: color-mix(in srgb, var(--accent) 14%, transparent);
+        --hairline: color-mix(in srgb, var(--accent) 10%, transparent);
+        --hairline-accent: color-mix(in srgb, var(--accent) 18%, transparent);
         --on-accent: var(--background);
 
-        /* Service tile (expandable, gaya modern-light): token latar tile.
-           Mesh pastel hangat (accent-tinted) sebagai fallback bila tidak ada
-           foto. Overlay tipis agar foto tetap terasa cerah; lebih pekat saat
-           tile aktif demi keterbacaan teks putih di atasnya. Literal hanya di
-           sini (R6.4), komponen mereferensikan var(--token). */
-        --grad-1: linear-gradient(135deg, color-mix(in srgb, var(--accent) 55%, #fff4e6) 0%, color-mix(in srgb, var(--accent) 30%, #ffe9d6) 50%, #ffd9e4 100%);
-        --grad-2: linear-gradient(135deg, color-mix(in srgb, var(--accent) 35%, #fff0e0) 0%, color-mix(in srgb, var(--accent) 18%, #ffe1ee) 50%, #e7d9ff 100%);
-        --grad-3: linear-gradient(135deg, color-mix(in srgb, var(--accent) 28%, #ffeaf0) 0%, #ffd6e8 50%, color-mix(in srgb, var(--accent) 22%, #ffe0d0) 100%);
-        --grad-4: linear-gradient(135deg, color-mix(in srgb, var(--accent) 22%, #ffe6f0) 0%, color-mix(in srgb, var(--accent) 16%, #fde0ff) 50%, #e3f0ff 100%);
-        --grad-5: linear-gradient(135deg, color-mix(in srgb, var(--accent) 30%, #ffe9e6) 0%, color-mix(in srgb, var(--accent) 20%, #ffe4f2) 50%, #e8f5ff 100%);
-        --grad-6: linear-gradient(135deg, color-mix(in srgb, var(--accent) 26%, #fff0e8) 0%, color-mix(in srgb, var(--accent) 24%, #ffd9ea) 50%, #eef0ff 100%);
-        --grad-fallback: linear-gradient(135deg, color-mix(in srgb, var(--accent) 40%, #fff0e6) 0%, color-mix(in srgb, var(--accent) 20%, #ffd9e4) 100%);
-        /* Teks di atas tile gelap/foto (overlay) — putih untuk kontras. */
+        /* Service mesh gradients. */
+        --grad-1: linear-gradient(135deg, color-mix(in srgb, var(--accent) 45%, #fff5f0) 0%, color-mix(in srgb, var(--accent) 20%, #ffece0) 50%, #ffd0dc 100%);
+        --grad-2: linear-gradient(135deg, color-mix(in srgb, var(--accent) 30%, #fff8f0) 0%, color-mix(in srgb, var(--accent) 14%, #ffebf2) 50%, #eadaff 100%);
+        --grad-3: linear-gradient(135deg, color-mix(in srgb, var(--accent) 22%, #fff0f4) 0%, #ffdeec 50%, color-mix(in srgb, var(--accent) 16%, #fff2ec) 100%);
+        --grad-4: linear-gradient(135deg, color-mix(in srgb, var(--accent) 18%, #fff0f7) 0%, color-mix(in srgb, var(--accent) 12%, #faebff) 50%, #e3f2ff 100%);
+        --grad-5: linear-gradient(135deg, color-mix(in srgb, var(--accent) 25%, #fff4f2) 0%, color-mix(in srgb, var(--accent) 16%, #ffebf5) 50%, #ebf5ff 100%);
+        --grad-6: linear-gradient(135deg, color-mix(in srgb, var(--accent) 20%, #fff6f0) 0%, color-mix(in srgb, var(--accent) 18%, #ffebf3) 50%, #eff2ff 100%);
+        --grad-fallback: linear-gradient(135deg, color-mix(in srgb, var(--accent) 35%, #fff3ec) 0%, color-mix(in srgb, var(--accent) 18%, #ffebf2) 100%);
+
         --on-dark: #ffffff;
-        --on-dark-muted: rgba(255, 255, 255, 0.82);
+        --on-dark-muted: rgba(255, 255, 255, 0.88);
         --on-dark-faint: rgba(255, 255, 255, 0.16);
-        --on-dark-chip: rgba(255, 255, 255, 0.14);
+        --on-dark-chip: rgba(255, 255, 255, 0.12);
         --hairline-dark: rgba(255, 255, 255, 0.10);
         --hairline-dark-hover: rgba(255, 255, 255, 0.22);
-        /* Overlay foto: idle tipis (foto tetap cerah), aktif pekat untuk keterbacaan. */
+
         --overlay-service-idle: linear-gradient(
           to top,
-          rgba(0, 0, 0, 0.55) 0%,
-          rgba(0, 0, 0, 0.22) 45%,
-          rgba(0, 0, 0, 0.04) 100%
+          rgba(0, 0, 0, 0.6) 0%,
+          rgba(0, 0, 0, 0.2) 50%,
+          rgba(0, 0, 0, 0.02) 100%
         );
         --overlay-service-active: linear-gradient(
           to top,
-          rgba(0, 0, 0, 0.88) 0%,
-          rgba(0, 0, 0, 0.52) 42%,
-          rgba(0, 0, 0, 0.14) 75%,
-          rgba(0, 0, 0, 0.04) 100%
+          rgba(0, 0, 0, 0.85) 0%,
+          rgba(0, 0, 0, 0.45) 45%,
+          rgba(0, 0, 0, 0.12) 75%,
+          rgba(0, 0, 0, 0.02) 100%
         );
-        --shadow-card-lift: 0 24px 60px -14px color-mix(in srgb, var(--accent) 32%, transparent), 0 8px 22px rgba(0, 0, 0, 0.14);
+        --shadow-card-lift: 0 24px 50px -12px color-mix(in srgb, var(--accent) 25%, transparent), 0 8px 20px rgba(0, 0, 0, 0.06);
 
         --font-display: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
         --font-sans:
@@ -116,11 +120,31 @@ const cssVars = paletteToCssVars(palette);
       * {
         box-sizing: border-box;
       }
+      
+      /* Premium custom scrollbar */
+      ::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+      }
+      ::-webkit-scrollbar-track {
+        background: var(--background);
+      }
+      ::-webkit-scrollbar-thumb {
+        background: color-mix(in srgb, var(--accent) 20%, transparent);
+        border: 2px solid var(--background);
+        border-radius: var(--radius-pill);
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: color-mix(in srgb, var(--accent) 35%, transparent);
+      }
+
       html {
         font-family: var(--font-sans);
         color: var(--text);
         background: var(--background);
         scroll-behavior: smooth;
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
       }
       body {
         margin: 0;
@@ -133,7 +157,7 @@ const cssVars = paletteToCssVars(palette);
           ),
           var(--background);
         color: var(--text);
-        line-height: 1.65;
+        line-height: 1.7;
         overflow-x: hidden;
       }
       h1,
@@ -141,12 +165,14 @@ const cssVars = paletteToCssVars(palette);
       h3,
       h4 {
         font-family: var(--font-display);
-        line-height: 1.15;
+        line-height: 1.2;
         color: var(--text);
-        letter-spacing: -0.02em;
+        letter-spacing: -0.025em;
+        font-weight: 700;
       }
       a {
-        color: var(--accent);
+        color: var(--accent-strong);
+        transition: color 0.2s ease, transform 0.2s ease;
       }
       img {
         max-width: 100%;
@@ -157,50 +183,56 @@ const cssVars = paletteToCssVars(palette);
         width: 100%;
         max-width: var(--max-width);
         margin-inline: auto;
-        padding-inline: clamp(1rem, 5vw, 4rem);
+        padding-inline: clamp(1.5rem, 6vw, 3rem);
         position: relative;
         z-index: 1;
       }
       section {
-        padding-block: clamp(3rem, 7vw, 5.5rem);
+        padding-block: clamp(4.5rem, 9vw, 6.5rem);
         position: relative;
       }
-      /* Judul section bersama: kicker + heading + lead opsional. */
+      /* Shared section header */
       .section-head {
         text-align: center;
-        max-width: 44rem;
-        margin: 0 auto clamp(2rem, 4vw, 3rem);
+        max-width: 46rem;
+        margin: 0 auto clamp(2.5rem, 5vw, 3.5rem);
       }
       .section-kicker {
         display: inline-flex;
         align-items: center;
         gap: 0.5rem;
-        font-family: var(--font-display);
+        font-family: var(--font-sans);
         font-weight: 700;
-        font-size: 0.78rem;
+        font-size: 0.75rem;
         letter-spacing: 0.12em;
         text-transform: uppercase;
-        color: var(--accent);
+        color: var(--accent-strong);
         background: var(--accent-soft);
-        padding: 0.4rem 0.9rem;
+        padding: 0.45rem 1.05rem;
+        border: 1px solid var(--hairline-accent);
         border-radius: var(--radius-pill);
-        margin: 0 0 1rem;
+        margin: 0 0 1.2rem;
       }
       .section-title {
-        font-size: clamp(1.7rem, 4vw, 2.6rem);
+        font-size: clamp(1.85rem, 4.5vw, 2.75rem);
+        font-weight: 800;
         margin: 0;
+        line-height: 1.15;
+        letter-spacing: -0.03em;
       }
       .section-lead {
         color: var(--muted);
-        margin: 0.85rem auto 0;
-        font-size: clamp(1rem, 2vw, 1.1rem);
+        margin: 0.95rem auto 0;
+        font-size: clamp(1.02rem, 1.8vw, 1.12rem);
+        line-height: 1.6;
       }
       :where(a, button, [tabindex]):focus-visible {
         outline: 3px solid var(--accent);
         outline-offset: 3px;
+        border-radius: var(--radius-xs);
       }
 
-      /* Latar blob organik ambient (dekoratif, di belakang konten). */
+      /* Background decorative blobs - softer and elegant blend */
       .page-blobs {
         position: fixed;
         inset: 0;
@@ -211,33 +243,34 @@ const cssVars = paletteToCssVars(palette);
       .blob {
         position: absolute;
         display: block;
-        filter: blur(60px);
-        opacity: 0.5;
-        border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
-        animation: morph 16s ease-in-out infinite alternate;
+        filter: blur(100px);
+        opacity: 0.4;
+        border-radius: 50%;
+        mix-blend-mode: multiply;
       }
       .blob-a {
         top: -8%;
-        right: -6%;
-        width: 38vw;
-        height: 38vw;
-        background: color-mix(in srgb, var(--accent) 30%, transparent);
+        right: -5%;
+        width: 45vw;
+        height: 45vw;
+        background: color-mix(in srgb, var(--accent) 15%, transparent);
+        animation: morph 20s ease-in-out infinite alternate;
       }
       .blob-b {
         top: 38%;
-        left: -10%;
-        width: 30vw;
-        height: 30vw;
-        background: color-mix(in srgb, var(--accent) 18%, transparent);
-        animation-delay: -6s;
+        left: -12%;
+        width: 35vw;
+        height: 35vw;
+        background: color-mix(in srgb, var(--accent) 10%, transparent);
+        animation: morph 25s ease-in-out infinite alternate-reverse;
       }
       .blob-c {
         bottom: -10%;
         right: 12%;
-        width: 26vw;
-        height: 26vw;
-        background: color-mix(in srgb, var(--surface) 70%, var(--accent));
-        animation-delay: -11s;
+        width: 30vw;
+        height: 30vw;
+        background: color-mix(in srgb, var(--surface) 60%, var(--accent));
+        animation: morph 22s ease-in-out infinite alternate;
       }
       @keyframes morph {
         0% {

@@ -45,35 +45,40 @@ const href = show ? buildWaUrl(waNumber, waMessage) : '';
 <style>
   .floating-wa {
     position: fixed;
-    right: clamp(1rem, 4vw, 2rem);
-    bottom: clamp(1rem, 4vw, 2rem);
+    right: clamp(1rem, 4vw, 2.5rem);
+    bottom: clamp(1rem, 4vw, 2.5rem);
     z-index: 70;
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
-    min-height: 52px;
-    padding: 0.8rem 1.3rem;
-    border-radius: 999px;
+    gap: 0.6rem;
+    min-height: 54px;
+    padding: 0.85rem 1.4rem;
+    border-radius: var(--radius-pill);
     background: var(--accent);
     color: var(--on-accent);
     font-family: var(--font-display);
     font-weight: 700;
+    font-size: 0.96rem;
     text-decoration: none;
-    box-shadow: var(--shadow-lg);
+    box-shadow: var(--shadow-xl);
     transition:
-      transform 0.2s ease,
-      box-shadow 0.2s ease;
+      transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+      background 0.25s ease;
   }
   .floating-wa::before {
     content: '';
     position: absolute;
     inset: 0;
     border-radius: inherit;
-    box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 55%, transparent);
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 45%, transparent);
     animation: wa-pulse 2.4s ease-out infinite;
+    pointer-events: none;
   }
   .floating-wa:hover {
-    transform: translateY(-3px) scale(1.03);
+    transform: translateY(-4px) scale(1.02);
+    background: var(--accent-strong);
+    box-shadow: 0 20px 40px -8px color-mix(in srgb, var(--accent) 35%, transparent);
   }
   .wa-icon {
     flex: none;
@@ -81,10 +86,11 @@ const href = show ? buildWaUrl(waNumber, waMessage) : '';
   }
   .wa-label {
     position: relative;
+    letter-spacing: 0.01em;
   }
   @keyframes wa-pulse {
     0% {
-      box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 55%, transparent);
+      box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 45%, transparent);
     }
     70% {
       box-shadow: 0 0 0 16px color-mix(in srgb, var(--accent) 0%, transparent);
@@ -111,8 +117,9 @@ const href = show ? buildWaUrl(waNumber, waMessage) : '';
       border: 0;
     }
     .floating-wa {
-      min-width: 52px;
+      min-width: 54px;
       justify-content: center;
+      padding: 0.85rem;
     }
   }
 </style>
