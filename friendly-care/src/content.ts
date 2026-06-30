@@ -40,14 +40,14 @@ const content: SiteContent = {
   googleMaps:
     'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.123!2d106.79!3d-6.29!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sCilandak!5e0!3m2!1sid!2sid!4v1700000000000',
 
-  heroPhoto: { url: 'hero_bidan_homecare.png', caption: 'Bidan Bunda Asih, melayani dengan sepenuh hati di rumah Anda' },
+  heroPhoto: { url: 'hero_bidan_homecare.webp', caption: 'Bidan Bunda Asih, melayani dengan sepenuh hati di rumah Anda' },
 
   photos: [
-    { url: 'hero_bidan_homecare.png', caption: 'Kunjungan rumah oleh Bidan Bunda Asih' },
-    { url: 'pijat_bayi.png', caption: 'Pijat bayi yang menenangkan untuk si kecil' },
-    { url: 'perawatan_payudara.png', caption: 'Edukasi dan perawatan payudara di rumah' },
-    { url: 'yoga_ibu_hamil.png', caption: 'Sesi yoga prenatal yang rileks dan aman' },
-    { url: 'konselor_laktasi.png', caption: 'Dukungan menyusui dari konselor laktasi' },
+    { url: 'hero_bidan_homecare.webp', caption: 'Kunjungan rumah oleh Bidan Bunda Asih' },
+    { url: 'pijat_bayi.webp', caption: 'Pijat bayi yang menenangkan untuk si kecil' },
+    { url: 'perawatan_payudara.webp', caption: 'Edukasi dan perawatan payudara di rumah' },
+    { url: 'yoga_ibu_hamil.webp', caption: 'Sesi yoga prenatal yang rileks dan aman' },
+    { url: 'konselor_laktasi.webp', caption: 'Dukungan menyusui dari konselor laktasi' },
   ],
 
   // — Konten —
@@ -77,7 +77,7 @@ const content: SiteContent = {
         'Pijat lembut untuk menstimulasi tumbuh kembang, melancarkan ' +
         'pencernaan, dan membuat bayi tidur lebih nyenyak.',
       icon: '👶',
-      image: 'pijat_bayi.png',
+      image: 'pijat_bayi.webp',
     },
     {
       title: 'Perawatan Payudara',
@@ -85,7 +85,7 @@ const content: SiteContent = {
         'Breast care untuk melancarkan ASI, meredakan bengkak, dan ' +
         'mencegah sumbatan, lengkap dengan edukasi perawatan mandiri.',
       icon: '🤱',
-      image: 'perawatan_payudara.png',
+      image: 'perawatan_payudara.webp',
     },
     {
       title: 'Yoga Ibu Hamil',
@@ -93,7 +93,7 @@ const content: SiteContent = {
         'Kelas prenatal yoga untuk menjaga kebugaran, melatih pernapasan, ' +
         'dan mempersiapkan tubuh ibu menjelang persalinan.',
       icon: '🧘‍♀️',
-      image: 'yoga_ibu_hamil.png',
+      image: 'yoga_ibu_hamil.webp',
     },
     {
       title: 'Konselor Laktasi',
@@ -101,7 +101,7 @@ const content: SiteContent = {
         'Konsultasi menyusui untuk membantu pelekatan yang tepat, ' +
         'meningkatkan produksi ASI, dan mengatasi kesulitan menyusui.',
       icon: '🍼',
-      image: 'konselor_laktasi.png',
+      image: 'konselor_laktasi.webp',
     },
   ],
 
