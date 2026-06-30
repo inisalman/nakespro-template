@@ -18,84 +18,95 @@ const content: SiteContent = {
   palette: 'terracotta',
 
   // — Wajib —
-  websiteName: 'Klinik Perawat Sehat Bersama',
+  websiteName: 'Insan Care — Perawatan Lansia & Paliatif',
   description:
-    'Layanan perawatan kesehatan profesional oleh tenaga kesehatan ' +
-    'bersertifikat. Perawatan luka, homecare lansia, dan konsultasi ' +
-    'kesehatan langsung di rumah Anda dengan jadwal yang fleksibel.',
-  serviceType: 'both',
+    'Layanan homecare lansia dan perawatan paliatif profesional langsung di rumah ' +
+    'Anda. Dampingi orang tua tercinta dengan perawat berlisensi, penuh kasih, dan berdedikasi.',
+  serviceType: 'homecare',
   waNumber: '081234567890',
 
   // — Turunan Order (opsional) —
-  practiceHours:
-    'Senin–Jumat 08.00–20.00 WIB, Sabtu 08.00–15.00 WIB, ' +
-    'kunjungan darurat 24 jam dengan perjanjian.',
-  location:
-    'Melayani area Jakarta Selatan, Depok, dan sekitarnya. ' +
-    'Klinik di Jl. Melati Raya No. 12, Cilandak, Jakarta Selatan.',
+  practiceHours: 'Layanan Kunjungan & Standby Homecare 24 Jam',
+  location: 'Melayani kunjungan rumah di Jakarta Selatan, Depok, Tangerang, dan Bekasi.',
   googleMaps:
     'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.123!2d106.79!3d-6.29!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sCilandak!5e0!3m2!1sid!2sid!4v1700000000000',
 
-  heroPhoto: { url: 'nakes-1.webp', caption: 'Ns. Rina Wijaya, perawat penanggung jawab' },
+  heroPhoto: {
+    url: 'hero_perawat_lansia.webp',
+    caption: 'Layanan homecare lansia penuh kasih oleh perawat profesional berhijab',
+  },
 
   photos: [
-    { url: 'nakes-1.webp', caption: 'Ns. Rina Wijaya, perawat penanggung jawab' },
-    { url: 'nakes-2.webp', caption: 'Tim perawat saat kunjungan homecare' },
-    { url: 'ruangan-1.webp', caption: 'Ruang perawatan klinik yang bersih' },
-    { url: 'ruangan-2.webp', caption: 'Ruang tunggu pasien yang nyaman' },
-    { url: 'alat-1.webp', caption: 'Peralatan perawatan luka steril' },
-    { url: 'alat-2.webp', caption: 'Alat pemeriksaan tanda vital' },
-    { url: 'hasil-1.webp', caption: 'Proses perawatan luka diabetik' },
-    { url: 'hasil-2.webp', caption: 'Pendampingan fisioterapi lansia' },
+    {
+      url: 'hero_perawat_lansia.webp',
+      caption: 'Perawat melakukan pendampingan penuh empati',
+    },
+    {
+      url: 'perawatan_paliatif.webp',
+      caption: 'Perawatan paliatif dengan kenyamanan ekstra untuk pasien',
+    },
+    {
+      url: 'pemantauan_vital.webp',
+      caption: 'Pemantauan vital sign dan kondisi kesehatan pasien secara berkala',
+    },
+    {
+      url: 'pendampingan_aktivitas.webp',
+      caption: 'Pendampingan aktivitas harian untuk menjaga kemandirian lansia',
+    },
   ],
 
   // — Konten —
-  tagline: 'Perawatan tepercaya, langsung ke rumah Anda',
+  tagline: 'Pendampingan Profesional dan Penuh Kasih di Rumah Anda',
   about:
-    'Klinik Perawat Sehat Bersama didirikan oleh sekelompok perawat ' +
-    'bersertifikat dengan pengalaman lebih dari sepuluh tahun di rumah ' +
-    'sakit rujukan. Kami percaya perawatan kesehatan yang baik dimulai ' +
-    'dari rasa nyaman pasien.\n\n' +
-    'Layanan kami mencakup perawatan luka kronis, pendampingan lansia, ' +
-    'pemasangan dan perawatan kateter, hingga edukasi keluarga. Setiap ' +
-    'tindakan mengikuti standar prosedur klinis dan dicatat secara rapi ' +
-    'agar perkembangan pasien selalu terpantau.',
+    'Insan Care berkomitmen menyediakan layanan perawatan lansia (geriatri) dan ' +
+    'asuhan paliatif berkualitas tinggi langsung di kenyamanan rumah pasien. Kami ' +
+    'percaya bahwa setiap lansia dan pasien berhak mendapatkan masa tua serta masa ' +
+    'pemulihan yang damai, dihormati, dan penuh kasih sayang.\n\n' +
+    'Didukung oleh tim perawat muda bersertifikat dan berhijab yang terlatih dalam ' +
+    'kompetensi medis geriatri, kami siap membantu asuhan harian, manajemen nyeri ' +
+    'paliatif, pemantauan tanda vital, perawatan luka, hingga terapi okupasi ' +
+    'ringan. Kami mengutamakan komunikasi yang hangat dengan keluarga serta pencatatan ' +
+    'asuhan yang disiplin.',
 
   credentials: [
-    { label: 'Perawat ber-STR aktif', icon: '🩺' },
-    { label: 'Sertifikat perawatan luka', icon: '🏅' },
-    { label: 'Pelatihan BTCLS', icon: '📋' },
-    { label: 'Mitra resmi BPJS', icon: '🤝' },
+    { label: 'Perawat Ber-STR & Berlisensi', icon: '🩺' },
+    { label: 'Sertifikasi Asuhan Geriatri', icon: '👵' },
+    { label: 'Keahlian Perawatan Paliatif', icon: '❤️' },
+    { label: 'Siaga Kunjungan 24/7', icon: '⏰' },
   ],
 
   services: [
     {
-      title: 'Perawatan Luka',
+      title: 'Homecare Geriatri (Lansia)',
       description:
-        'Perawatan luka diabetik, luka operasi, dan luka kronis dengan ' +
-        'teknik steril dan pemantauan berkala.',
-      icon: '🩹',
-    },
-    {
-      title: 'Homecare Lansia',
-      description:
-        'Pendampingan harian, bantuan mobilitas, dan pemantauan kondisi ' +
-        'kesehatan lansia di rumah.',
+        'Pendampingan aktivitas harian, pemenuhan nutrisi, bantuan mobilisasi, ' +
+        'serta kenyamanan dan keamanan lansia di rumah.',
       icon: '👵',
+      image: 'pendampingan_aktivitas.webp',
     },
     {
-      title: 'Pemeriksaan Tanda Vital',
+      title: 'Perawatan Paliatif',
       description:
-        'Pengukuran tekanan darah, gula darah, dan saturasi oksigen ' +
-        'lengkap dengan laporan tertulis.',
+        'Pemberian asuhan medis and emosional untuk meningkatkan kualitas hidup ' +
+        'pasien dengan penyakit kronis atau stadium lanjut.',
       icon: '❤️',
+      image: 'perawatan_paliatif.webp',
     },
     {
-      title: 'Konsultasi Kesehatan',
+      title: 'Pemantauan Medis Berkala',
       description:
-        'Konsultasi kebutuhan perawatan dan edukasi keluarga oleh perawat ' +
-        'berpengalaman.',
+        'Pemeriksaan rutin tanda vital, kepatuhan minum obat, terapi oksigen, ' +
+        'dan koordinasi dengan dokter penanggung jawab.',
+      icon: '🩺',
+      image: 'pemantauan_vital.webp',
+    },
+    {
+      title: 'Terapi & Edukasi Keluarga',
+      description:
+        'Bimbingan mobilitas ringan bagi lansia serta edukasi perawatan mandiri ' +
+        'agar keluarga lebih tenang dan terlatih.',
       icon: '💬',
+      image: 'hero_perawat_lansia.webp',
     },
   ],
 
@@ -103,55 +114,54 @@ const content: SiteContent = {
     {
       step: 1,
       title: 'Hubungi via WhatsApp',
-      description: 'Ceritakan kebutuhan perawatan Anda melalui WhatsApp kami.',
+      description: 'Konsultasikan kondisi pasien dan kebutuhan asuhan orang tua Anda.',
     },
     {
       step: 2,
-      title: 'Jadwalkan Kunjungan',
+      title: 'Asesmen & Rencana Asuhan',
       description:
-        'Kami atur jadwal kunjungan sesuai waktu yang paling nyaman untuk Anda.',
+        'Tim kami melakukan asesmen kondisi fisik untuk menyusun rencana keperawatan.',
     },
     {
       step: 3,
-      title: 'Perawatan di Rumah',
+      title: 'Kunjungan & Perawatan',
       description:
-        'Perawat datang tepat waktu dan melakukan tindakan sesuai standar klinis.',
+        'Perawat berlisensi datang untuk memberikan tindakan medis dan pendampingan.',
     },
     {
       step: 4,
-      title: 'Laporan & Tindak Lanjut',
-      description:
-        'Anda menerima laporan kondisi dan rekomendasi perawatan berikutnya.',
+      title: 'Evaluasi & Laporan Harian',
+      description: 'Keluarga menerima pembaruan berkala mengenai perkembangan kondisi pasien.',
     },
   ],
 
   testimonials: [
     {
-      name: 'Bapak Hadi',
+      name: 'Ibu Rahayu',
       text:
-        'Perawatan luka ayah saya sangat telaten. Perawatnya ramah dan ' +
-        'selalu menjelaskan setiap tindakan dengan sabar.',
-      role: 'Keluarga pasien, Depok',
-    },
-    {
-      name: 'Ibu Sari',
-      text:
-        'Sangat terbantu dengan layanan homecare untuk ibu saya. Jadwal ' +
-        'fleksibel dan laporannya jelas setiap kunjungan.',
+        'Perawat dari Insan Care sangat sabar merawat ibu saya yang pasca-stroke. ' +
+        'Tutur katanya lembut, sopan, dan ibunya merasa sangat dihargai.',
       role: 'Keluarga pasien, Jakarta Selatan',
     },
     {
-      name: 'Ibu Lestari',
+      name: 'Bapak Gunawan',
       text:
-        'Pemeriksaan rutin gula darah jadi mudah tanpa harus antre di ' +
-        'klinik. Hasilnya langsung dicatat dan dijelaskan.',
-      role: 'Pasien homecare',
+        'Sangat terbantu dengan layanan perawatan paliatifnya. Kehadiran perawat ' +
+        'berhijab yang ramah membuat ayah saya tenang menjalani pengobatan.',
+      role: 'Anak pasien geriatri, Depok',
+    },
+    {
+      name: 'Ibu Ratna',
+      text:
+        'Pemantauan tensi dan obat harian jadi praktis. Perawat selalu datang ' +
+        'tepat waktu dan laporannya sangat detail membantu kami.',
+      role: 'Keluarga pasien, Tangerang',
     },
   ],
 
   // — CTA WhatsApp —
   waMessage:
-    'Halo Klinik Perawat Sehat Bersama, saya ingin bertanya tentang layanan perawatan di rumah.',
+    'Halo Insan Care, saya ingin berkonsultasi mengenai layanan homecare lansia / perawatan paliatif untuk keluarga saya.',
 };
 
 export default assertSiteContent(content);
