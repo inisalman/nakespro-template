@@ -18,140 +18,140 @@ const content: SiteContent = {
   palette: 'neutral',
 
   // — Wajib —
-  websiteName: 'Klinik Perawat Sehat Bersama',
+  websiteName: 'Klinik Sunat Modern Bersama',
   description:
-    'Layanan perawatan kesehatan profesional oleh tenaga kesehatan ' +
-    'bersertifikat. Perawatan luka, homecare lansia, dan konsultasi ' +
-    'kesehatan langsung di rumah Anda dengan jadwal yang fleksibel.',
+    'Layanan sunat modern profesional oleh perawat bersertifikat langsung ' +
+    'di rumah Anda atau di klinik. Metode minim nyeri, tanpa jahitan, ' +
+    'dan cepat sembuh untuk kenyamanan jagoan Anda.',
   serviceType: 'both',
   waNumber: '081234567890',
 
   // — Turunan Order (opsional) —
   practiceHours:
-    'Senin–Jumat 08.00–20.00 WIB, Sabtu 08.00–15.00 WIB, ' +
-    'kunjungan darurat 24 jam dengan perjanjian.',
+    'Senin–Minggu 08.00–20.00 WIB, melayani panggilan ke rumah dengan perjanjian. ' +
+    'Konsultasi online pasca sunat sedia 24 jam.',
   location:
-    'Melayani area Jakarta Selatan, Depok, dan sekitarnya. ' +
-    'Klinik di Jl. Melati Raya No. 12, Cilandak, Jakarta Selatan.',
+    'Melayani area Jakarta, Depok, Tangerang, dan Bekasi. ' +
+    'Klinik pusat di Jl. Sehat Raya No. 10, Jakarta Selatan.',
   googleMaps:
     'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.123!2d106.79!3d-6.29!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sCilandak!5e0!3m2!1sid!2sid!4v1700000000000',
 
-  heroPhoto: { url: 'hero.webp', caption: 'Ns. Rina Wijaya, perawat penanggung jawab' },
+  heroPhoto: { url: 'hero.webp', caption: 'Ns. Ahmad Fauzi, praktisi sunat modern' },
 
   photos: [
-    { url: 'nakes-1.webp', caption: 'Ns. Rina Wijaya, perawat penanggung jawab' },
-    { url: 'nakes-2.webp', caption: 'Tim perawat saat kunjungan homecare' },
-    { url: 'ruangan-1.webp', caption: 'Ruang perawatan klinik yang bersih' },
-    { url: 'ruangan-2.webp', caption: 'Ruang tunggu pasien yang nyaman' },
-    { url: 'alat-1.webp', caption: 'Peralatan perawatan luka steril' },
-    { url: 'alat-2.webp', caption: 'Alat pemeriksaan tanda vital' },
-    { url: 'hasil-1.webp', caption: 'Proses perawatan luka diabetik' },
-    { url: 'hasil-2.webp', caption: 'Pendampingan fisioterapi lansia' },
+    { url: 'nakes-1.webp', caption: 'Ns. Ahmad Fauzi, praktisi sunat modern' },
+    { url: 'nakes-2.webp', caption: 'Perawat memberikan edukasi kepada orang tua' },
+    { url: 'ruangan-1.webp', caption: 'Ruang tindakan klinik yang nyaman dan steril' },
+    { url: 'ruangan-2.webp', caption: 'Area bermain anak di ruang tunggu' },
+    { url: 'alat-1.webp', caption: 'Peralatan sunat modern sekali pakai (disposable)' },
+    { url: 'alat-2.webp', caption: 'Perlengkapan bius minim nyeri (tanpa jarum)' },
+    { url: 'hasil-1.webp', caption: 'Anak tetap ceria setelah tindakan sunat' },
+    { url: 'hasil-2.webp', caption: 'Pendampingan dan kontrol pasca sunat' },
   ],
 
   // — Konten —
-  tagline: 'Perawatan tepercaya, langsung ke rumah Anda',
+  tagline: 'Sunat modern minim nyeri, jagoan tetap ceria',
   about:
-    'Klinik Perawat Sehat Bersama didirikan oleh sekelompok perawat ' +
-    'bersertifikat dengan pengalaman lebih dari sepuluh tahun di rumah ' +
-    'sakit rujukan. Kami percaya perawatan kesehatan yang baik dimulai ' +
-    'dari rasa nyaman pasien.\n\n' +
-    'Layanan kami mencakup perawatan luka kronis, pendampingan lansia, ' +
-    'pemasangan dan perawatan kateter, hingga edukasi keluarga. Setiap ' +
-    'tindakan mengikuti standar prosedur klinis dan dicatat secara rapi ' +
-    'agar perkembangan pasien selalu terpantau.',
+    'Klinik Sunat Modern Bersama hadir untuk memberikan pengalaman khitan ' +
+    'yang menyenangkan dan bebas trauma bagi jagoan Anda. Ditangani oleh ' +
+    'tim perawat terlatih dan bersertifikat khusus khitan modern, kami ' +
+    'mengutamakan standar keamanan, sterilitas, dan kenyamanan.\n\n' +
+    'Kami menyediakan berbagai metode sunat terkini seperti Super Ring ' +
+    'dan Smart Clamp yang minim perdarahan dan tanpa jahitan. Layanan ' +
+    'kami dapat dilakukan di klinik yang ramah anak maupun panggilan ' +
+    'ke rumah (homecare), lengkap dengan pendampingan hingga sembuh total.',
 
   credentials: [
     { label: 'Perawat ber-STR aktif', icon: '🩺' },
-    { label: 'Sertifikat perawatan luka', icon: '🏅' },
-    { label: 'Pelatihan BTCLS', icon: '📋' },
-    { label: 'Mitra resmi BPJS', icon: '🤝' },
+    { label: 'Sertifikat Khitan Modern', icon: '🏅' },
+    { label: 'Pelatihan Bius Tanpa Jarum', icon: '💉' },
+    { label: 'Pendampingan 24 Jam', icon: '📞' },
   ],
 
   services: [
     {
-      title: 'Perawatan Luka Diabetes',
+      title: 'Sunat Metode Super Ring',
       description:
-        'Perawatan luka diabetik dengan teknik steril, pencegahan infeksi, ' +
-        'dan pemantauan berkala untuk mempercepat penyembuhan.',
-      image: 'luka_diabetes.webp',
+        'Metode canggih tanpa jahit dan tanpa perban. Anak bebas mandi ' +
+        'seperti biasa dan penyembuhan lebih cepat.',
+      image: 'super_ring.webp',
     },
     {
-      title: 'Perawatan Luka Kanker',
+      title: 'Sunat Metode Smart Clamp',
       description:
-        'Penanganan luka kanker secara hati-hati untuk mengurangi nyeri, ' +
-        'mengontrol bau, dan menjaga kenyamanan pasien.',
-      image: 'luka_kanker.webp',
+        'Pengerjaan cepat, minim perdarahan, dan hasil estetis yang rapi. ' +
+        'Sangat direkomendasikan untuk anak aktif.',
+      image: 'smart_clamp.webp',
     },
     {
-      title: 'Perawatan Luka Bakar',
+      title: 'Sunat Dewasa / Pria',
       description:
-        'Perawatan luka bakar dengan pembersihan, penggantian balutan, ' +
-        'dan pencegahan komplikasi sesuai derajat luka.',
-      image: 'luka_bakar.webp',
+        'Layanan sunat privat untuk pria dewasa dengan metode khusus ' +
+        'yang nyaman, aman, dan menjaga kerahasiaan.',
+      image: 'sunat_dewasa.webp',
     },
     {
-      title: 'Perawatan Luka Post Operasi',
+      title: 'Sunat Panggilan (Homecare)',
       description:
-        'Perawatan luka pasca operasi dengan teknik steril, penggantian ' +
-        'balutan, dan pemantauan proses penyembuhan untuk mencegah infeksi.',
-      image: 'luka_operasi.webp',
+        'Praktis tanpa antre. Tim medis kami datang ke rumah Anda ' +
+        'dengan peralatan steril dan standar klinik lengkap.',
+      image: 'sunat_homecare.webp',
     },
   ],
 
   howItWorks: [
     {
       step: 1,
-      title: 'Hubungi via WhatsApp',
-      description: 'Ceritakan kebutuhan perawatan Anda melalui WhatsApp kami.',
+      title: 'Konsultasi via WhatsApp',
+      description: 'Tanya jawab mengenai metode sunat dan biaya via admin kami.',
     },
     {
       step: 2,
-      title: 'Jadwalkan Kunjungan',
+      title: 'Atur Jadwal & Lokasi',
       description:
-        'Kami atur jadwal kunjungan sesuai waktu yang paling nyaman untuk Anda.',
+        'Pilih metode sunat dan atur jadwal tindakan, di klinik atau di rumah.',
     },
     {
       step: 3,
-      title: 'Perawatan di Rumah',
+      title: 'Tindakan Sunat',
       description:
-        'Perawat datang tepat waktu dan melakukan tindakan sesuai standar klinis.',
+        'Proses tindakan cepat dengan bius minim nyeri agar anak tidak trauma.',
     },
     {
       step: 4,
-      title: 'Laporan & Tindak Lanjut',
+      title: 'Kontrol & Pantauan',
       description:
-        'Anda menerima laporan kondisi dan rekomendasi perawatan berikutnya.',
+        'Pendampingan gratis via WhatsApp hingga alat lepas dan sembuh total.',
     },
   ],
 
   testimonials: [
     {
-      name: 'Bapak Hadi',
+      name: 'Bunda Rafi',
       text:
-        'Perawatan luka ayah saya sangat telaten. Perawatnya ramah dan ' +
-        'selalu menjelaskan setiap tindakan dengan sabar.',
-      role: 'Keluarga pasien, Depok',
+        'Alhamdulillah sunat Rafi berjalan lancar. Anaknya malah main HP ' +
+        'terus pas disunat. Besoknya udah bisa lari-lari lagi.',
+      role: 'Orang tua pasien, Jakarta',
     },
     {
-      name: 'Ibu Sari',
+      name: 'Ayah Bima',
       text:
-        'Sangat terbantu dengan layanan homecare untuk ibu saya. Jadwal ' +
-        'fleksibel dan laporannya jelas setiap kunjungan.',
-      role: 'Keluarga pasien, Jakarta Selatan',
+        'Pilih sunat di rumah ternyata sangat praktis. Perawatnya sabar ' +
+        'banget bujuk Bima supaya nggak takut. Terima kasih tim.',
+      role: 'Orang tua pasien, Depok',
     },
     {
-      name: 'Ibu Lestari',
+      name: 'Bunda Kenzo',
       text:
-        'Pemeriksaan rutin gula darah jadi mudah tanpa harus antre di ' +
-        'klinik. Hasilnya langsung dicatat dan dijelaskan.',
-      role: 'Pasien homecare',
+        'Metode ringnya bagus banget, nggak perlu ganti perban dan ' +
+        'anak bisa langsung mandi. Perawatnya juga fast respon kalau di-WA.',
+      role: 'Orang tua pasien, Tangerang',
     },
   ],
 
   // — CTA WhatsApp —
   waMessage:
-    'Halo Klinik Perawat Sehat Bersama, saya ingin bertanya tentang layanan perawatan di rumah.',
+    'Halo Klinik Sunat Modern Bersama, saya ingin konsultasi mengenai layanan sunat.',
 };
 
 export default assertSiteContent(content);

@@ -6,6 +6,9 @@
 // `assertSiteContent` dipanggil saat impor agar pelanggaran bound
 // menghentikan build sebelum dist/ (R8.5).
 //
+// Profil client: praktik perawat sunat modern (circumcision) dengan metode
+// minim nyeri dan layanan homecare maupun di klinik.
+//
 // Foto yang direferensikan harus ada di public/images/ (R8.2, R8.7). Nama
 // berkas di sini cocok dengan berkas .webp di public/images/.
 
@@ -18,143 +21,140 @@ const content: SiteContent = {
   palette: 'bright-health',
 
   // — Wajib —
-  websiteName: 'Fisiomove Homecare',
+  websiteName: 'Klinik Sunat Modern Bersama',
   description:
-    'Fisioterapi profesional langsung ke rumah Anda. Pemulihan pasca ' +
-    'stroke, nyeri sendi, cedera olahraga, dan rehabilitasi lansia ' +
-    'ditangani fisioterapis ber-STR dengan program yang terukur dan ' +
-    'jadwal yang menyesuaikan ritme keluarga Anda.',
+    'Layanan sunat modern profesional oleh perawat bersertifikat langsung ' +
+    'di rumah Anda atau di klinik. Metode minim nyeri, tanpa jahitan, ' +
+    'dan cepat sembuh untuk kenyamanan jagoan Anda.',
   serviceType: 'both',
   waNumber: '081234567890',
 
   // — Turunan Order (opsional) —
   practiceHours:
-    'Senin–Jumat 07.00–20.00 WIB, Sabtu 07.00–16.00 WIB, ' +
-    'sesi kunjungan pagi dan sore dengan perjanjian.',
+    'Senin–Minggu 08.00–20.00 WIB, melayani panggilan ke rumah dengan perjanjian. ' +
+    'Konsultasi online pasca sunat sedia 24 jam.',
   location:
-    'Melayani area Jakarta Selatan, Depok, Tangerang Selatan, dan ' +
-    'sekitarnya. Basis praktik di Jl. Melati Raya No. 12, Cilandak, ' +
-    'Jakarta Selatan.',
+    'Melayani area Jakarta, Depok, Tangerang, dan Bekasi. ' +
+    'Klinik pusat di Jl. Sehat Raya No. 10, Jakarta Selatan.',
   googleMaps:
     'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.123!2d106.79!3d-6.29!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sCilandak!5e0!3m2!1sid!2sid!4v1700000000000',
 
-  heroPhoto: { url: 'nakes-1.webp', caption: 'Ftr. Rina Wijaya, fisioterapis penanggung jawab' },
+  heroPhoto: { url: 'nakes-1.webp', caption: 'Ns. Ahmad Fauzi, praktisi sunat modern' },
 
   photos: [
-    { url: 'nakes-1.webp', caption: 'Ftr. Rina Wijaya, fisioterapis penanggung jawab' },
-    { url: 'nakes-2.webp', caption: 'Sesi latihan mobilisasi bersama fisioterapis' },
-    { url: 'ruangan-1.webp', caption: 'Ruang terapi dengan matras rehabilitasi' },
-    { url: 'ruangan-2.webp', caption: 'Area latihan gerak yang lapang dan aman' },
-    { url: 'alat-1.webp', caption: 'Unit TENS untuk terapi nyeri' },
-    { url: 'alat-2.webp', caption: 'Resistance band dan alat latihan fungsional' },
-    { url: 'hasil-1.webp', caption: 'Latihan pemulihan rentang gerak lutut' },
-    { url: 'hasil-2.webp', caption: 'Pendampingan latihan jalan pasca stroke' },
+    { url: 'nakes-1.webp', caption: 'Ns. Ahmad Fauzi, praktisi sunat modern' },
+    { url: 'nakes-2.webp', caption: 'Perawat memberikan edukasi kepada orang tua' },
+    { url: 'ruangan-1.webp', caption: 'Ruang tindakan klinik yang nyaman dan steril' },
+    { url: 'ruangan-2.webp', caption: 'Area bermain anak di ruang tunggu' },
+    { url: 'alat-1.webp', caption: 'Peralatan sunat modern sekali pakai (disposable)' },
+    { url: 'alat-2.webp', caption: 'Perlengkapan bius minim nyeri (tanpa jarum)' },
+    { url: 'hasil-1.webp', caption: 'Anak tetap ceria setelah tindakan sunat' },
+    { url: 'hasil-2.webp', caption: 'Pendampingan dan kontrol pasca sunat' },
   ],
 
   // — Konten —
-  tagline: 'Gerak kembali, pulih di rumah sendiri',
+  tagline: 'Sunat modern minim nyeri, jagoan tetap ceria',
   about:
-    'Fisiomove Homecare lahir dari satu keyakinan sederhana: pemulihan ' +
-    'terbaik terjadi di tempat Anda merasa paling nyaman. Tim kami terdiri ' +
-    'dari fisioterapis ber-STR aktif dengan pengalaman menangani kasus ' +
-    'neurologis, ortopedi, dan geriatri di rumah sakit rujukan.\n\n' +
-    'Setiap program dimulai dari asesmen menyeluruh, lalu disusun menjadi ' +
-    'rencana terapi terukur dengan target mingguan yang jelas. Kami ' +
-    'mendampingi mulai dari latihan rentang gerak, penguatan otot, ' +
-    'reedukasi jalan, hingga edukasi keluarga agar proses pemulihan tetap ' +
-    'berjalan di antara kunjungan.',
+    'Klinik Sunat Modern Bersama hadir untuk memberikan pengalaman khitan ' +
+    'yang menyenangkan dan bebas trauma bagi jagoan Anda. Ditangani oleh ' +
+    'tim perawat terlatih dan bersertifikat khusus khitan modern, kami ' +
+    'mengutamakan standar keamanan, sterilitas, dan kenyamanan.\n\n' +
+    'Kami menyediakan berbagai metode sunat terkini seperti Super Ring ' +
+    'dan Smart Clamp yang minim perdarahan dan tanpa jahitan. Layanan ' +
+    'kami dapat dilakukan di klinik yang ramah anak maupun panggilan ' +
+    'ke rumah (homecare), lengkap dengan pendampingan hingga sembuh total.',
 
   credentials: [
-    { label: 'Fisioterapis ber-STR aktif', icon: '🩺' },
-    { label: 'Sertifikat manual therapy', icon: '🏅' },
-    { label: 'Pelatihan rehabilitasi neuro', icon: '🧠' },
-    { label: 'Mitra resmi BPJS', icon: '🤝' },
+    { label: 'Perawat ber-STR aktif', icon: '🩺' },
+    { label: 'Sertifikat Khitan Modern', icon: '🏅' },
+    { label: 'Pelatihan Bius Tanpa Jarum', icon: '💉' },
+    { label: 'Pendampingan 24 Jam', icon: '📞' },
   ],
 
   services: [
     {
-      title: 'Rehabilitasi Pasca Stroke',
+      title: 'Sunat Metode Super Ring',
       description:
-        'Program reedukasi gerak, latihan keseimbangan, dan penguatan ' +
-        'sisi tubuh yang melemah untuk memulihkan kemandirian.',
-      icon: '🧠',
+        'Metode canggih tanpa jahit dan tanpa perban. Anak bebas mandi ' +
+        'seperti biasa dan penyembuhan lebih cepat.',
+      icon: '💍',
     },
     {
-      title: 'Terapi Nyeri Sendi & Punggung',
+      title: 'Sunat Metode Smart Clamp',
       description:
-        'Penanganan nyeri lutut, bahu, dan low back pain dengan manual ' +
-        'therapy serta modalitas TENS dan terapi latihan.',
-      icon: '🦴',
+        'Pengerjaan cepat, minim perdarahan, dan hasil estetis yang rapi. ' +
+        'Sangat direkomendasikan untuk anak aktif.',
+      icon: '🛡️',
     },
     {
-      title: 'Pemulihan Cedera Olahraga',
+      title: 'Sunat Dewasa / Pria',
       description:
-        'Rehabilitasi pasca cedera dan pasca operasi agar Anda kembali ' +
-        'bergerak aktif dengan aman dan bertahap.',
-      icon: '🏃',
+        'Layanan sunat privat untuk pria dewasa dengan metode khusus ' +
+        'yang nyaman, aman, dan menjaga kerahasiaan.',
+      icon: '👨',
     },
     {
-      title: 'Fisioterapi Geriatri',
+      title: 'Sunat Panggilan (Homecare)',
       description:
-        'Latihan mobilitas, pencegahan jatuh, dan penguatan otot untuk ' +
-        'menjaga kemandirian lansia di rumah.',
-      icon: '👵',
+        'Praktis tanpa antre. Tim medis kami datang ke rumah Anda ' +
+        'dengan peralatan steril dan standar klinik lengkap.',
+      icon: '🏠',
     },
   ],
 
   howItWorks: [
     {
       step: 1,
-      title: 'Hubungi via WhatsApp',
-      description: 'Ceritakan keluhan dan kebutuhan terapi Anda melalui WhatsApp kami.',
+      title: 'Konsultasi via WhatsApp',
+      description: 'Tanya jawab mengenai metode sunat dan biaya via admin kami.',
     },
     {
       step: 2,
-      title: 'Asesmen Awal',
+      title: 'Atur Jadwal & Lokasi',
       description:
-        'Fisioterapis menilai kondisi dan menyusun program terapi terukur sesuai target Anda.',
+        'Pilih metode sunat dan atur jadwal tindakan, di klinik atau di rumah.',
     },
     {
       step: 3,
-      title: 'Terapi di Rumah',
+      title: 'Tindakan Sunat',
       description:
-        'Fisioterapis datang tepat waktu dan memandu setiap sesi latihan sesuai standar klinis.',
+        'Proses tindakan cepat dengan bius minim nyeri agar anak tidak trauma.',
     },
     {
       step: 4,
-      title: 'Evaluasi & Tindak Lanjut',
+      title: 'Kontrol & Pantauan',
       description:
-        'Anda menerima catatan perkembangan dan rencana latihan mandiri antar kunjungan.',
+        'Pendampingan gratis via WhatsApp hingga alat lepas dan sembuh total.',
     },
   ],
 
   testimonials: [
     {
-      name: 'Bapak Hadi',
+      name: 'Bunda Rafi',
       text:
-        'Ayah saya pasca stroke kini bisa berjalan dengan walker. ' +
-        'Fisioterapisnya sabar dan setiap latihan dijelaskan dengan detail.',
-      role: 'Keluarga pasien, Depok',
+        'Alhamdulillah sunat Rafi berjalan lancar. Anaknya malah main HP ' +
+        'terus pas disunat. Besoknya udah bisa lari-lari lagi.',
+      role: 'Orang tua pasien, Jakarta',
     },
     {
-      name: 'Ibu Sari',
+      name: 'Ayah Bima',
       text:
-        'Nyeri lutut saya jauh berkurang setelah beberapa sesi di rumah. ' +
-        'Tidak perlu repot bolak-balik ke klinik dan jadwalnya fleksibel.',
-      role: 'Pasien terapi nyeri, Jakarta Selatan',
+        'Pilih sunat di rumah ternyata sangat praktis. Perawatnya sabar ' +
+        'banget bujuk Bima supaya nggak takut. Terima kasih tim.',
+      role: 'Orang tua pasien, Depok',
     },
     {
-      name: 'Ibu Lestari',
+      name: 'Bunda Kenzo',
       text:
-        'Pemulihan pasca operasi lutut ibu saya sangat terbantu. Programnya ' +
-        'jelas dan perkembangannya dicatat rapi setiap kunjungan.',
-      role: 'Keluarga pasien homecare',
+        'Metode ringnya bagus banget, nggak perlu ganti perban dan ' +
+        'anak bisa langsung mandi. Perawatnya juga fast respon kalau di-WA.',
+      role: 'Orang tua pasien, Tangerang',
     },
   ],
 
   // — CTA WhatsApp —
   waMessage:
-    'Halo Fisiomove Homecare, saya ingin berkonsultasi tentang layanan fisioterapi di rumah.',
+    'Halo Klinik Sunat Modern Bersama, saya ingin konsultasi mengenai layanan sunat.',
 };
 
 export default assertSiteContent(content);
